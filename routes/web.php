@@ -12,11 +12,33 @@
 */
 
 Route::group(['middleware' => 'auth'], function (){
-    Route::get('/dashboard', function () {
-        dd("Here");
+
+    Route::get('/', function () {
+        return view('dashboard.index');
     });
+
+    Route::get('/logout', [
+        'as' => 'auth.logout',
+        'uses' => 'LoginController@destroy'
+    ]);
 });
 
-Route::get('/', function () {
-    return view('layouts.default');
+
+Route::group(['middleware' => 'guest'],function() {
+
+    Route::get('/login', [
+        'uses' => 'LoginController@index'
+    ]);
+
+    Route::post('/login/auth', [
+        'as' => 'login.auth',
+        'uses' => 'LoginController@authenticate'
+    ]);
+
+    Route::get('login/confirm/{work_email}', 'LoginController@confirmAuthentication');
+
+    Route::post('/login/confirm/{email}', [
+        'as' => 'login.confirm',
+        'uses' => 'LoginController@confirmAuthentication'
+    ]);
 });
