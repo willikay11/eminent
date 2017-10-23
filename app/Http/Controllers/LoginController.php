@@ -105,7 +105,7 @@ class LoginController extends Controller
             ]);
 
         }else{
-            
+
             Flash::error('Email and/or password does not match');
 
             return back();
