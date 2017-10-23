@@ -4,6 +4,7 @@ namespace eminent\Models;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable
 {
@@ -41,8 +42,18 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    /**
+     * @param $password
+     */
+    public function setPasswordAttribute($password)
+    {
+        $this->attributes['password'] = Hash::make($password);
+    }
+
+
     public function contact()
     {
         return $this->belongsTo(Contact::class);
     }
+
 }

@@ -13,6 +13,8 @@ try {
     require('bootstrap-sass');
 } catch (e) {}
 
+window.Vue = require('vue');
+
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
  * to our Laravel back-end. This library automatically handles sending the
@@ -22,6 +24,14 @@ try {
 window.axios = require('axios');
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
+/**
+ * Use Element UI
+ */
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-default/index.css'
+import locale from 'element-ui/lib/locale/lang/en'
+Vue.use(ElementUI, { locale })
 
 /**
  * Next we will register the CSRF Token as a common header with Axios so that

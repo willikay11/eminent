@@ -14,12 +14,24 @@
 Route::group(['middleware' => 'auth'], function (){
 
     Route::get('/', function () {
-        return view('dashboard.index');
+        return view('dashboard.dashboard');
     });
 
     Route::get('/logout', [
         'as' => 'auth.logout',
         'uses' => 'LoginController@destroy'
+    ]);
+
+    /*
+     * Permissions Routes
+     */
+    Route::get('/api/permissions', [
+        'uses' => 'PermissionController@getAllPermissions'
+    ]);
+
+    Route::get('/permissions', [
+        'as' => 'permissions',
+        'uses' => 'PermissionController@index'
     ]);
 });
 

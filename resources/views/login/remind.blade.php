@@ -6,7 +6,7 @@
         <div class="row">
             <div class="login-container">
                 <div class="col-lg-6 inner-left">
-                    <img class="login-image" src="img/EBG-logo.png">
+                    <img class="login-image" src="/img/EBG-logo.png">
                 </div>
                 <div class="col-lg-6 inner-right">
 

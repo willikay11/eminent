@@ -1,0 +1,1 @@
+Vue.component('permissionsTable', require('./permissions/permissionsTable.vue'));

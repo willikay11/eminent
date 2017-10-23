@@ -8354,6 +8354,31 @@ button.close {
   }
 }
 
+.panel-body {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.panel-footer {
+  padding: 10px 15px;
+  background-color: white;
+  border-top: none;
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+.panel-header {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.panel-hr {
+  margin-left: 20px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  margin-right: 20px;
+}
+
 body {
   font-family: 'Poppins', sans-serif;
   background: #fafafa;
@@ -8560,6 +8585,7 @@ a.article:hover {
 ----------------------------------------------------- */
 
 #content {
+  width: 100%;
   background-color: #eff4fb;
   padding: 20px;
   min-height: 100vh;
