@@ -99,4 +99,7 @@ return [
         ],
     ],
 
+    'activation' => [
+        'expire' => 1440,
+    ]
 ];

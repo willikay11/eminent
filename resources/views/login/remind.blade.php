@@ -17,27 +17,19 @@
                     </div>
 
                     <div class="col-lg-12 login-header">
-                        <h3>Login</h3>
-                        <p>Enter your login details </p>
+                        <h3>Reset Password</h3>
+                        <p>Enter your account email. </p>
                     </div>
 
-                    {!! Form::open(['route' => 'login.auth']) !!}
+                    {!! Form::open(['route' => 'login.remind']) !!}
                     <div class="row">
                         <div class="col-lg-12 form-group ebg-input-container">
-                            {!! Form::text('email', null, ['class' => 'form-control ebg-input', 'placeholder' => 'example@eminent.co.ke']) !!}
-                        </div>
-
-                        <div class="col-lg-12 form-group ebg-input-container">
-                            {!! Form::password('password', ['class' => 'form-control ebg-input', 'placeholder' => 'password']) !!}
+                            {!! Form::text('email', null, ['class' => 'form-control ebg-input']) !!}
                         </div>
 
                         <div class="col-lg-12 ebg-input-container">
                             <div class="col-lg-6">
-                                {!! Form::submit('Continue', ['class' => 'btn ebg-button']) !!}
-                            </div>
-
-                            <div class="col-lg-6">
-                                <a href="/password/remind">Forgot Password</a>
+                                {!! Form::submit('Reset', ['class' => 'btn ebg-button']) !!}
                             </div>
                         </div>
                     </div>
@@ -54,7 +46,5 @@
 
 
     </div>
-
-
 
 @stop

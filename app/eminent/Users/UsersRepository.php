@@ -16,6 +16,14 @@ class UsersRepository
 {
 
     /*
+     * Get a user by their id
+     */
+    public function getUserById($id)
+    {
+        return User::findOrFail($id);
+    }
+
+    /*
      * Check if a user exists by their email
      */
     public function getUserByEmail($email)
@@ -31,6 +39,16 @@ class UsersRepository
     public function saveLastLogin($user)
     {
         $user->last_login = Carbon::now();
+
+        $user->save();
+    }
+
+    /*
+     * Reset the users password
+     */
+    public function reset($user, $password)
+    {
+        $user->password = $password;
 
         $user->save();
     }

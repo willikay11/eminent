@@ -26,4 +26,17 @@ class UserMailers
             $message->to($data['email'])->subject($data['subject']);
         });
     }
+
+    /*
+     * Send the password reset link to the user
+     */
+    public static function sendPasswordResetLink($data)
+    {
+        $data['subject'] = 'CRM User Password Reset';
+
+        Mail::send('emails.users.reset_password', $data, function ($message) use ($data)
+        {
+            $message->to($data['email'])->subject($data['subject']);
+        });
+    }
 }

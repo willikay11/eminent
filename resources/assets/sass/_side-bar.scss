@@ -53,20 +53,20 @@ i, span {
 }
 
 #sidebar {
-  min-width: 250px;
-  max-width: 250px;
-  background: #7386D5;
+  min-width: 270px;
+  max-width: 270px;
+  background: $dark-blue;
   color: #fff;
   transition: all 0.3s;
 }
 
 #sidebar.active {
-  min-width: 80px;
-  max-width: 80px;
+  min-width: 100px;
+  max-width: 100px;
   text-align: center;
 }
 
-#sidebar.active .sidebar-header h3, #sidebar.active .CTAs {
+#sidebar.active .sidebar-header h4, #sidebar.active .CTAs {
   display: none;
 }
 
@@ -106,7 +106,7 @@ i, span {
 
 #sidebar .sidebar-header {
   padding: 20px;
-  background: #6d7fcc;
+  background: $light-blue;
 }
 
 #sidebar .sidebar-header strong {
@@ -189,6 +189,7 @@ a.article, a.article:hover {
     CONTENT STYLE
 ----------------------------------------------------- */
 #content {
+  background-color: $content-area-blue;
   padding: 20px;
   min-height: 100vh;
   transition: all 0.3s;
@@ -217,7 +218,7 @@ a.article, a.article:hover {
     margin-left: 0 !important;
   }
 
-  #sidebar .sidebar-header h3, #sidebar .CTAs {
+  #sidebar .sidebar-header h4, #sidebar .CTAs {
     display: none;
   }
 

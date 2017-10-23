@@ -1,0 +1,22 @@
+.navbar-fixed-top {
+  left: 270px !important;
+  transition: .3s;
+}
+
+#fixedNav.active {
+  left: 100px !important;
+  transition: .3s;
+}
+
+.content-container{
+  margin-top: 60px;
+}
+@media (max-width: 768px) {
+  .navbar-fixed-top {
+    left: 0px !important;
+  }
+
+  .logo-container{
+    display: none;
+  }
+}

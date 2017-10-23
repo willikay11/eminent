@@ -128,7 +128,7 @@ trait UserRules
     public function usersPassword($request)
     {
         $rules = [
-            'password'=>'required|min:8|confirmed|case_diff|numbers|letters'
+            'password'=>'required|min:8|confirmed|alpha_num'
         ];
 
         return $this->verdict($request, $rules);

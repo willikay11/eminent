@@ -41,4 +41,24 @@ Route::group(['middleware' => 'guest'],function() {
         'as' => 'login.confirm',
         'uses' => 'LoginController@confirmAuthentication'
     ]);
+
+    Route::get('/password/remind', [
+        'as' => 'password.remind',
+        'uses' => 'RemindersController@index'
+    ]);
+
+    Route::post('/password/remind', [
+        'as' => 'login.remind',
+        'uses' => 'RemindersController@authenticateReminder'
+    ]);
+
+    Route::get('/password/remind/user/{id}/token/{token}', [
+        'as' => 'auth.reset',
+        'uses' => 'RemindersController@authenticateResetLink'
+    ]);
+
+    Route::post('/password/reset/user/{id}', [
+        'as' => 'login.reset',
+        'uses' => 'RemindersController@savePassword'
+    ]);
 });
