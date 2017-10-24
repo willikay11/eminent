@@ -33,6 +33,19 @@ Route::group(['middleware' => 'auth'], function (){
         'as' => 'permissions',
         'uses' => 'PermissionController@index'
     ]);
+
+
+    /*
+     * Roles Routes
+     */
+    Route::get('/api/roles', [
+        'uses' => 'RoleController@getAllRoles'
+    ]);
+
+    Route::get('/roles', [
+        'as' => 'roles',
+        'uses' => 'RoleController@index'
+    ]);
 });
 
 

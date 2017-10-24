@@ -46,7 +46,7 @@
                     </a>
                     <ul class="collapse list-unstyled" id="adminSubMenu">
                         <li><a href="#">Users</a></li>
-                        <li><a href="#">Roles</a></li>
+                        <li><a href="/roles">Roles</a></li>
                         <li><a href="/permissions">Permissions</a></li>
                         <li><a href="#">Designations</a></li>
                         <li><a href="#">Professions</a></li>
