@@ -52,4 +52,13 @@ class UsersRepository
 
         $user->save();
     }
+
+    public function revoke($id)
+    {
+        $user = $this->getUserById($id);
+
+        $user->role_id = null;
+
+        $user->save();
+    }
 }

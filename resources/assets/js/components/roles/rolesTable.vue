@@ -25,7 +25,7 @@
                         label="Actions"
                         width="120">
                     <template slot-scope="scope">
-                        <el-button @click="handleClick" size="small">Details</el-button>
+                        <el-button @click="showDetails(scope.row)" size="small">Details</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -86,14 +86,14 @@
         created: function () {
             let vm = this;
 
-            vm.getPermissions();
+            vm.getRoles();
         },
 
         methods:{
             handleClick() {
                 console.log('click');
             },
-            getPermissions()
+            getRoles()
             {
                 let vm = this;
                 axios.get('/api/roles')
@@ -131,7 +131,7 @@
                             {
                                 vm.dialogVisible = false;
 
-                                vm.getPermissions();
+                                vm.getRoles();
 
                                 if(response.data.success)
                                 {
@@ -154,6 +154,10 @@
                         return false;
                     }
                 });
+            },
+            showDetails(role)
+            {
+                window.location.href = '/roles/details/' + role.id;
             }
         }
     }

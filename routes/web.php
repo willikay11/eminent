@@ -55,6 +55,33 @@ Route::group(['middleware' => 'auth'], function (){
         'as' => 'roles.save',
         'uses' => 'RoleController@store',
     ]);
+
+    Route::get('/api/role/{id}/members', [
+        'uses' => 'RoleController@getMembers'
+    ]);
+
+    Route::get('/api/role/{id}/permissions', [
+        'uses' => 'RoleController@getPermissions'
+    ]);
+
+    Route::get('/roles/permissions/{id}', [
+        'uses' => 'RoleController@permissions'
+    ]);
+
+    Route::post('/roles/permissions/{id}', [
+        'as' => 'roles.permissions',
+        'uses' => 'RoleController@updatePermissions'
+    ]);
+
+    Route::get('/roles/revoke/{id}', [
+        'as' => 'roles.revoke',
+        'uses' => 'RoleController@revoke'
+    ]);
+
+    Route::get('/permission/revoke/role/{role}/{permission}', [
+        'as' => 'roles.permission_revoke',
+        'uses' => 'RoleController@permissionRevoke'
+    ]);
 });
 
 
