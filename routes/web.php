@@ -46,12 +46,22 @@ Route::group(['middleware' => 'auth'], function (){
         'as' => 'roles',
         'uses' => 'RoleController@index'
     ]);
+
+    Route::get('/roles/details/{id}', [
+        'uses' => 'RoleController@details'
+    ]);
+
+    Route::post('/roles/save', [
+        'as' => 'roles.save',
+        'uses' => 'RoleController@store',
+    ]);
 });
 
 
-Route::group(['middleware' => 'guest'],function() {
+Route::group(['middleware' => 'guest'], function() {
 
     Route::get('/login', [
+        'as' => 'login',
         'uses' => 'LoginController@index'
     ]);
 
