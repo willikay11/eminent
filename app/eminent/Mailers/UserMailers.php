@@ -32,9 +32,19 @@ class UserMailers
      */
     public static function sendPasswordResetLink($data)
     {
-        $data['subject'] = 'CRM User Password Reset';
+        $data['subject'] = 'Eminent CRM User Password Reset';
 
         Mail::send('emails.users.reset_password', $data, function ($message) use ($data)
+        {
+            $message->to($data['email'])->subject($data['subject']);
+        });
+    }
+
+    public static function userActivation($data)
+    {
+        $data['subject'] = 'Eminent CRM User Account Registration';
+
+        Mail::send('emails.users.accountactivation', $data, function ($message) use ($data)
         {
             $message->to($data['email'])->subject($data['subject']);
         });

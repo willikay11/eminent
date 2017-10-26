@@ -10,7 +10,9 @@
 namespace eminent\Users;
 
 use Carbon\Carbon;
+use eminent\Models\Contact;
 use eminent\Models\User;
+use Illuminate\Support\Facades\Config;
 
 class UsersRepository
 {
@@ -58,6 +60,56 @@ class UsersRepository
         $user = $this->getUserById($id);
 
         $user->role_id = null;
+
+        $user->save();
+    }
+
+    public function save($input, $id)
+    {
+        $input['contact_id'] = Contact::where('email', $input['email'])->first()->id;
+
+        if(is_null($id))
+        {
+            $input['activation_key'] = sha1(md5(time()));
+
+            $input['activation_key_created_at'] = Carbon::now();
+
+            $user = User::create($input);
+
+        }else{
+            $user = User::findOrFail($id);
+
+            $user->update($input);
+        }
+
+        return $user;
+    }
+
+    public function checkActivationKeyExpiry( $time )
+    {
+        $time_sent = new Carbon($time);
+
+        $time_elapsed = $time_sent->copy()->diffInMinutes(Carbon::now());
+
+        if($time_elapsed > Config::get('auth.activation.expire'))
+        {
+            return false;
+        }
+        return true;
+    }
+
+    public function getUserByCode($code)
+    {
+        return User::where('activation_key', $code)->first();
+    }
+
+    public function activate($user, $input)
+    {
+        $user->activation_key = null;
+
+        $user->active = 1;
+
+        $user->password = $input['password'];
 
         $user->save();
     }

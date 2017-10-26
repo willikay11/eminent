@@ -22,6 +22,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Users\UserPasswordResetComplete' => [
             'App\Listeners\Users\WhenUserPasswordResetComplete',
         ],
+        'App\Events\Users\UserRegistered' => [
+            'App\Listeners\Users\WhenUserRegistered',
+        ],
     ];
 
     /**

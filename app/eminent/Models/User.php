@@ -5,11 +5,14 @@ namespace eminent\Models;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Hash;
+use Laracasts\Presenter\PresentableTrait;
 
 class User extends Authenticatable
 {
     use Notifiable;
+    use PresentableTrait;
 
+    protected $presenter = 'eminent\Users\UserPresenter';
     /**
      * The attributes that are mass assignable.
      *
@@ -56,4 +59,8 @@ class User extends Authenticatable
         return $this->belongsTo(Contact::class);
     }
 
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
 }

@@ -100,6 +100,39 @@ Route::group(['middleware' => 'auth'], function (){
     ]);
 
     /*
+     * User Routes
+     */
+    Route::get('/api/users', [
+        'uses' => 'UserController@getUsers'
+    ]);
+
+    Route::get('/users', [
+        'uses' => 'UserController@index'
+    ]);
+
+    Route::get('info/users', [
+        'uses' => 'UserController@getInformation'
+    ]);
+
+    Route::post('/users/save', [
+        'uses' => 'UserController@storeUser'
+    ]);
+
+    Route::get('/users/activation/userId/{id}/code/{code}', [
+        'as' => 'users.activation',
+        'uses' => 'UserController@activation'
+    ]);
+
+    Route::get('/users/create_password/{id}', [
+        'as' => 'users.create_password',
+        'uses' => 'UserController@createPassword'
+    ]);
+
+    Route::post('/users/create_password/{id}', [
+        'as' => 'users.create_password',
+        'uses' => 'UserController@savePassword'
+    ]);
+    /*
      * Profession Routes
      */
     Route::get('/api/professions', [

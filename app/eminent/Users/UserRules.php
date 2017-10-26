@@ -26,48 +26,31 @@ trait UserRules
      */
     public function usersCreate($request)
     {
-        $messages = [
-            'employment_date.required_if' => 'An employment date should be provided for a distribution department member',
-            'start_date.required_unless' => 'The job position start date is required'
-        ];
-
         $rules = [
             'email' => 'required | unique:users| exists:contacts,email',
-            'designation' => 'required',
+            'designation_id' => 'required',
             'role_id' => 'required',
             'department_id' => 'required',
-            'employment_date' => 'required_if:department_id,1',
-            'start_date' => 'required_unless:position_id,""',
-            'can_be_assigned_lead' => 'required'
+//            'employment_date' => 'required',
         ];
 
-        return $this->verdict($request, $rules, $messages);
+        return $this->verdict($request, $rules);
     }
 
     /*
      * Validate users update
      */
-    public function usersUpdate($request, $id, $contactId)
+    public function usersUpdate($request)
     {
-        $messages = [
-            'employment_date.required_if' => 'An employment date should be provided for a distribution department member',
-        ];
-
         $rules = [
-            'firstname' => 'required',
-            'lastname' => 'required',
-            'title_id' => 'required',
-            'gender_id' => 'required',
-            'email' => 'required | unique:users,email,'.$id .' | unique:contacts,email,'.$contactId,
-            'phone' => 'unique:contacts,phone,' . $contactId,
-            'designation' => 'required',
+            'email' => 'required | unique:users,email,'.$request->get('userId') .' | exists:contacts,email',
+            'designation_id' => 'required',
             'role_id' => 'required',
             'department_id' => 'required',
-            'employment_date' => 'required_if:department_id,1',
-            'can_be_assigned_lead' => 'required'
+            'employment_date' => 'required',
         ];
 
-        return $this->verdict($request, $rules, $messages);
+        return $this->verdict($request, $rules);
     }
 
     /*
