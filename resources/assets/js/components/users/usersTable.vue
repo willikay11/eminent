@@ -58,7 +58,7 @@
         </div>
 
         <el-dialog
-                title="New/Edit Designation"
+                title="New/Edit User"
                 :visible.sync="dialogVisible"
                 size="large">
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-position="left">
@@ -89,7 +89,7 @@
                         </el-col>
                         <el-col :span="7">
                             <el-form-item prop="lastname">
-                                <el-input placeholder="Name Last" v-model="ruleForm.lastname"></el-input>
+                                <el-input placeholder="Last Name" v-model="ruleForm.lastname"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-form-item>
@@ -109,7 +109,7 @@
                         </el-col>
                         <el-col :span="3">
                             <el-form-item prop="country">
-                                <el-select v-model="ruleForm.country" placeholder="Select Country">
+                                <el-select v-model="ruleForm.country" filterable placeholder="Select Country">
                                     <el-option
                                             v-for="item in countries"
                                             :key="item.value"
@@ -127,14 +127,9 @@
                                 <el-input placeholder="Email (email@eminent.co.ke)" v-model="ruleForm.email"></el-input>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="3" class="right-margin">
-                            <el-form-item prop="code">
-                                <el-input placeholder="Country Code" v-model="ruleForm.code"></el-input>
-                            </el-form-item>
-                        </el-col>
                         <el-col :span="7">
                             <el-form-item prop="phone">
-                                <el-input placeholder="Phone Number" v-model="ruleForm.phone"></el-input>
+                                <el-input placeholder="Phone Number" v-model.number="ruleForm.phone"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-form-item>
@@ -175,7 +170,11 @@
                         </el-col>
                         <el-col :span="7">
                             <el-form-item prop="employmentDate">
-                                <el-input placeholder="Input Employement date" v-model="ruleForm.employmentDate"></el-input>
+                                <el-date-picker
+                                        v-model="ruleForm.employmentDate"
+                                        type="date"
+                                        placeholder="Employment Date">
+                                </el-date-picker>
                             </el-form-item>
                         </el-col>
                     </el-form-item>
@@ -236,7 +235,6 @@
                     firstname: '',
                     lastname: '',
                     email: '',
-                    code: '',
                     phone: '',
                     role: '',
                     department: '',
@@ -263,13 +261,10 @@
                         {required: true, message: 'Please input Last name', trigger: 'blur'},
                     ],
                     email : [
-                        {required: true, message: 'Please input email', trigger: 'blur'},
-                    ],
-                    code : [
-                        {required: true, message: 'Please input Country code', trigger: 'blur'},
+                        {required: true, message: 'Please input email', trigger: 'blur', type: 'email'},
                     ],
                     phone : [
-                        {required: true, message: 'Please input Phone Number', trigger: 'blur'},
+                        {required: true, message: 'Please input Phone Number', trigger: 'blur', type: 'number'},
                     ],
                     role : [
                         {required: true, message: 'Please select role', trigger: 'change'},
@@ -281,7 +276,7 @@
                         {required: true, message: 'Please select country', trigger: 'change'},
                     ],
                     employmentDate : [
-                        {required: true, message: 'Please input employment date', trigger: 'blur'},
+                        {required: true, message: 'Please input employment date', trigger: 'blur', type: 'date'},
                     ],
                 }
             }
@@ -356,6 +351,7 @@
                             role_id: vm.ruleForm.role,
                             active: 0,
                             userId: vm.userId,
+                            employment_date: vm.employmentDate
                         })
                             .then(function (response)
                             {
@@ -393,7 +389,7 @@
 
 //                vm.ruleForm.designationName = designation.name;
 //
-//                vm.designationId = designation.id;
+                vm.ruleForm.designation = user.designation_id;
             },
             filterTag(value, row) {
                 return row.tag === value;

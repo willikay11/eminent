@@ -31,7 +31,7 @@ trait UserRules
             'designation_id' => 'required',
             'role_id' => 'required',
             'department_id' => 'required',
-//            'employment_date' => 'required',
+            'employment_date' => 'required|date',
         ];
 
         return $this->verdict($request, $rules);
@@ -47,7 +47,7 @@ trait UserRules
             'designation_id' => 'required',
             'role_id' => 'required',
             'department_id' => 'required',
-            'employment_date' => 'required',
+            'employment_date' => 'required|date',
         ];
 
         return $this->verdict($request, $rules);

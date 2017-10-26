@@ -22,6 +22,7 @@ class User extends Authenticatable
         'contact_id',
         'email',
         'designation_id',
+        'department_id',
         'role_id',
         'password',
         'last_login',

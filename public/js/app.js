@@ -85278,7 +85278,6 @@ Object.defineProperty(exports, "__esModule", {
 //
 //
 //
-//
 
 exports.default = {
     data: function data() {
@@ -85308,7 +85307,6 @@ exports.default = {
                 firstname: '',
                 lastname: '',
                 email: '',
-                code: '',
                 phone: '',
                 role: '',
                 department: '',
@@ -85322,13 +85320,12 @@ exports.default = {
                 gender: [{ required: true, message: 'Please select gender', trigger: 'change' }],
                 firstname: [{ required: true, message: 'Please input First name', trigger: 'blur' }],
                 lastname: [{ required: true, message: 'Please input Last name', trigger: 'blur' }],
-                email: [{ required: true, message: 'Please input email', trigger: 'blur' }],
-                code: [{ required: true, message: 'Please input Country code', trigger: 'blur' }],
-                phone: [{ required: true, message: 'Please input Phone Number', trigger: 'blur' }],
+                email: [{ required: true, message: 'Please input email', trigger: 'blur', type: 'email' }],
+                phone: [{ required: true, message: 'Please input Phone Number', trigger: 'blur', type: 'number' }],
                 role: [{ required: true, message: 'Please select role', trigger: 'change' }],
                 department: [{ required: true, message: 'Please select department', trigger: 'change' }],
                 country: [{ required: true, message: 'Please select country', trigger: 'change' }],
-                employmentDate: [{ required: true, message: 'Please input employment date', trigger: 'blur' }]
+                employmentDate: [{ required: true, message: 'Please input employment date', trigger: 'blur', type: 'date' }]
             }
         };
     },
@@ -85396,7 +85393,8 @@ exports.default = {
                         department_id: vm.ruleForm.department,
                         role_id: vm.ruleForm.role,
                         active: 0,
-                        userId: vm.userId
+                        userId: vm.userId,
+                        employment_date: vm.employmentDate
                     }).then(function (response) {
                         vm.dialogVisible = false;
 
@@ -85428,7 +85426,7 @@ exports.default = {
 
             //                vm.ruleForm.designationName = designation.name;
             //
-            //                vm.designationId = designation.id;
+            vm.ruleForm.designation = user.designation_id;
         },
         filterTag: function filterTag(value, row) {
             return row.tag === value;
@@ -85570,7 +85568,7 @@ var render = function() {
         "el-dialog",
         {
           attrs: {
-            title: "New/Edit Designation",
+            title: "New/Edit User",
             visible: _vm.dialogVisible,
             size: "large"
           },
@@ -85677,7 +85675,7 @@ var render = function() {
                             { attrs: { prop: "lastname" } },
                             [
                               _c("el-input", {
-                                attrs: { placeholder: "Name Last" },
+                                attrs: { placeholder: "Last Name" },
                                 model: {
                                   value: _vm.ruleForm.lastname,
                                   callback: function($$v) {
@@ -85748,7 +85746,10 @@ var render = function() {
                               _c(
                                 "el-select",
                                 {
-                                  attrs: { placeholder: "Select Country" },
+                                  attrs: {
+                                    filterable: "",
+                                    placeholder: "Select Country"
+                                  },
                                   model: {
                                     value: _vm.ruleForm.country,
                                     callback: function($$v) {
@@ -85810,31 +85811,6 @@ var render = function() {
                       _vm._v(" "),
                       _c(
                         "el-col",
-                        { staticClass: "right-margin", attrs: { span: 3 } },
-                        [
-                          _c(
-                            "el-form-item",
-                            { attrs: { prop: "code" } },
-                            [
-                              _c("el-input", {
-                                attrs: { placeholder: "Country Code" },
-                                model: {
-                                  value: _vm.ruleForm.code,
-                                  callback: function($$v) {
-                                    _vm.$set(_vm.ruleForm, "code", $$v)
-                                  },
-                                  expression: "ruleForm.code"
-                                }
-                              })
-                            ],
-                            1
-                          )
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "el-col",
                         { attrs: { span: 7 } },
                         [
                           _c(
@@ -85846,7 +85822,7 @@ var render = function() {
                                 model: {
                                   value: _vm.ruleForm.phone,
                                   callback: function($$v) {
-                                    _vm.$set(_vm.ruleForm, "phone", $$v)
+                                    _vm.$set(_vm.ruleForm, "phone", _vm._n($$v))
                                   },
                                   expression: "ruleForm.phone"
                                 }
@@ -85957,9 +85933,10 @@ var render = function() {
                             "el-form-item",
                             { attrs: { prop: "employmentDate" } },
                             [
-                              _c("el-input", {
+                              _c("el-date-picker", {
                                 attrs: {
-                                  placeholder: "Input Employement date"
+                                  type: "date",
+                                  placeholder: "Employment Date"
                                 },
                                 model: {
                                   value: _vm.ruleForm.employmentDate,

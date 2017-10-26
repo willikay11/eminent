@@ -49,7 +49,8 @@ class UserController extends Controller
                 'email' => $user->email,
                 'role' => $user->role->name,
                 'phone' => $user->contact->phone,
-                'active' => $user->present()->activeStatus
+                'active' => $user->present()->activeStatus,
+                'designation_id' => $user->designation_id
             ];
         },null, null);
 
