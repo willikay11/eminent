@@ -49,7 +49,7 @@
                         <li><a href="/roles">Roles</a></li>
                         <li><a href="/permissions">Permissions</a></li>
                         <li><a href="/designations">Designations</a></li>
-                        <li><a href="#">Professions</a></li>
+                        <li><a href="/professions">Professions</a></li>
                         <li><a href="#">All Contacts</a></li>
                     </ul>
                 </li>

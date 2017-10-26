@@ -2,10 +2,10 @@
     <div class="panel panel-default">
         <div class="col-lg-12 panel-header">
             <div class="col-lg-6">
-                <h4>Designations</h4>
+                <h4>Professions</h4>
             </div>
             <div class="col-lg-6" style="text-align: right">
-                <button class="btn ebg-button" v-on:click="showAddRoleDialog()">Add Designations</button>
+                <button class="btn ebg-button" v-on:click="showAddProfessionDialog()">Add Profession</button>
             </div>
         </div>
         <div class="panel-body">
@@ -30,7 +30,7 @@
                         label="Actions"
                         width="120">
                     <template slot-scope="scope">
-                        <el-button @click="EditDesignation(scope.row)" size="small">Edit</el-button>
+                        <el-button @click="EditProfession(scope.row)" size="small">Edit</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -46,13 +46,13 @@
         </div>
 
         <el-dialog
-                title="New/Edit Designation"
+                title="New/Edit Profession"
                 :visible.sync="dialogVisible"
                 size="tiny">
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-position="top">
 
-                <el-form-item prop="designationName" label="Designation Name">
-                    <el-input placeholder="Input Name" v-model="ruleForm.designationName"></el-input>
+                <el-form-item prop="professionName" label="Profession Name">
+                    <el-input placeholder="Input Name" v-model="ruleForm.professionName"></el-input>
                 </el-form-item>
 
                 <el-form-item prop="active" label="Active">
@@ -68,7 +68,7 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">Cancel</el-button>
-                <el-button type="primary" @click="addDesignation('ruleForm')">Save</el-button>
+                <el-button type="primary" @click="addProfession('ruleForm')">Save</el-button>
             </span>
         </el-dialog>
     </div>
@@ -88,35 +88,35 @@
                 }],
                 total: 0,
                 dialogVisible: false,
-                designationId: null,
+                professionId: null,
                 ruleForm: {
-                    designationName: '',
+                    professionName: '',
                     active: ''
                 },
                 rules: {
-                    designationName : [
-                        {required: true, message: 'Please input designation name', trigger: 'blur'},
+                    professionName : [
+                        {required: true, message: 'Please input profession name', trigger: 'blur'},
                     ],
                     active : [
                         {required: true, message: 'Please active status', trigger: 'change'},
-                    ]
-                }
+                    ],
+                },
             }
         },
         created: function () {
             let vm = this;
 
-            vm.getDesignations();
+            vm.getProfessions();
         },
 
         methods:{
             handleClick() {
                 console.log('click');
             },
-            getDesignations()
+            getProfessions()
             {
                 let vm = this;
-                axios.get('/api/designations')
+                axios.get('/api/professions')
                     .then(function (response) {
                         vm.tableData = [].concat(response.data.data);
                         vm.total = response.data.last_page;
@@ -124,7 +124,7 @@
                     console.log(error);
                 })
             },
-            showAddRoleDialog()
+            showAddProfessionDialog()
             {
                 let vm = this;
 
@@ -137,21 +137,21 @@
                     })
                     .catch(_ => {});
             },
-            addDesignation(formName)
+            addProfession(formName)
             {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         let vm = this;
-                        axios.post('/designations/save', {
-                            name     : vm.ruleForm.designationName,
+                        axios.post('/professions/save', {
+                            name     : vm.ruleForm.professionName,
                             active : vm.ruleForm.active,
-                            designationId: vm.designationId
+                            professionId: vm.professionId
                         })
                             .then(function (response)
                             {
                                 vm.dialogVisible = false;
 
-                                vm.getDesignations();
+                                vm.getProfessions();
 
                                 if(response.data.success)
                                 {
@@ -175,15 +175,15 @@
                     }
                 });
             },
-            EditDesignation(designation)
+            EditProfession(profession)
             {
                 let vm = this;
 
                 vm.dialogVisible = true;
 
-                vm.ruleForm.designationName = designation.name;
+                vm.ruleForm.professionName = profession.name;
 
-                vm.designationId = designation.id;
+                vm.professionId = profession.id;
             },
             filterTag(value, row) {
                 return row.tag === value;

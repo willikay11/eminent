@@ -98,6 +98,22 @@ Route::group(['middleware' => 'auth'], function (){
         'as' => 'designations.save',
         'uses' => 'DesignationController@storeDesignation'
     ]);
+
+    /*
+     * Profession Routes
+     */
+    Route::get('/api/professions', [
+        'uses' => 'ProfessionController@getProfessions'
+    ]);
+
+    Route::get('/professions', [
+        'uses' => 'ProfessionController@index'
+    ]);
+
+    Route::post('/professions/save', [
+        'as' => 'professions.save',
+        'uses' => 'ProfessionController@storeProfession'
+    ]);
 });
 
 

@@ -2,54 +2,54 @@
 /**
  * Created by PhpStorm.
  * User: mac-intern
- * Date: 10/24/17
- * Time: 4:34 PM
+ * Date: 10/26/17
+ * Time: 9:10 AM
  */
 
 namespace App\Http\Controllers;
 
 
 use eminent\API\SortFilterPaginate;
-use eminent\Designations\DesignationsRepository;
-use eminent\Models\Designation;
+use eminent\Models\Profession;
+use eminent\Professions\ProfessionRepository;
+use eminent\Professions\ProfessionRules;
 use Illuminate\Http\Request;
-use eminent\Designations\DesignationRules;
 
-class DesignationController extends Controller
+class ProfessionController extends Controller
 {
 
     use SortFilterPaginate;
-    use DesignationRules;
+    use ProfessionRules;
 
-    protected $designationsRepository;
+    protected $professionRepository;
 
-    public function __construct(DesignationsRepository $designationsRepository)
+    public function __construct(ProfessionRepository $professionRepository)
     {
-        $this->designationsRepository = $designationsRepository;
+        $this->professionRepository = $professionRepository;
     }
 
-    public function getDesignations()
+    public function getProfessions()
     {
-        $designations = $this->sortFilterPaginate(new Designation(), [], function ($designation)
+        $professions = $this->sortFilterPaginate(new Profession(), [], function ($profession)
         {
             return[
-                'id' => $designation->id,
-                'name' => $designation->name,
-                'active' => $designation->present()->activeStatus
+                'id' => $profession->id,
+                'name' => $profession->name,
+                'active' => $profession->present()->activeStatus
             ];
         },null, null);
 
-        return self::toResponse(null, $designations);
+        return self::toResponse(null, $professions);
     }
 
     public function index()
     {
-        return view('designation.index');
+        return view('professions.index');
     }
 
-    public function storeDesignation(Request $request)
+    public function storeProfession(Request $request)
     {
-        if(is_null($request->get('designationId')))
+        if(is_null($request->get('professionId')))
         {
             return $this->save($request);
         }
@@ -60,7 +60,7 @@ class DesignationController extends Controller
 
     public function save($request)
     {
-        $validation = $this->validateDesignationCreate($request);
+        $validation = $this->validateProfessionCreate($request);
 
         if($validation)
         {
@@ -72,13 +72,13 @@ class DesignationController extends Controller
             return $response;
         }
 
-        $designation = $this->designationsRepository->createDesignation($request->toArray());
+        $designation = $this->professionRepository->createProfession($request->toArray());
 
         if($designation)
         {
             $response = [
                 'success' => true,
-                'message' => 'Designation added successfully'
+                'message' => 'Profession added successfully'
             ];
 
             return $response;
@@ -94,7 +94,7 @@ class DesignationController extends Controller
 
     public function edit($request)
     {
-        $validation = $this->validateDesignationEdit($request);
+        $validation = $this->validateProfessionEdit($request);
 
         if($validation)
         {
@@ -106,13 +106,13 @@ class DesignationController extends Controller
             return $response;
         }
 
-        $designation = $this->designationsRepository->updateDesignation($request->toArray());
+        $designation = $this->professionRepository->updateProfession($request->toArray());
 
         if($designation)
         {
             $response = [
                 'success' => true,
-                'message' => 'Designation edited successfully'
+                'message' => 'Profession edited successfully'
             ];
 
             return $response;
