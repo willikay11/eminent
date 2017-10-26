@@ -48,7 +48,7 @@
                         <li><a href="#">Users</a></li>
                         <li><a href="/roles">Roles</a></li>
                         <li><a href="/permissions">Permissions</a></li>
-                        <li><a href="#">Designations</a></li>
+                        <li><a href="/designations">Designations</a></li>
                         <li><a href="#">Professions</a></li>
                         <li><a href="#">All Contacts</a></li>
                     </ul>

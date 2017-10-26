@@ -82,6 +82,22 @@ Route::group(['middleware' => 'auth'], function (){
         'as' => 'roles.permission_revoke',
         'uses' => 'RoleController@permissionRevoke'
     ]);
+
+    /*
+     * Designation Routes
+     */
+    Route::get('/api/designations', [
+        'uses' => 'DesignationController@getDesignations'
+    ]);
+
+    Route::get('/designations', [
+        'uses' => 'DesignationController@index'
+    ]);
+
+    Route::post('/designations/save', [
+        'as' => 'designations.save',
+        'uses' => 'DesignationController@storeDesignation'
+    ]);
 });
 
 
