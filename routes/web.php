@@ -147,6 +147,22 @@ Route::group(['middleware' => 'auth'], function (){
         'as' => 'professions.save',
         'uses' => 'ProfessionController@storeProfession'
     ]);
+
+    /*
+     * Sources Routes
+     */
+    Route::get('/sources', [
+        'uses' => 'SourceController@index'
+    ]);
+
+    Route::get('/api/sources', [
+        'uses' => 'SourceController@getAllSources'
+    ]);
+
+    Route::post('/sources/save', [
+        'as' => 'sources.save',
+        'uses' => 'SourceController@storeSource'
+    ]);
 });
 
 
