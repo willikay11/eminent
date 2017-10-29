@@ -18,7 +18,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="/contacts/user">
                         <i class="glyphicon glyphicon-briefcase"></i>
                         Contacts
                     </a>

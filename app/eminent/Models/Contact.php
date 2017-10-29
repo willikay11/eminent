@@ -10,9 +10,11 @@ namespace eminent\Models;
 
 
 use Illuminate\Database\Eloquent\Model;
+use Laracasts\Presenter\PresentableTrait;
 
 class Contact extends Model
 {
+    use PresentableTrait;
     /**
      * The database table used by the model.
      *
@@ -20,6 +22,7 @@ class Contact extends Model
      */
     protected $table = 'contacts';
 
+    protected $presenter = 'eminent\Contacts\ContactPresenter';
     /**
      * The attributes that are mass assignable.
      *
@@ -51,4 +54,61 @@ class Contact extends Model
      * @var array
      */
     protected $guarded = array('id', 'created_at', 'updated_at');
+
+
+    /*
+     * Relationship between a user and a contacts
+     */
+    public function user()
+    {
+        return $this->hasOne(User::class, 'contact_id');
+    }
+
+    /*
+     * Relationship between a title and a contact
+     */
+    public function titleName()
+    {
+        return $this->belongsTo(Title::class);
+    }
+
+    /*
+     * Religion
+     */
+    public function religionName()
+    {
+        return $this->belongsTo(Religions::class);
+    }
+
+    /*
+     * Country
+     */
+    public function countryName()
+    {
+        return $this->belongsTo(Country::class);
+    }
+
+    /*
+     * Relationship between contact and gender
+     */
+    public function genderName()
+    {
+        return $this->belongsTo(Gender::class);
+    }
+
+    /*
+     * Relationship between a contact and a client
+     */
+    public function clients()
+    {
+        return $this->hasOne(Client::class);
+    }
+
+    /*
+     * Relationship between a contact and a client
+     */
+    public function profession()
+    {
+        return $this->belongsTo(Profession::class);
+    }
 }

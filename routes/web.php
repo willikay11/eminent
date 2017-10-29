@@ -180,6 +180,25 @@ Route::group(['middleware' => 'auth'], function (){
         'uses' => 'DepartmentController@store'
     ]);
 
+    /*
+     * Contacts Routes
+     */
+    Route::get('/api/contacts/user', [
+        'uses' => 'ContactController@getUserClients'
+    ]);
+
+    Route::get('/contacts/user', [
+        'uses' =>'ContactController@index'
+    ]);
+
+    Route::get('/contacts/info', [
+        'uses' => 'ContactController@getInfo'
+    ]);
+
+    Route::post('/contacts/save', [
+        'as' => 'contacts.save',
+        'uses' => 'ContactController@store'
+    ]);
 });
 
 

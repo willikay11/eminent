@@ -11172,6 +11172,197 @@ module.exports = {
 
 /***/ }),
 /* 4 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function(useSourceMap) {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		return this.map(function (item) {
+			var content = cssWithMappingToString(item, useSourceMap);
+			if(item[2]) {
+				return "@media " + item[2] + "{" + content + "}";
+			} else {
+				return content;
+			}
+		}).join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+function cssWithMappingToString(item, useSourceMap) {
+	var content = item[1] || '';
+	var cssMapping = item[3];
+	if (!cssMapping) {
+		return content;
+	}
+
+	if (useSourceMap && typeof btoa === 'function') {
+		var sourceMapping = toComment(cssMapping);
+		var sourceURLs = cssMapping.sources.map(function (source) {
+			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
+		});
+
+		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
+	}
+
+	return [content].join('\n');
+}
+
+// Adapted from convert-source-map (MIT)
+function toComment(sourceMap) {
+	// eslint-disable-next-line no-undef
+	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
+	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
+
+	return '/*# ' + data + ' */';
+}
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+/* globals __VUE_SSR_CONTEXT__ */
+
+// IMPORTANT: Do NOT use ES2015 features in this file.
+// This module is a runtime utility for cleaner component module output and will
+// be included in the final webpack user bundle.
+
+module.exports = function normalizeComponent (
+  rawScriptExports,
+  compiledTemplate,
+  functionalTemplate,
+  injectStyles,
+  scopeId,
+  moduleIdentifier /* server only */
+) {
+  var esModule
+  var scriptExports = rawScriptExports = rawScriptExports || {}
+
+  // ES6 modules interop
+  var type = typeof rawScriptExports.default
+  if (type === 'object' || type === 'function') {
+    esModule = rawScriptExports
+    scriptExports = rawScriptExports.default
+  }
+
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // render functions
+  if (compiledTemplate) {
+    options.render = compiledTemplate.render
+    options.staticRenderFns = compiledTemplate.staticRenderFns
+    options._compiled = true
+  }
+
+  // functional template
+  if (functionalTemplate) {
+    options.functional = true
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = scopeId
+  }
+
+  var hook
+  if (moduleIdentifier) { // server build
+    hook = function (context) {
+      // 2.3 injection
+      context =
+        context || // cached call
+        (this.$vnode && this.$vnode.ssrContext) || // stateful
+        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
+      // 2.2 with runInNewContext: true
+      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__
+      }
+      // inject component styles
+      if (injectStyles) {
+        injectStyles.call(this, context)
+      }
+      // register component module identifier for async chunk inferrence
+      if (context && context._registeredComponents) {
+        context._registeredComponents.add(moduleIdentifier)
+      }
+    }
+    // used by ssr in case component is cached and beforeCreate
+    // never gets called
+    options._ssrRegister = hook
+  } else if (injectStyles) {
+    hook = injectStyles
+  }
+
+  if (hook) {
+    var functional = options.functional
+    var existing = functional
+      ? options.render
+      : options.beforeCreate
+
+    if (!functional) {
+      // inject component registration as beforeCreate hook
+      options.beforeCreate = existing
+        ? [].concat(existing, hook)
+        : [hook]
+    } else {
+      // for template-only hot-reload because in that case the render fn doesn't
+      // go through the normalizer
+      options._injectStyles = hook
+      // register for functioal component in vue file
+      options.render = function renderWithStyleInjection (h, context) {
+        hook.call(context)
+        return existing(h, context)
+      }
+    }
+  }
+
+  return {
+    esModule: esModule,
+    exports: scriptExports,
+    options: options
+  }
+}
+
+
+/***/ }),
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11369,290 +11560,7 @@ function setStyle(element, styleName, value) {
 };
 
 /***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.__esModule = true;
-function _broadcast(componentName, eventName, params) {
-  this.$children.forEach(function (child) {
-    var name = child.$options.componentName;
-
-    if (name === componentName) {
-      child.$emit.apply(child, [eventName].concat(params));
-    } else {
-      _broadcast.apply(child, [componentName, eventName].concat([params]));
-    }
-  });
-}
-exports.default = {
-  methods: {
-    dispatch: function dispatch(componentName, eventName, params) {
-      var parent = this.$parent || this.$root;
-      var name = parent.$options.componentName;
-
-      while (parent && (!name || name !== componentName)) {
-        parent = parent.$parent;
-
-        if (parent) {
-          name = parent.$options.componentName;
-        }
-      }
-      if (parent) {
-        parent.$emit.apply(parent, [eventName].concat(params));
-      }
-    },
-    broadcast: function broadcast(componentName, eventName, params) {
-      _broadcast.call(this, componentName, eventName, params);
-    }
-  }
-};
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.__esModule = true;
-exports.hasOwn = hasOwn;
-exports.toObject = toObject;
-var hasOwnProperty = Object.prototype.hasOwnProperty;
-function hasOwn(obj, key) {
-  return hasOwnProperty.call(obj, key);
-};
-
-function extend(to, _from) {
-  for (var key in _from) {
-    to[key] = _from[key];
-  }
-  return to;
-};
-
-function toObject(arr) {
-  var res = {};
-  for (var i = 0; i < arr.length; i++) {
-    if (arr[i]) {
-      extend(res, arr[i]);
-    }
-  }
-  return res;
-};
-
-var getValueByPath = exports.getValueByPath = function getValueByPath(object, prop) {
-  prop = prop || '';
-  var paths = prop.split('.');
-  var current = object;
-  var result = null;
-  for (var i = 0, j = paths.length; i < j; i++) {
-    var path = paths[i];
-    if (!current) break;
-
-    if (i === j - 1) {
-      result = current[path];
-      break;
-    }
-    current = current[path];
-  }
-  return result;
-};
-
-/***/ }),
 /* 7 */
-/***/ (function(module, exports) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-// css base code, injected by the css-loader
-module.exports = function(useSourceMap) {
-	var list = [];
-
-	// return the list of modules as css string
-	list.toString = function toString() {
-		return this.map(function (item) {
-			var content = cssWithMappingToString(item, useSourceMap);
-			if(item[2]) {
-				return "@media " + item[2] + "{" + content + "}";
-			} else {
-				return content;
-			}
-		}).join("");
-	};
-
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
-};
-
-function cssWithMappingToString(item, useSourceMap) {
-	var content = item[1] || '';
-	var cssMapping = item[3];
-	if (!cssMapping) {
-		return content;
-	}
-
-	if (useSourceMap && typeof btoa === 'function') {
-		var sourceMapping = toComment(cssMapping);
-		var sourceURLs = cssMapping.sources.map(function (source) {
-			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
-		});
-
-		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
-	}
-
-	return [content].join('\n');
-}
-
-// Adapted from convert-source-map (MIT)
-function toComment(sourceMap) {
-	// eslint-disable-next-line no-undef
-	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
-	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
-
-	return '/*# ' + data + ' */';
-}
-
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports) {
-
-/* globals __VUE_SSR_CONTEXT__ */
-
-// IMPORTANT: Do NOT use ES2015 features in this file.
-// This module is a runtime utility for cleaner component module output and will
-// be included in the final webpack user bundle.
-
-module.exports = function normalizeComponent (
-  rawScriptExports,
-  compiledTemplate,
-  functionalTemplate,
-  injectStyles,
-  scopeId,
-  moduleIdentifier /* server only */
-) {
-  var esModule
-  var scriptExports = rawScriptExports = rawScriptExports || {}
-
-  // ES6 modules interop
-  var type = typeof rawScriptExports.default
-  if (type === 'object' || type === 'function') {
-    esModule = rawScriptExports
-    scriptExports = rawScriptExports.default
-  }
-
-  // Vue.extend constructor export interop
-  var options = typeof scriptExports === 'function'
-    ? scriptExports.options
-    : scriptExports
-
-  // render functions
-  if (compiledTemplate) {
-    options.render = compiledTemplate.render
-    options.staticRenderFns = compiledTemplate.staticRenderFns
-    options._compiled = true
-  }
-
-  // functional template
-  if (functionalTemplate) {
-    options.functional = true
-  }
-
-  // scopedId
-  if (scopeId) {
-    options._scopeId = scopeId
-  }
-
-  var hook
-  if (moduleIdentifier) { // server build
-    hook = function (context) {
-      // 2.3 injection
-      context =
-        context || // cached call
-        (this.$vnode && this.$vnode.ssrContext) || // stateful
-        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
-      // 2.2 with runInNewContext: true
-      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
-        context = __VUE_SSR_CONTEXT__
-      }
-      // inject component styles
-      if (injectStyles) {
-        injectStyles.call(this, context)
-      }
-      // register component module identifier for async chunk inferrence
-      if (context && context._registeredComponents) {
-        context._registeredComponents.add(moduleIdentifier)
-      }
-    }
-    // used by ssr in case component is cached and beforeCreate
-    // never gets called
-    options._ssrRegister = hook
-  } else if (injectStyles) {
-    hook = injectStyles
-  }
-
-  if (hook) {
-    var functional = options.functional
-    var existing = functional
-      ? options.render
-      : options.beforeCreate
-
-    if (!functional) {
-      // inject component registration as beforeCreate hook
-      options.beforeCreate = existing
-        ? [].concat(existing, hook)
-        : [hook]
-    } else {
-      // for template-only hot-reload because in that case the render fn doesn't
-      // go through the normalizer
-      options._injectStyles = hook
-      // register for functioal component in vue file
-      options.render = function renderWithStyleInjection (h, context) {
-        hook.call(context)
-        return existing(h, context)
-      }
-    }
-  }
-
-  return {
-    esModule: esModule,
-    exports: scriptExports,
-    options: options
-  }
-}
-
-
-/***/ }),
-/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -11873,6 +11781,98 @@ function applyToTag (styleElement, obj) {
 
 
 /***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+function _broadcast(componentName, eventName, params) {
+  this.$children.forEach(function (child) {
+    var name = child.$options.componentName;
+
+    if (name === componentName) {
+      child.$emit.apply(child, [eventName].concat(params));
+    } else {
+      _broadcast.apply(child, [componentName, eventName].concat([params]));
+    }
+  });
+}
+exports.default = {
+  methods: {
+    dispatch: function dispatch(componentName, eventName, params) {
+      var parent = this.$parent || this.$root;
+      var name = parent.$options.componentName;
+
+      while (parent && (!name || name !== componentName)) {
+        parent = parent.$parent;
+
+        if (parent) {
+          name = parent.$options.componentName;
+        }
+      }
+      if (parent) {
+        parent.$emit.apply(parent, [eventName].concat(params));
+      }
+    },
+    broadcast: function broadcast(componentName, eventName, params) {
+      _broadcast.call(this, componentName, eventName, params);
+    }
+  }
+};
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+exports.hasOwn = hasOwn;
+exports.toObject = toObject;
+var hasOwnProperty = Object.prototype.hasOwnProperty;
+function hasOwn(obj, key) {
+  return hasOwnProperty.call(obj, key);
+};
+
+function extend(to, _from) {
+  for (var key in _from) {
+    to[key] = _from[key];
+  }
+  return to;
+};
+
+function toObject(arr) {
+  var res = {};
+  for (var i = 0; i < arr.length; i++) {
+    if (arr[i]) {
+      extend(res, arr[i]);
+    }
+  }
+  return res;
+};
+
+var getValueByPath = exports.getValueByPath = function getValueByPath(object, prop) {
+  prop = prop || '';
+  var paths = prop.split('.');
+  var current = object;
+  var result = null;
+  for (var i = 0, j = paths.length; i < j; i++) {
+    var path = paths[i];
+    if (!current) break;
+
+    if (i === j - 1) {
+      result = current[path];
+      break;
+    }
+    current = current[path];
+  }
+  return result;
+};
+
+/***/ }),
 /* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -12043,7 +12043,7 @@ module.exports =
 /***/ 14:
 /***/ function(module, exports) {
 
-	module.exports = __webpack_require__(5);
+	module.exports = __webpack_require__(8);
 
 /***/ },
 
@@ -13147,7 +13147,7 @@ var _vue = __webpack_require__(2);
 
 var _vue2 = _interopRequireDefault(_vue);
 
-var _dom = __webpack_require__(4);
+var _dom = __webpack_require__(6);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -13429,7 +13429,7 @@ var _scrollbarWidth = __webpack_require__(15);
 
 var _scrollbarWidth2 = _interopRequireDefault(_scrollbarWidth);
 
-var _dom = __webpack_require__(4);
+var _dom = __webpack_require__(6);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -13775,14 +13775,14 @@ module.exports =
 /***/ 123:
 /***/ function(module, exports) {
 
-	module.exports = __webpack_require__(4);
+	module.exports = __webpack_require__(6);
 
 /***/ },
 
 /***/ 219:
 /***/ function(module, exports) {
 
-	module.exports = __webpack_require__(6);
+	module.exports = __webpack_require__(9);
 
 /***/ },
 
@@ -14556,7 +14556,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 exports.isVNode = isVNode;
 exports.getFirstComponentChild = getFirstComponentChild;
 
-var _util = __webpack_require__(6);
+var _util = __webpack_require__(9);
 
 function isVNode(node) {
   return (typeof node === 'undefined' ? 'undefined' : _typeof(node)) === 'object' && (0, _util.hasOwn)(node, 'componentOptions');
@@ -14878,7 +14878,7 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(36);
-module.exports = __webpack_require__(141);
+module.exports = __webpack_require__(156);
 
 
 /***/ }),
@@ -16425,7 +16425,7 @@ module.exports =
 /* 15 */
 /***/ function(module, exports) {
 
-	module.exports = __webpack_require__(5);
+	module.exports = __webpack_require__(8);
 
 /***/ },
 /* 16 */
@@ -17754,7 +17754,7 @@ module.exports =
 /* 44 */
 /***/ function(module, exports) {
 
-	module.exports = __webpack_require__(4);
+	module.exports = __webpack_require__(6);
 
 /***/ },
 /* 45 */
@@ -21644,7 +21644,7 @@ module.exports =
 /* 107 */
 /***/ function(module, exports) {
 
-	module.exports = __webpack_require__(6);
+	module.exports = __webpack_require__(9);
 
 /***/ },
 /* 108 */
@@ -43295,7 +43295,7 @@ module.exports =
 /***/ 14:
 /***/ function(module, exports) {
 
-	module.exports = __webpack_require__(5);
+	module.exports = __webpack_require__(8);
 
 /***/ },
 
@@ -43344,7 +43344,7 @@ module.exports =
 /***/ 123:
 /***/ function(module, exports) {
 
-	module.exports = __webpack_require__(4);
+	module.exports = __webpack_require__(6);
 
 /***/ },
 
@@ -43554,7 +43554,7 @@ module.exports =
 /***/ 219:
 /***/ function(module, exports) {
 
-	module.exports = __webpack_require__(6);
+	module.exports = __webpack_require__(9);
 
 /***/ },
 
@@ -44975,7 +44975,7 @@ var _vue = __webpack_require__(2);
 
 var _vue2 = _interopRequireDefault(_vue);
 
-var _dom = __webpack_require__(4);
+var _dom = __webpack_require__(6);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -46698,7 +46698,7 @@ exports.default = function (Vue) {
   return template;
 };
 
-var _util = __webpack_require__(6);
+var _util = __webpack_require__(9);
 
 var RE_NARGS = /(%|)\{([0-9a-zA-Z_]+)\}/g;
 /**
@@ -46851,7 +46851,7 @@ module.exports =
 /***/ 14:
 /***/ function(module, exports) {
 
-	module.exports = __webpack_require__(5);
+	module.exports = __webpack_require__(8);
 
 /***/ },
 
@@ -47083,7 +47083,7 @@ module.exports =
 /***/ 219:
 /***/ function(module, exports) {
 
-	module.exports = __webpack_require__(6);
+	module.exports = __webpack_require__(9);
 
 /***/ },
 
@@ -47639,7 +47639,7 @@ module.exports =
 
 exports.__esModule = true;
 
-var _dom = __webpack_require__(4);
+var _dom = __webpack_require__(6);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -47871,7 +47871,7 @@ module.exports =
 /***/ 14:
 /***/ function(module, exports) {
 
-	module.exports = __webpack_require__(5);
+	module.exports = __webpack_require__(8);
 
 /***/ },
 
@@ -48636,7 +48636,7 @@ module.exports =
 /***/ 14:
 /***/ function(module, exports) {
 
-	module.exports = __webpack_require__(5);
+	module.exports = __webpack_require__(8);
 
 /***/ },
 
@@ -50514,7 +50514,7 @@ module.exports =
 /***/ 123:
 /***/ function(module, exports) {
 
-	module.exports = __webpack_require__(4);
+	module.exports = __webpack_require__(6);
 
 /***/ },
 
@@ -51427,7 +51427,7 @@ if(false) {
 /* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(7)(undefined);
+exports = module.exports = __webpack_require__(4)(undefined);
 // imports
 
 
@@ -82670,11 +82670,13 @@ Vue.component('designationsTable', __webpack_require__(126));
 
 Vue.component('professionsTable', __webpack_require__(131));
 
-Vue.component('sourcesTable', __webpack_require__(148));
+Vue.component('sourcesTable', __webpack_require__(136));
 
-Vue.component('departmentsTable', __webpack_require__(153));
+Vue.component('departmentsTable', __webpack_require__(141));
 
-Vue.component('usersTable', __webpack_require__(136));
+Vue.component('usersTable', __webpack_require__(146));
+
+Vue.component('contactsTable', __webpack_require__(151));
 
 /***/ }),
 /* 112 */
@@ -82685,7 +82687,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(113)
 }
-var normalizeComponent = __webpack_require__(8)
+var normalizeComponent = __webpack_require__(5)
 /* script */
 var __vue_script__ = __webpack_require__(116)
 /* template */
@@ -82739,7 +82741,7 @@ var content = __webpack_require__(114);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(9)("31777d72", content, false);
+var update = __webpack_require__(7)("31777d72", content, false);
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -82758,7 +82760,7 @@ if(false) {
 /* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(7)(undefined);
+exports = module.exports = __webpack_require__(4)(undefined);
 // imports
 
 
@@ -82988,7 +82990,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(119)
 }
-var normalizeComponent = __webpack_require__(8)
+var normalizeComponent = __webpack_require__(5)
 /* script */
 var __vue_script__ = __webpack_require__(121)
 /* template */
@@ -83042,7 +83044,7 @@ var content = __webpack_require__(120);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(9)("76a86eff", content, false);
+var update = __webpack_require__(7)("76a86eff", content, false);
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -83061,7 +83063,7 @@ if(false) {
 /* 120 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(7)(undefined);
+exports = module.exports = __webpack_require__(4)(undefined);
 // imports
 
 
@@ -83490,7 +83492,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(8)
+var normalizeComponent = __webpack_require__(5)
 /* script */
 var __vue_script__ = __webpack_require__(124)
 /* template */
@@ -83940,7 +83942,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(127)
 }
-var normalizeComponent = __webpack_require__(8)
+var normalizeComponent = __webpack_require__(5)
 /* script */
 var __vue_script__ = __webpack_require__(129)
 /* template */
@@ -83994,7 +83996,7 @@ var content = __webpack_require__(128);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(9)("80f4299a", content, false);
+var update = __webpack_require__(7)("80f4299a", content, false);
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -84013,7 +84015,7 @@ if(false) {
 /* 128 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(7)(undefined);
+exports = module.exports = __webpack_require__(4)(undefined);
 // imports
 
 
@@ -84479,7 +84481,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(132)
 }
-var normalizeComponent = __webpack_require__(8)
+var normalizeComponent = __webpack_require__(5)
 /* script */
 var __vue_script__ = __webpack_require__(134)
 /* template */
@@ -84533,7 +84535,7 @@ var content = __webpack_require__(133);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(9)("6f536b48", content, false);
+var update = __webpack_require__(7)("6f536b48", content, false);
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -84552,7 +84554,7 @@ if(false) {
 /* 133 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(7)(undefined);
+exports = module.exports = __webpack_require__(4)(undefined);
 // imports
 
 
@@ -85016,11 +85018,1085 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(137)
 }
-var normalizeComponent = __webpack_require__(8)
+var normalizeComponent = __webpack_require__(5)
 /* script */
 var __vue_script__ = __webpack_require__(139)
 /* template */
 var __vue_template__ = __webpack_require__(140)
+/* template functional */
+  var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/sources/sourceTable.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-7118fcd5", Component.options)
+  } else {
+    hotAPI.reload("data-v-7118fcd5", Component.options)
+' + '  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 137 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(138);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(7)("1be49183", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7118fcd5\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./sourceTable.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7118fcd5\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./sourceTable.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 138 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(4)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, "\n.el-table{\n    border-left: none;\n    border-right: none;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 139 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+exports.default = {
+    data: function data() {
+        return {
+            tableData: [],
+            options: [{
+                value: '1',
+                label: 'Active'
+            }, {
+                value: '0',
+                label: 'Inactive'
+            }],
+            total: 0,
+            dialogVisible: false,
+            sourceId: null,
+            ruleForm: {
+                sourceName: '',
+                active: ''
+            },
+            rules: {
+                sourceName: [{ required: true, message: 'Please input source name', trigger: 'blur' }],
+                active: [{ required: true, message: 'Please active status', trigger: 'change' }]
+            }
+        };
+    },
+
+    created: function created() {
+        var vm = this;
+
+        vm.getSources();
+    },
+
+    methods: {
+        handleClick: function handleClick() {
+            console.log('click');
+        },
+        getSources: function getSources() {
+            var vm = this;
+            axios.get('/api/sources').then(function (response) {
+                vm.tableData = [].concat(response.data.data);
+                vm.total = response.data.last_page;
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        showAddSourcesDialog: function showAddSourcesDialog() {
+            var vm = this;
+
+            vm.dialogVisible = true;
+        },
+        handleClose: function handleClose(done) {
+            this.$confirm('Are you sure to close this dialog?').then(function (_) {
+                done();
+            }).catch(function (_) {});
+        },
+        addSource: function addSource(formName) {
+            var _this = this;
+
+            this.$refs[formName].validate(function (valid) {
+                if (valid) {
+                    var vm = _this;
+                    axios.post('/sources/save', {
+                        name: vm.ruleForm.sourceName,
+                        active: vm.ruleForm.active,
+                        sourceId: vm.sourceId
+                    }).then(function (response) {
+                        vm.dialogVisible = false;
+
+                        vm.getSources();
+
+                        if (response.data.success) {
+                            vm.$message({
+                                type: 'success',
+                                message: response.data.message
+                            });
+                        } else {
+                            vm.$message({
+                                type: 'error',
+                                message: response.data.message
+                            });
+                        }
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+                } else {
+                    return false;
+                }
+            });
+        },
+        EditSource: function EditSource(source) {
+            var vm = this;
+
+            vm.dialogVisible = true;
+
+            vm.ruleForm.sourceName = source.name;
+
+            vm.sourceId = source.id;
+        },
+        filterTag: function filterTag(value, row) {
+            return row.tag === value;
+        }
+    }
+};
+
+/***/ }),
+/* 140 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "panel panel-default" },
+    [
+      _c("div", { staticClass: "col-lg-12 panel-header" }, [
+        _vm._m(0),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "col-lg-6", staticStyle: { "text-align": "right" } },
+          [
+            _c(
+              "button",
+              {
+                staticClass: "btn ebg-button",
+                on: {
+                  click: function($event) {
+                    _vm.showAddSourcesDialog()
+                  }
+                }
+              },
+              [_vm._v("Add Source")]
+            )
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "panel-body" },
+        [
+          _c(
+            "el-table",
+            {
+              staticStyle: { width: "100%" },
+              attrs: { data: _vm.tableData, stripe: "" }
+            },
+            [
+              _c("el-table-column", { attrs: { prop: "name", label: "Name" } }),
+              _vm._v(" "),
+              _c("el-table-column", {
+                attrs: { prop: "tag", label: "Active" },
+                scopedSlots: _vm._u([
+                  {
+                    key: "default",
+                    fn: function(scope) {
+                      return [
+                        _c(
+                          "el-tag",
+                          {
+                            attrs: {
+                              type:
+                                scope.row.active === "Active"
+                                  ? "success"
+                                  : "danger",
+                              "close-transition": ""
+                            }
+                          },
+                          [_vm._v(_vm._s(scope.row.active))]
+                        )
+                      ]
+                    }
+                  }
+                ])
+              }),
+              _vm._v(" "),
+              _c("el-table-column", {
+                attrs: { label: "Actions", width: "120" },
+                scopedSlots: _vm._u([
+                  {
+                    key: "default",
+                    fn: function(scope) {
+                      return [
+                        _c(
+                          "el-button",
+                          {
+                            attrs: { size: "small" },
+                            on: {
+                              click: function($event) {
+                                _vm.EditSource(scope.row)
+                              }
+                            }
+                          },
+                          [_vm._v("Edit")]
+                        )
+                      ]
+                    }
+                  }
+                ])
+              })
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("hr", { staticClass: "panel-hr" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "panel-footer" }, [
+        _c(
+          "div",
+          { staticClass: "block" },
+          [
+            _c("el-pagination", {
+              attrs: { layout: "prev, pager, next", total: _vm.total }
+            })
+          ],
+          1
+        )
+      ]),
+      _vm._v(" "),
+      _c(
+        "el-dialog",
+        {
+          attrs: {
+            title: "New/Edit Source",
+            visible: _vm.dialogVisible,
+            size: "tiny"
+          },
+          on: {
+            "update:visible": function($event) {
+              _vm.dialogVisible = $event
+            }
+          }
+        },
+        [
+          _c(
+            "el-form",
+            {
+              ref: "ruleForm",
+              attrs: {
+                model: _vm.ruleForm,
+                rules: _vm.rules,
+                "label-position": "top"
+              }
+            },
+            [
+              _c(
+                "el-form-item",
+                { attrs: { prop: "sourceName", label: "Source Name" } },
+                [
+                  _c("el-input", {
+                    attrs: { placeholder: "Input Name" },
+                    model: {
+                      value: _vm.ruleForm.sourceName,
+                      callback: function($$v) {
+                        _vm.$set(_vm.ruleForm, "sourceName", $$v)
+                      },
+                      expression: "ruleForm.sourceName"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "el-form-item",
+                { attrs: { prop: "active", label: "Active" } },
+                [
+                  _c(
+                    "el-select",
+                    {
+                      attrs: { placeholder: "Select" },
+                      model: {
+                        value: _vm.ruleForm.active,
+                        callback: function($$v) {
+                          _vm.$set(_vm.ruleForm, "active", $$v)
+                        },
+                        expression: "ruleForm.active"
+                      }
+                    },
+                    _vm._l(_vm.options, function(item) {
+                      return _c("el-option", {
+                        key: item.value,
+                        attrs: { label: item.label, value: item.value }
+                      })
+                    })
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "span",
+            {
+              staticClass: "dialog-footer",
+              attrs: { slot: "footer" },
+              slot: "footer"
+            },
+            [
+              _c(
+                "el-button",
+                {
+                  on: {
+                    click: function($event) {
+                      _vm.dialogVisible = false
+                    }
+                  }
+                },
+                [_vm._v("Cancel")]
+              ),
+              _vm._v(" "),
+              _c(
+                "el-button",
+                {
+                  attrs: { type: "primary" },
+                  on: {
+                    click: function($event) {
+                      _vm.addSource("ruleForm")
+                    }
+                  }
+                },
+                [_vm._v("Save")]
+              )
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-lg-6" }, [
+      _c("h4", [_vm._v("Sources")])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-7118fcd5", module.exports)
+  }
+}
+
+/***/ }),
+/* 141 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(142)
+}
+var normalizeComponent = __webpack_require__(5)
+/* script */
+var __vue_script__ = __webpack_require__(144)
+/* template */
+var __vue_template__ = __webpack_require__(145)
+/* template functional */
+  var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/departments/departmentTable.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-5e5c81b2", Component.options)
+  } else {
+    hotAPI.reload("data-v-5e5c81b2", Component.options)
+' + '  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 142 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(143);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(7)("2cf3c962", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-5e5c81b2\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./departmentTable.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-5e5c81b2\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./departmentTable.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 143 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(4)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, "\n.el-table{\n    border-left: none;\n    border-right: none;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 144 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+exports.default = {
+    data: function data() {
+        return {
+            tableData: [],
+            options: [{
+                value: '1',
+                label: 'Active'
+            }, {
+                value: '0',
+                label: 'Inactive'
+            }],
+            total: 0,
+            dialogVisible: false,
+            departmentId: null,
+            ruleForm: {
+                name: '',
+                active: ''
+            },
+            rules: {
+                name: [{ required: true, message: 'Please input profession name', trigger: 'blur' }],
+                active: [{ required: true, message: 'Please active status', trigger: 'change' }]
+            }
+        };
+    },
+
+    created: function created() {
+        var vm = this;
+
+        vm.getDepartments();
+    },
+
+    methods: {
+        handleClick: function handleClick() {
+            console.log('click');
+        },
+        getDepartments: function getDepartments() {
+            var vm = this;
+            axios.get('/api/departments').then(function (response) {
+                vm.tableData = [].concat(response.data.data);
+                vm.total = response.data.last_page;
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        showAddDialog: function showAddDialog() {
+            var vm = this;
+
+            vm.dialogVisible = true;
+        },
+        handleClose: function handleClose(done) {
+            this.$confirm('Are you sure to close this dialog?').then(function (_) {
+                done();
+            }).catch(function (_) {});
+        },
+        add: function add(formName) {
+            var _this = this;
+
+            this.$refs[formName].validate(function (valid) {
+                if (valid) {
+                    var vm = _this;
+                    axios.post('/departments/save', {
+                        name: vm.ruleForm.name,
+                        active: vm.ruleForm.active,
+                        departmentId: vm.departmentId
+                    }).then(function (response) {
+                        vm.dialogVisible = false;
+
+                        vm.getDepartments();
+
+                        if (response.data.success) {
+                            vm.$message({
+                                type: 'success',
+                                message: response.data.message
+                            });
+                        } else {
+                            vm.$message({
+                                type: 'error',
+                                message: response.data.message
+                            });
+                        }
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+                } else {
+                    return false;
+                }
+            });
+        },
+        edit: function edit(department) {
+            var vm = this;
+
+            vm.dialogVisible = true;
+
+            vm.ruleForm.name = department.name;
+
+            vm.departmentId = department.id;
+        },
+        filterTag: function filterTag(value, row) {
+            return row.tag === value;
+        }
+    }
+};
+
+/***/ }),
+/* 145 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "panel panel-default" },
+    [
+      _c("div", { staticClass: "col-lg-12 panel-header" }, [
+        _vm._m(0),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "col-lg-6", staticStyle: { "text-align": "right" } },
+          [
+            _c(
+              "button",
+              {
+                staticClass: "btn ebg-button",
+                on: {
+                  click: function($event) {
+                    _vm.showAddDialog()
+                  }
+                }
+              },
+              [_vm._v("Add Department")]
+            )
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "panel-body" },
+        [
+          _c(
+            "el-table",
+            {
+              staticStyle: { width: "100%" },
+              attrs: { data: _vm.tableData, stripe: "" }
+            },
+            [
+              _c("el-table-column", { attrs: { prop: "name", label: "Name" } }),
+              _vm._v(" "),
+              _c("el-table-column", {
+                attrs: { prop: "tag", label: "Active" },
+                scopedSlots: _vm._u([
+                  {
+                    key: "default",
+                    fn: function(scope) {
+                      return [
+                        _c(
+                          "el-tag",
+                          {
+                            attrs: {
+                              type:
+                                scope.row.active === "Active"
+                                  ? "success"
+                                  : "danger",
+                              "close-transition": ""
+                            }
+                          },
+                          [_vm._v(_vm._s(scope.row.active))]
+                        )
+                      ]
+                    }
+                  }
+                ])
+              }),
+              _vm._v(" "),
+              _c("el-table-column", {
+                attrs: { label: "Actions", width: "120" },
+                scopedSlots: _vm._u([
+                  {
+                    key: "default",
+                    fn: function(scope) {
+                      return [
+                        _c(
+                          "el-button",
+                          {
+                            attrs: { size: "small" },
+                            on: {
+                              click: function($event) {
+                                _vm.edit(scope.row)
+                              }
+                            }
+                          },
+                          [_vm._v("Edit")]
+                        )
+                      ]
+                    }
+                  }
+                ])
+              })
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("hr", { staticClass: "panel-hr" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "panel-footer" }, [
+        _c(
+          "div",
+          { staticClass: "block" },
+          [
+            _c("el-pagination", {
+              attrs: { layout: "prev, pager, next", total: _vm.total }
+            })
+          ],
+          1
+        )
+      ]),
+      _vm._v(" "),
+      _c(
+        "el-dialog",
+        {
+          attrs: {
+            title: "New/Edit Profession",
+            visible: _vm.dialogVisible,
+            size: "tiny"
+          },
+          on: {
+            "update:visible": function($event) {
+              _vm.dialogVisible = $event
+            }
+          }
+        },
+        [
+          _c(
+            "el-form",
+            {
+              ref: "ruleForm",
+              attrs: {
+                model: _vm.ruleForm,
+                rules: _vm.rules,
+                "label-position": "top"
+              }
+            },
+            [
+              _c(
+                "el-form-item",
+                { attrs: { prop: "name", label: "Department Name" } },
+                [
+                  _c("el-input", {
+                    attrs: { placeholder: "Input Name" },
+                    model: {
+                      value: _vm.ruleForm.name,
+                      callback: function($$v) {
+                        _vm.$set(_vm.ruleForm, "name", $$v)
+                      },
+                      expression: "ruleForm.name"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "el-form-item",
+                { attrs: { prop: "active", label: "Active" } },
+                [
+                  _c(
+                    "el-select",
+                    {
+                      attrs: { placeholder: "Select" },
+                      model: {
+                        value: _vm.ruleForm.active,
+                        callback: function($$v) {
+                          _vm.$set(_vm.ruleForm, "active", $$v)
+                        },
+                        expression: "ruleForm.active"
+                      }
+                    },
+                    _vm._l(_vm.options, function(item) {
+                      return _c("el-option", {
+                        key: item.value,
+                        attrs: { label: item.label, value: item.value }
+                      })
+                    })
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "span",
+            {
+              staticClass: "dialog-footer",
+              attrs: { slot: "footer" },
+              slot: "footer"
+            },
+            [
+              _c(
+                "el-button",
+                {
+                  on: {
+                    click: function($event) {
+                      _vm.dialogVisible = false
+                    }
+                  }
+                },
+                [_vm._v("Cancel")]
+              ),
+              _vm._v(" "),
+              _c(
+                "el-button",
+                {
+                  attrs: { type: "primary" },
+                  on: {
+                    click: function($event) {
+                      _vm.add("ruleForm")
+                    }
+                  }
+                },
+                [_vm._v("Save")]
+              )
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-lg-6" }, [
+      _c("h4", [_vm._v("Departments")])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-5e5c81b2", module.exports)
+  }
+}
+
+/***/ }),
+/* 146 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(147)
+}
+var normalizeComponent = __webpack_require__(5)
+/* script */
+var __vue_script__ = __webpack_require__(149)
+/* template */
+var __vue_template__ = __webpack_require__(150)
 /* template functional */
   var __vue_template_functional__ = false
 /* styles */
@@ -85060,17 +86136,17 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 137 */
+/* 147 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(138);
+var content = __webpack_require__(148);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(9)("76ad9c36", content, false);
+var update = __webpack_require__(7)("76ad9c36", content, false);
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -85086,10 +86162,10 @@ if(false) {
 }
 
 /***/ }),
-/* 138 */
+/* 148 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(7)(undefined);
+exports = module.exports = __webpack_require__(4)(undefined);
 // imports
 
 
@@ -85100,7 +86176,7 @@ exports.push([module.i, "\n.el-table{\n    border-left: none;\n    border-right:
 
 
 /***/ }),
-/* 139 */
+/* 149 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -85433,7 +86509,7 @@ exports.default = {
                         role_id: vm.ruleForm.role,
                         active: 0,
                         userId: vm.userId,
-                        employment_date: vm.ruleForm.employmentDate
+                        employment_date: vm.employmentDate
                     }).then(function (response) {
                         vm.dialogVisible = false;
 
@@ -85444,8 +86520,6 @@ exports.default = {
                                 type: 'success',
                                 message: response.data.message
                             });
-
-                            vm.$refs[formName].resetFields();
                         } else {
                             vm.$message({
                                 type: 'error',
@@ -85476,7 +86550,7 @@ exports.default = {
 };
 
 /***/ }),
-/* 140 */
+/* 150 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -86104,31 +87178,19 @@ if (false) {
 }
 
 /***/ }),
-/* 141 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 142 */,
-/* 143 */,
-/* 144 */,
-/* 145 */,
-/* 146 */,
-/* 147 */,
-/* 148 */
+/* 151 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(149)
+  __webpack_require__(152)
 }
-var normalizeComponent = __webpack_require__(8)
+var normalizeComponent = __webpack_require__(5)
 /* script */
-var __vue_script__ = __webpack_require__(151)
+var __vue_script__ = __webpack_require__(154)
 /* template */
-var __vue_template__ = __webpack_require__(152)
+var __vue_template__ = __webpack_require__(155)
 /* template functional */
   var __vue_template_functional__ = false
 /* styles */
@@ -86145,7 +87207,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/assets/js/components/sources/sourceTable.vue"
+Component.options.__file = "resources/assets/js/components/contacts/contactTable.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
 
 /* hot reload */
@@ -86155,9 +87217,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-7118fcd5", Component.options)
+    hotAPI.createRecord("data-v-d57b467a", Component.options)
   } else {
-    hotAPI.reload("data-v-7118fcd5", Component.options)
+    hotAPI.reload("data-v-d57b467a", Component.options)
 ' + '  }
   module.hot.dispose(function (data) {
     disposed = true
@@ -86168,584 +87230,47 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 149 */
+/* 152 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(150);
+var content = __webpack_require__(153);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(9)("1be49183", content, false);
+var update = __webpack_require__(7)("a06f616e", content, false);
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
  if(!content.locals) {
-   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7118fcd5\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./sourceTable.vue", function() {
-     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7118fcd5\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./sourceTable.vue");
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-d57b467a\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./contactTable.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-d57b467a\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./contactTable.vue");
      if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
      update(newContent);
    });
  }
  // When the module is disposed, remove the <style> tags
  module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 150 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(7)(undefined);
-// imports
-
-
-// module
-exports.push([module.i, "\n.el-table{\n    border-left: none;\n    border-right: none;\n}\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 151 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-exports.default = {
-    data: function data() {
-        return {
-            tableData: [],
-            options: [{
-                value: '1',
-                label: 'Active'
-            }, {
-                value: '0',
-                label: 'Inactive'
-            }],
-            total: 0,
-            dialogVisible: false,
-            sourceId: null,
-            ruleForm: {
-                sourceName: '',
-                active: ''
-            },
-            rules: {
-                sourceName: [{ required: true, message: 'Please input source name', trigger: 'blur' }],
-                active: [{ required: true, message: 'Please active status', trigger: 'change' }]
-            }
-        };
-    },
-
-    created: function created() {
-        var vm = this;
-
-        vm.getSources();
-    },
-
-    methods: {
-        handleClick: function handleClick() {
-            console.log('click');
-        },
-        getSources: function getSources() {
-            var vm = this;
-            axios.get('/api/sources').then(function (response) {
-                vm.tableData = [].concat(response.data.data);
-                vm.total = response.data.last_page;
-            }).catch(function (error) {
-                console.log(error);
-            });
-        },
-        showAddSourcesDialog: function showAddSourcesDialog() {
-            var vm = this;
-
-            vm.dialogVisible = true;
-        },
-        handleClose: function handleClose(done) {
-            this.$confirm('Are you sure to close this dialog?').then(function (_) {
-                done();
-            }).catch(function (_) {});
-        },
-        addSource: function addSource(formName) {
-            var _this = this;
-
-            this.$refs[formName].validate(function (valid) {
-                if (valid) {
-                    var vm = _this;
-                    axios.post('/sources/save', {
-                        name: vm.ruleForm.sourceName,
-                        active: vm.ruleForm.active,
-                        sourceId: vm.sourceId
-                    }).then(function (response) {
-                        vm.dialogVisible = false;
-
-                        vm.getSources();
-
-                        if (response.data.success) {
-                            vm.$message({
-                                type: 'success',
-                                message: response.data.message
-                            });
-                        } else {
-                            vm.$message({
-                                type: 'error',
-                                message: response.data.message
-                            });
-                        }
-                    }).catch(function (error) {
-                        console.log(error);
-                    });
-                } else {
-                    return false;
-                }
-            });
-        },
-        EditSource: function EditSource(source) {
-            var vm = this;
-
-            vm.dialogVisible = true;
-
-            vm.ruleForm.sourceName = source.name;
-
-            vm.sourceId = source.id;
-        },
-        filterTag: function filterTag(value, row) {
-            return row.tag === value;
-        }
-    }
-};
-
-/***/ }),
-/* 152 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "panel panel-default" },
-    [
-      _c("div", { staticClass: "col-lg-12 panel-header" }, [
-        _vm._m(0),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "col-lg-6", staticStyle: { "text-align": "right" } },
-          [
-            _c(
-              "button",
-              {
-                staticClass: "btn ebg-button",
-                on: {
-                  click: function($event) {
-                    _vm.showAddSourcesDialog()
-                  }
-                }
-              },
-              [_vm._v("Add Source")]
-            )
-          ]
-        )
-      ]),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "panel-body" },
-        [
-          _c(
-            "el-table",
-            {
-              staticStyle: { width: "100%" },
-              attrs: { data: _vm.tableData, stripe: "" }
-            },
-            [
-              _c("el-table-column", { attrs: { prop: "name", label: "Name" } }),
-              _vm._v(" "),
-              _c("el-table-column", {
-                attrs: { prop: "tag", label: "Active" },
-                scopedSlots: _vm._u([
-                  {
-                    key: "default",
-                    fn: function(scope) {
-                      return [
-                        _c(
-                          "el-tag",
-                          {
-                            attrs: {
-                              type:
-                                scope.row.active === "Active"
-                                  ? "success"
-                                  : "danger",
-                              "close-transition": ""
-                            }
-                          },
-                          [_vm._v(_vm._s(scope.row.active))]
-                        )
-                      ]
-                    }
-                  }
-                ])
-              }),
-              _vm._v(" "),
-              _c("el-table-column", {
-                attrs: { label: "Actions", width: "120" },
-                scopedSlots: _vm._u([
-                  {
-                    key: "default",
-                    fn: function(scope) {
-                      return [
-                        _c(
-                          "el-button",
-                          {
-                            attrs: { size: "small" },
-                            on: {
-                              click: function($event) {
-                                _vm.EditSource(scope.row)
-                              }
-                            }
-                          },
-                          [_vm._v("Edit")]
-                        )
-                      ]
-                    }
-                  }
-                ])
-              })
-            ],
-            1
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c("hr", { staticClass: "panel-hr" }),
-      _vm._v(" "),
-      _c("div", { staticClass: "panel-footer" }, [
-        _c(
-          "div",
-          { staticClass: "block" },
-          [
-            _c("el-pagination", {
-              attrs: { layout: "prev, pager, next", total: _vm.total }
-            })
-          ],
-          1
-        )
-      ]),
-      _vm._v(" "),
-      _c(
-        "el-dialog",
-        {
-          attrs: {
-            title: "New/Edit Source",
-            visible: _vm.dialogVisible,
-            size: "tiny"
-          },
-          on: {
-            "update:visible": function($event) {
-              _vm.dialogVisible = $event
-            }
-          }
-        },
-        [
-          _c(
-            "el-form",
-            {
-              ref: "ruleForm",
-              attrs: {
-                model: _vm.ruleForm,
-                rules: _vm.rules,
-                "label-position": "top"
-              }
-            },
-            [
-              _c(
-                "el-form-item",
-                { attrs: { prop: "sourceName", label: "Source Name" } },
-                [
-                  _c("el-input", {
-                    attrs: { placeholder: "Input Name" },
-                    model: {
-                      value: _vm.ruleForm.sourceName,
-                      callback: function($$v) {
-                        _vm.$set(_vm.ruleForm, "sourceName", $$v)
-                      },
-                      expression: "ruleForm.sourceName"
-                    }
-                  })
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "el-form-item",
-                { attrs: { prop: "active", label: "Active" } },
-                [
-                  _c(
-                    "el-select",
-                    {
-                      attrs: { placeholder: "Select" },
-                      model: {
-                        value: _vm.ruleForm.active,
-                        callback: function($$v) {
-                          _vm.$set(_vm.ruleForm, "active", $$v)
-                        },
-                        expression: "ruleForm.active"
-                      }
-                    },
-                    _vm._l(_vm.options, function(item) {
-                      return _c("el-option", {
-                        key: item.value,
-                        attrs: { label: item.label, value: item.value }
-                      })
-                    })
-                  )
-                ],
-                1
-              )
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "span",
-            {
-              staticClass: "dialog-footer",
-              attrs: { slot: "footer" },
-              slot: "footer"
-            },
-            [
-              _c(
-                "el-button",
-                {
-                  on: {
-                    click: function($event) {
-                      _vm.dialogVisible = false
-                    }
-                  }
-                },
-                [_vm._v("Cancel")]
-              ),
-              _vm._v(" "),
-              _c(
-                "el-button",
-                {
-                  attrs: { type: "primary" },
-                  on: {
-                    click: function($event) {
-                      _vm.addSource("ruleForm")
-                    }
-                  }
-                },
-                [_vm._v("Save")]
-              )
-            ],
-            1
-          )
-        ],
-        1
-      )
-    ],
-    1
-  )
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-lg-6" }, [
-      _c("h4", [_vm._v("Sources")])
-    ])
-  }
-]
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-7118fcd5", module.exports)
-  }
 }
 
 /***/ }),
 /* 153 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var disposed = false
-function injectStyle (ssrContext) {
-  if (disposed) return
-  __webpack_require__(154)
-}
-var normalizeComponent = __webpack_require__(8)
-/* script */
-var __vue_script__ = __webpack_require__(156)
-/* template */
-var __vue_template__ = __webpack_require__(157)
-/* template functional */
-  var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = injectStyle
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/departments/departmentTable.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-5e5c81b2", Component.options)
-  } else {
-    hotAPI.reload("data-v-5e5c81b2", Component.options)
-' + '  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 154 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(155);
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var update = __webpack_require__(9)("2cf3c962", content, false);
-// Hot Module Replacement
-if(false) {
- // When the styles change, update the <style> tags
- if(!content.locals) {
-   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-5e5c81b2\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./departmentTable.vue", function() {
-     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-5e5c81b2\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./departmentTable.vue");
-     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-     update(newContent);
-   });
- }
- // When the module is disposed, remove the <style> tags
- module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 155 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(7)(undefined);
+exports = module.exports = __webpack_require__(4)(undefined);
 // imports
 
 
 // module
-exports.push([module.i, "\n.el-table{\n    border-left: none;\n    border-right: none;\n}\n", ""]);
+exports.push([module.i, "\n.el-table{\n    border-left: none;\n    border-right: none;\n}\n.el-date-editor.el-input {\n    width: 90%;\n}\n.el-select {\n    width: 90%;\n}\n\n/*.panel-header{*/\n    /*padding-bottom: 20px;*/\n    /*border-bottom: 1px solid;*/\n    /*margin-bottom: 20px;*/\n/*}*/\n.search-container{\n    padding-bottom: 20px;\n    border-bottom: 1px solid;\n    margin-bottom: 20px;\n}\n.right-margin{\n    margin-right: 20px;\n}\n", ""]);
 
 // exports
 
 
 /***/ }),
-/* 156 */
+/* 154 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -86830,11 +87355,191 @@ Object.defineProperty(exports, "__esModule", {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 exports.default = {
     data: function data() {
         return {
             tableData: [],
+            genders: [],
+            titles: [],
+            countries: [],
+            religions: [],
+            professions: [],
+            sources: [],
+            products: [],
             options: [{
                 value: '1',
                 label: 'Active'
@@ -86845,13 +87550,50 @@ exports.default = {
             total: 0,
             dialogVisible: false,
             departmentId: null,
+            searchForm: {
+                startDate: '',
+                endDate: '',
+                source: ''
+            },
+            searchRules: {
+                startDate: [{ required: true, message: 'Please input start date', trigger: 'blur', type: 'date' }],
+                endDate: [{ required: true, message: 'Please input end date', trigger: 'blur', type: 'date' }],
+                source: [{ required: true, message: 'Please select status', trigger: 'change' }]
+            },
             ruleForm: {
-                name: '',
-                active: ''
+                source: '',
+                designation: '',
+                active: '',
+                title: '',
+                gender: '',
+                firstname: '',
+                lastname: '',
+                email: '',
+                phone: '',
+                role: '',
+                department: '',
+                employmentDate: '',
+                country: '',
+                profession: '',
+                religion: ''
             },
             rules: {
-                name: [{ required: true, message: 'Please input profession name', trigger: 'blur' }],
-                active: [{ required: true, message: 'Please active status', trigger: 'change' }]
+                startDate: [{ required: true, message: 'Please input start date', trigger: 'blur', type: 'date' }],
+                source: [{ required: true, message: 'Please select status', trigger: 'change' }],
+                designation: [{ required: true, message: 'Please input designation name', trigger: 'blur' }],
+                active: [{ required: true, message: 'Please select active status', trigger: 'change' }],
+                title: [{ required: true, message: 'Please select title', trigger: 'change' }],
+                gender: [{ required: true, message: 'Please select gender', trigger: 'change' }],
+                firstname: [{ required: true, message: 'Please input First name', trigger: 'blur' }],
+                lastname: [{ required: true, message: 'Please input Last name', trigger: 'blur' }],
+                email: [{ required: true, message: 'Please input email', trigger: 'blur', type: 'email' }],
+                phone: [{ required: true, message: 'Please input Phone Number', trigger: 'blur', type: 'number' }],
+                role: [{ required: true, message: 'Please select role', trigger: 'change' }],
+                department: [{ required: true, message: 'Please select department', trigger: 'change' }],
+                country: [{ required: true, message: 'Please select country', trigger: 'change' }],
+                profession: [{ required: true, message: 'Please select profession', trigger: 'change' }],
+                religion: [{ required: true, message: 'Please select religion', trigger: 'change' }],
+                employmentDate: [{ required: true, message: 'Please input employment date', trigger: 'blur', type: 'date' }]
             }
         };
     },
@@ -86859,16 +87601,32 @@ exports.default = {
     created: function created() {
         var vm = this;
 
-        vm.getDepartments();
+        vm.getUserContacts();
+
+        vm.getInformation();
     },
 
     methods: {
         handleClick: function handleClick() {
             console.log('click');
         },
-        getDepartments: function getDepartments() {
+        getInformation: function getInformation() {
             var vm = this;
-            axios.get('/api/departments').then(function (response) {
+            axios.get('/contacts/info').then(function (response) {
+                vm.products = response.data.products;
+                vm.countries = response.data.countries;
+                vm.titles = response.data.titles;
+                vm.sources = response.data.sources;
+                vm.genders = response.data.genders;
+                vm.religions = response.data.religions;
+                vm.professions = response.data.professions;
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        getUserContacts: function getUserContacts() {
+            var vm = this;
+            axios.get('/api/contacts/user').then(function (response) {
                 vm.tableData = [].concat(response.data.data);
                 vm.total = response.data.last_page;
             }).catch(function (error) {
@@ -86891,20 +87649,30 @@ exports.default = {
             this.$refs[formName].validate(function (valid) {
                 if (valid) {
                     var vm = _this;
-                    axios.post('/departments/save', {
-                        name: vm.ruleForm.name,
-                        active: vm.ruleForm.active,
-                        departmentId: vm.departmentId
+                    axios.post('/contacts/save', {
+                        type: 1,
+                        title_id: vm.ruleForm.title,
+                        firstname: vm.ruleForm.firstname,
+                        lastname: vm.ruleForm.lastname,
+                        email: vm.ruleForm.email,
+                        phone: vm.ruleForm.phone,
+                        profession_id: vm.ruleForm.profession,
+                        country_id: vm.ruleForm.country,
+                        religion_id: vm.ruleForm.religion,
+                        gender_id: vm.ruleForm.gender,
+                        source_id: vm.ruleForm.source
                     }).then(function (response) {
                         vm.dialogVisible = false;
 
-                        vm.getDepartments();
+                        vm.getUserContacts();
 
                         if (response.data.success) {
                             vm.$message({
                                 type: 'success',
                                 message: response.data.message
                             });
+
+                            vm.$refs[formName].resetFields();
                         } else {
                             vm.$message({
                                 type: 'error',
@@ -86935,240 +87703,775 @@ exports.default = {
 };
 
 /***/ }),
-/* 157 */
+/* 155 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "panel panel-default" },
-    [
-      _c("div", { staticClass: "col-lg-12 panel-header" }, [
-        _vm._m(0),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "col-lg-6", staticStyle: { "text-align": "right" } },
-          [
-            _c(
-              "button",
-              {
-                staticClass: "btn ebg-button",
-                on: {
-                  click: function($event) {
-                    _vm.showAddDialog()
-                  }
-                }
-              },
-              [_vm._v("Add Department")]
-            )
-          ]
-        )
-      ]),
+  return _c("div", { staticClass: "panel panel-default" }, [
+    _c("div", { staticClass: "col-lg-12 panel-header" }, [
+      _vm._m(0),
       _vm._v(" "),
       _c(
         "div",
-        { staticClass: "panel-body" },
+        { staticClass: "col-lg-6", staticStyle: { "text-align": "right" } },
         [
           _c(
-            "el-table",
+            "button",
             {
-              staticStyle: { width: "100%" },
-              attrs: { data: _vm.tableData, stripe: "" }
+              staticClass: "btn ebg-button",
+              on: {
+                click: function($event) {
+                  _vm.showAddDialog()
+                }
+              }
             },
-            [
-              _c("el-table-column", { attrs: { prop: "name", label: "Name" } }),
-              _vm._v(" "),
-              _c("el-table-column", {
-                attrs: { prop: "tag", label: "Active" },
-                scopedSlots: _vm._u([
-                  {
-                    key: "default",
-                    fn: function(scope) {
-                      return [
-                        _c(
-                          "el-tag",
-                          {
-                            attrs: {
-                              type:
-                                scope.row.active === "Active"
-                                  ? "success"
-                                  : "danger",
-                              "close-transition": ""
-                            }
-                          },
-                          [_vm._v(_vm._s(scope.row.active))]
-                        )
-                      ]
-                    }
-                  }
-                ])
-              }),
-              _vm._v(" "),
-              _c("el-table-column", {
-                attrs: { label: "Actions", width: "120" },
-                scopedSlots: _vm._u([
-                  {
-                    key: "default",
-                    fn: function(scope) {
-                      return [
-                        _c(
-                          "el-button",
-                          {
-                            attrs: { size: "small" },
-                            on: {
-                              click: function($event) {
-                                _vm.edit(scope.row)
-                              }
-                            }
-                          },
-                          [_vm._v("Edit")]
-                        )
-                      ]
-                    }
-                  }
-                ])
-              })
-            ],
-            1
+            [_vm._v("Add User")]
           )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c("hr", { staticClass: "panel-hr" }),
-      _vm._v(" "),
-      _c("div", { staticClass: "panel-footer" }, [
+        ]
+      )
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "panel-body" },
+      [
         _c(
-          "div",
-          { staticClass: "block" },
+          "el-form",
+          {
+            ref: "searchForm",
+            staticStyle: { "padding-left": "30px" },
+            attrs: {
+              model: _vm.searchForm,
+              rules: _vm.searchRules,
+              "label-position": "left"
+            }
+          },
           [
-            _c("el-pagination", {
-              attrs: { layout: "prev, pager, next", total: _vm.total }
+            _c(
+              "el-col",
+              { attrs: { span: 7 } },
+              [
+                _c(
+                  "el-form-item",
+                  { attrs: { prop: "startDate" } },
+                  [
+                    _c("el-date-picker", {
+                      attrs: { type: "date", placeholder: "Start Date" },
+                      model: {
+                        value: _vm.searchForm.startDate,
+                        callback: function($$v) {
+                          _vm.$set(_vm.searchForm, "startDate", $$v)
+                        },
+                        expression: "searchForm.startDate"
+                      }
+                    })
+                  ],
+                  1
+                )
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "el-col",
+              { attrs: { span: 7 } },
+              [
+                _c(
+                  "el-form-item",
+                  { attrs: { prop: "endDate" } },
+                  [
+                    _c("el-date-picker", {
+                      attrs: { type: "date", placeholder: "End Date" },
+                      model: {
+                        value: _vm.searchForm.endDate,
+                        callback: function($$v) {
+                          _vm.$set(_vm.searchForm, "endDate", $$v)
+                        },
+                        expression: "searchForm.endDate"
+                      }
+                    })
+                  ],
+                  1
+                )
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "el-col",
+              { staticClass: "right-margin", attrs: { span: 5 } },
+              [
+                _c(
+                  "el-form-item",
+                  { attrs: { prop: "source" } },
+                  [
+                    _c(
+                      "el-select",
+                      {
+                        attrs: { placeholder: "Select source" },
+                        model: {
+                          value: _vm.searchForm.source,
+                          callback: function($$v) {
+                            _vm.$set(_vm.searchForm, "source", $$v)
+                          },
+                          expression: "searchForm.source"
+                        }
+                      },
+                      _vm._l(_vm.sources, function(item) {
+                        return _c("el-option", {
+                          key: item.value,
+                          attrs: { label: item.label, value: item.value }
+                        })
+                      })
+                    )
+                  ],
+                  1
+                )
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "el-col",
+              { attrs: { span: 5 } },
+              [
+                _c(
+                  "el-button",
+                  {
+                    attrs: { type: "primary" },
+                    on: { click: function($event) {} }
+                  },
+                  [_vm._v("Filter")]
+                )
+              ],
+              1
+            )
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "el-table",
+          {
+            staticStyle: { width: "100%" },
+            attrs: { data: _vm.tableData, stripe: "" }
+          },
+          [
+            _c("el-table-column", { attrs: { prop: "name", label: "Name" } }),
+            _vm._v(" "),
+            _c("el-table-column", { attrs: { prop: "email", label: "Email" } }),
+            _vm._v(" "),
+            _c("el-table-column", {
+              attrs: { prop: "source", label: "Source" }
+            }),
+            _vm._v(" "),
+            _c("el-table-column", {
+              attrs: { prop: "tag", label: "Status" },
+              scopedSlots: _vm._u([
+                {
+                  key: "default",
+                  fn: function(scope) {
+                    return [
+                      _c(
+                        "el-tag",
+                        {
+                          attrs: {
+                            type:
+                              scope.row.status === "Client"
+                                ? "success"
+                                : scope.row.status === "Prospect"
+                                  ? "warning"
+                                  : "danger",
+                            "close-transition": ""
+                          }
+                        },
+                        [_vm._v(_vm._s(scope.row.status))]
+                      )
+                    ]
+                  }
+                }
+              ])
+            }),
+            _vm._v(" "),
+            _c("el-table-column", {
+              attrs: { label: "Actions", width: "120" },
+              scopedSlots: _vm._u([
+                {
+                  key: "default",
+                  fn: function(scope) {
+                    return [
+                      _c(
+                        "el-button",
+                        {
+                          attrs: { size: "small" },
+                          on: {
+                            click: function($event) {
+                              _vm.edit(scope.row)
+                            }
+                          }
+                        },
+                        [_vm._v("Edit")]
+                      )
+                    ]
+                  }
+                }
+              ])
             })
           ],
           1
-        )
-      ]),
-      _vm._v(" "),
-      _c(
-        "el-dialog",
-        {
-          attrs: {
-            title: "New/Edit Profession",
-            visible: _vm.dialogVisible,
-            size: "tiny"
-          },
-          on: {
-            "update:visible": function($event) {
-              _vm.dialogVisible = $event
-            }
-          }
-        },
-        [
-          _c(
-            "el-form",
-            {
-              ref: "ruleForm",
-              attrs: {
-                model: _vm.ruleForm,
-                rules: _vm.rules,
-                "label-position": "top"
-              }
+        ),
+        _vm._v(" "),
+        _c(
+          "el-dialog",
+          {
+            attrs: {
+              title: "New/Edit Contact",
+              visible: _vm.dialogVisible,
+              size: "large"
             },
-            [
+            on: {
+              "update:visible": function($event) {
+                _vm.dialogVisible = $event
+              }
+            }
+          },
+          [
+            _c(
+              "el-form",
+              {
+                ref: "ruleForm",
+                attrs: {
+                  model: _vm.ruleForm,
+                  rules: _vm.rules,
+                  "label-position": "left"
+                }
+              },
+              [
+                _c("div", { staticClass: "contact-add" }, [
+                  _c("span", [_vm._v("Contact Details")]),
+                  _vm._v(" "),
+                  _c("hr", { staticClass: "hr-section-divider" })
+                ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "form-item-container" },
+                  [
+                    _c(
+                      "el-form-item",
+                      { attrs: { label: "Name", required: "" } },
+                      [
+                        _c(
+                          "el-col",
+                          { staticClass: "right-margin", attrs: { span: 3 } },
+                          [
+                            _c(
+                              "el-form-item",
+                              { attrs: { prop: "title" } },
+                              [
+                                _c(
+                                  "el-select",
+                                  {
+                                    attrs: { placeholder: "Select Title" },
+                                    model: {
+                                      value: _vm.ruleForm.title,
+                                      callback: function($$v) {
+                                        _vm.$set(_vm.ruleForm, "title", $$v)
+                                      },
+                                      expression: "ruleForm.title"
+                                    }
+                                  },
+                                  _vm._l(_vm.titles, function(item) {
+                                    return _c("el-option", {
+                                      key: item.value,
+                                      attrs: {
+                                        label: item.label,
+                                        value: item.value
+                                      }
+                                    })
+                                  })
+                                )
+                              ],
+                              1
+                            )
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "el-col",
+                          { staticClass: "right-margin", attrs: { span: 7 } },
+                          [
+                            _c(
+                              "el-form-item",
+                              { attrs: { prop: "firstname" } },
+                              [
+                                _c("el-input", {
+                                  attrs: { placeholder: "First Name" },
+                                  model: {
+                                    value: _vm.ruleForm.firstname,
+                                    callback: function($$v) {
+                                      _vm.$set(_vm.ruleForm, "firstname", $$v)
+                                    },
+                                    expression: "ruleForm.firstname"
+                                  }
+                                })
+                              ],
+                              1
+                            )
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "el-col",
+                          { attrs: { span: 7 } },
+                          [
+                            _c(
+                              "el-form-item",
+                              { attrs: { prop: "lastname" } },
+                              [
+                                _c("el-input", {
+                                  attrs: { placeholder: "Last Name" },
+                                  model: {
+                                    value: _vm.ruleForm.lastname,
+                                    callback: function($$v) {
+                                      _vm.$set(_vm.ruleForm, "lastname", $$v)
+                                    },
+                                    expression: "ruleForm.lastname"
+                                  }
+                                })
+                              ],
+                              1
+                            )
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "el-form-item",
+                      { attrs: { label: "Contact Details", required: "" } },
+                      [
+                        _c(
+                          "el-col",
+                          { staticClass: "right-margin", attrs: { span: 7 } },
+                          [
+                            _c(
+                              "el-form-item",
+                              { attrs: { prop: "email" } },
+                              [
+                                _c("el-input", {
+                                  attrs: {
+                                    placeholder: "Email (email@eminent.co.ke)"
+                                  },
+                                  model: {
+                                    value: _vm.ruleForm.email,
+                                    callback: function($$v) {
+                                      _vm.$set(_vm.ruleForm, "email", $$v)
+                                    },
+                                    expression: "ruleForm.email"
+                                  }
+                                })
+                              ],
+                              1
+                            )
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "el-col",
+                          { attrs: { span: 7 } },
+                          [
+                            _c(
+                              "el-form-item",
+                              { attrs: { prop: "phone" } },
+                              [
+                                _c("el-input", {
+                                  attrs: { placeholder: "Phone Number" },
+                                  model: {
+                                    value: _vm.ruleForm.phone,
+                                    callback: function($$v) {
+                                      _vm.$set(
+                                        _vm.ruleForm,
+                                        "phone",
+                                        _vm._n($$v)
+                                      )
+                                    },
+                                    expression: "ruleForm.phone"
+                                  }
+                                })
+                              ],
+                              1
+                            )
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "el-form-item",
+                      { attrs: { label: "Other Details", required: "" } },
+                      [
+                        _c(
+                          "el-col",
+                          { attrs: { span: 8 } },
+                          [
+                            _c(
+                              "el-form-item",
+                              { attrs: { prop: "gender" } },
+                              [
+                                _c(
+                                  "el-select",
+                                  {
+                                    attrs: { placeholder: "Select Gender" },
+                                    model: {
+                                      value: _vm.ruleForm.gender,
+                                      callback: function($$v) {
+                                        _vm.$set(_vm.ruleForm, "gender", $$v)
+                                      },
+                                      expression: "ruleForm.gender"
+                                    }
+                                  },
+                                  _vm._l(_vm.genders, function(item) {
+                                    return _c("el-option", {
+                                      key: item.value,
+                                      attrs: {
+                                        label: item.label,
+                                        value: item.value
+                                      }
+                                    })
+                                  })
+                                )
+                              ],
+                              1
+                            )
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "el-col",
+                          { attrs: { span: 8 } },
+                          [
+                            _c(
+                              "el-form-item",
+                              { attrs: { prop: "source" } },
+                              [
+                                _c(
+                                  "el-select",
+                                  {
+                                    attrs: {
+                                      filterable: "",
+                                      placeholder: "Select Source"
+                                    },
+                                    model: {
+                                      value: _vm.ruleForm.source,
+                                      callback: function($$v) {
+                                        _vm.$set(_vm.ruleForm, "source", $$v)
+                                      },
+                                      expression: "ruleForm.source"
+                                    }
+                                  },
+                                  _vm._l(_vm.sources, function(item) {
+                                    return _c("el-option", {
+                                      key: item.value,
+                                      attrs: {
+                                        label: item.label,
+                                        value: item.value
+                                      }
+                                    })
+                                  })
+                                )
+                              ],
+                              1
+                            )
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "el-col",
+                          {
+                            staticStyle: { "margin-top": "15px" },
+                            attrs: { span: 8 }
+                          },
+                          [
+                            _c(
+                              "el-form-item",
+                              { attrs: { prop: "profession" } },
+                              [
+                                _c(
+                                  "el-select",
+                                  {
+                                    attrs: {
+                                      filterable: "",
+                                      placeholder: "Select Profession"
+                                    },
+                                    model: {
+                                      value: _vm.ruleForm.profession,
+                                      callback: function($$v) {
+                                        _vm.$set(
+                                          _vm.ruleForm,
+                                          "profession",
+                                          $$v
+                                        )
+                                      },
+                                      expression: "ruleForm.profession"
+                                    }
+                                  },
+                                  _vm._l(_vm.professions, function(item) {
+                                    return _c("el-option", {
+                                      key: item.value,
+                                      attrs: {
+                                        label: item.label,
+                                        value: item.value
+                                      }
+                                    })
+                                  })
+                                )
+                              ],
+                              1
+                            )
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "el-col",
+                          {
+                            staticStyle: { "margin-top": "15px" },
+                            attrs: { span: 8 }
+                          },
+                          [
+                            _c(
+                              "el-form-item",
+                              { attrs: { prop: "religion" } },
+                              [
+                                _c(
+                                  "el-select",
+                                  {
+                                    attrs: {
+                                      filterable: "",
+                                      placeholder: "Select Religion"
+                                    },
+                                    model: {
+                                      value: _vm.ruleForm.religion,
+                                      callback: function($$v) {
+                                        _vm.$set(_vm.ruleForm, "religion", $$v)
+                                      },
+                                      expression: "ruleForm.religion"
+                                    }
+                                  },
+                                  _vm._l(_vm.religions, function(item) {
+                                    return _c("el-option", {
+                                      key: item.value,
+                                      attrs: {
+                                        label: item.label,
+                                        value: item.value
+                                      }
+                                    })
+                                  })
+                                )
+                              ],
+                              1
+                            )
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "el-form-item",
+                      { attrs: { label: "Country", required: "" } },
+                      [
+                        _c(
+                          "el-col",
+                          { attrs: { span: 7 } },
+                          [
+                            _c(
+                              "el-form-item",
+                              { attrs: { prop: "country" } },
+                              [
+                                _c(
+                                  "el-select",
+                                  {
+                                    attrs: {
+                                      filterable: "",
+                                      placeholder: "Select Country"
+                                    },
+                                    model: {
+                                      value: _vm.ruleForm.country,
+                                      callback: function($$v) {
+                                        _vm.$set(_vm.ruleForm, "country", $$v)
+                                      },
+                                      expression: "ruleForm.country"
+                                    }
+                                  },
+                                  _vm._l(_vm.countries, function(item) {
+                                    return _c("el-option", {
+                                      key: item.value,
+                                      attrs: {
+                                        label: item.label,
+                                        value: item.value
+                                      }
+                                    })
+                                  })
+                                )
+                              ],
+                              1
+                            )
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "el-form-item",
+                      { attrs: { label: "Products", required: "" } },
+                      [
+                        _c(
+                          "el-col",
+                          { staticClass: "right-margin", attrs: { span: 14 } },
+                          [
+                            _c(
+                              "el-form-item",
+                              { attrs: { prop: "email" } },
+                              [
+                                _c("el-input", {
+                                  attrs: {
+                                    placeholder: "Email (email@eminent.co.ke)"
+                                  },
+                                  model: {
+                                    value: _vm.ruleForm.email,
+                                    callback: function($$v) {
+                                      _vm.$set(_vm.ruleForm, "email", $$v)
+                                    },
+                                    expression: "ruleForm.email"
+                                  }
+                                })
+                              ],
+                              1
+                            )
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "el-form-item",
+                      { attrs: { label: "Address", required: "" } },
+                      [
+                        _c(
+                          "el-col",
+                          { staticClass: "right-margin", attrs: { span: 14 } },
+                          [
+                            _c(
+                              "el-form-item",
+                              { attrs: { prop: "email" } },
+                              [
+                                _c("el-input", {
+                                  attrs: {
+                                    placeholder: "Email (email@eminent.co.ke)"
+                                  },
+                                  model: {
+                                    value: _vm.ruleForm.email,
+                                    callback: function($$v) {
+                                      _vm.$set(_vm.ruleForm, "email", $$v)
+                                    },
+                                    expression: "ruleForm.email"
+                                  }
+                                })
+                              ],
+                              1
+                            )
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    )
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c("hr")
+              ]
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-item-container" }, [
               _c(
-                "el-form-item",
-                { attrs: { prop: "name", label: "Department Name" } },
-                [
-                  _c("el-input", {
-                    attrs: { placeholder: "Input Name" },
-                    model: {
-                      value: _vm.ruleForm.name,
-                      callback: function($$v) {
-                        _vm.$set(_vm.ruleForm, "name", $$v)
-                      },
-                      expression: "ruleForm.name"
-                    }
-                  })
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "el-form-item",
-                { attrs: { prop: "active", label: "Active" } },
+                "span",
+                {
+                  staticClass: "dialog-footer",
+                  attrs: { slot: "footer" },
+                  slot: "footer"
+                },
                 [
                   _c(
-                    "el-select",
+                    "el-button",
                     {
-                      attrs: { placeholder: "Select" },
-                      model: {
-                        value: _vm.ruleForm.active,
-                        callback: function($$v) {
-                          _vm.$set(_vm.ruleForm, "active", $$v)
-                        },
-                        expression: "ruleForm.active"
+                      on: {
+                        click: function($event) {
+                          _vm.dialogVisible = false
+                        }
                       }
                     },
-                    _vm._l(_vm.options, function(item) {
-                      return _c("el-option", {
-                        key: item.value,
-                        attrs: { label: item.label, value: item.value }
-                      })
-                    })
+                    [_vm._v("Cancel")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "el-button",
+                    {
+                      attrs: { type: "primary" },
+                      on: {
+                        click: function($event) {
+                          _vm.add("ruleForm")
+                        }
+                      }
+                    },
+                    [_vm._v("Save")]
                   )
                 ],
                 1
               )
-            ],
-            1
-          ),
-          _vm._v(" "),
+            ])
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c("hr", { staticClass: "panel-hr" }),
+        _vm._v(" "),
+        _c("div", { staticClass: "panel-footer" }, [
           _c(
-            "span",
-            {
-              staticClass: "dialog-footer",
-              attrs: { slot: "footer" },
-              slot: "footer"
-            },
+            "div",
+            { staticClass: "block" },
             [
-              _c(
-                "el-button",
-                {
-                  on: {
-                    click: function($event) {
-                      _vm.dialogVisible = false
-                    }
-                  }
-                },
-                [_vm._v("Cancel")]
-              ),
-              _vm._v(" "),
-              _c(
-                "el-button",
-                {
-                  attrs: { type: "primary" },
-                  on: {
-                    click: function($event) {
-                      _vm.add("ruleForm")
-                    }
-                  }
-                },
-                [_vm._v("Save")]
-              )
+              _c("el-pagination", {
+                attrs: { layout: "prev, pager, next", total: _vm.total }
+              })
             ],
             1
           )
-        ],
-        1
-      )
-    ],
-    1
-  )
+        ])
+      ],
+      1
+    )
+  ])
 }
 var staticRenderFns = [
   function() {
@@ -87176,7 +88479,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "col-lg-6" }, [
-      _c("h4", [_vm._v("Departments")])
+      _c("h4", [_vm._v("Contacts")])
     ])
   }
 ]
@@ -87185,9 +88488,15 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-5e5c81b2", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-d57b467a", module.exports)
   }
 }
+
+/***/ }),
+/* 156 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);

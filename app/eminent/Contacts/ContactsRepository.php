@@ -23,13 +23,28 @@ class ContactsRepository
         return Contact::find($id);
     }
 
-    public function save(array $input)
+    public function save(array $input, $id = null)
     {
-        return Contact::create($input);
+        if(is_null($id))
+        {
+            $contact = Contact::create($input);
+
+            return $contact;
+        }else
+        {
+            $contact = Contact::findOrFail($id);
+
+            return $this->updateContact($contact, $input);
+        }
     }
 
     public function updateContact($contact, array $input)
     {
         return $contact->update($input);
+    }
+
+    public function getContactByPhone($phone)
+    {
+        return Contact::where('phone', $phone)->first();
     }
 }
