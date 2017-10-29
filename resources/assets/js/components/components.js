@@ -10,4 +10,6 @@ Vue.component('professionsTable', require('./professions/professionTable.vue'));
 
 Vue.component('sourcesTable', require('./sources/sourceTable.vue'));
 
+Vue.component('departmentsTable', require('./departments/departmentTable.vue'));
+
 Vue.component('usersTable', require('./users/usersTable.vue'));

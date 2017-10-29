@@ -10,9 +10,11 @@ namespace eminent\Models;
 
 
 use Illuminate\Database\Eloquent\Model;
+use Laracasts\Presenter\PresentableTrait;
 
 class Department extends Model
 {
+    use PresentableTrait;
     /**
      * The database table used by the model.
      *
@@ -20,6 +22,7 @@ class Department extends Model
      */
     protected $table = 'departments';
 
+    protected $presenter = 'eminent\Departments\DepartmentsPresenter';
     /**
      * The attributes that are mass assignable.
      *

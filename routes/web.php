@@ -163,6 +163,23 @@ Route::group(['middleware' => 'auth'], function (){
         'as' => 'sources.save',
         'uses' => 'SourceController@storeSource'
     ]);
+
+    /*
+     * Departments Routes
+     */
+    Route::get('/departments', [
+        'uses' => 'DepartmentController@index'
+    ]);
+
+    Route::get('/api/departments', [
+        'uses' => 'DepartmentController@getDepartments'
+    ]);
+
+    Route::post('/departments/save', [
+        'as' => 'departments.save',
+        'uses' => 'DepartmentController@store'
+    ]);
+
 });
 
 

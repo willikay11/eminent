@@ -26,8 +26,8 @@ class SourcesRepository
 
     public function updateSource(array $input)
     {
-        $designation = $this->getSourceById($input['sourceId']);
+        $source = $this->getSourceById($input['sourceId']);
 
-        return $designation->update($input);
+        return $source->update($input);
     }
 }
