@@ -43,6 +43,7 @@ class RoleController extends Controller
                 'id' => $role->id,
                 'name' => $role->name,
                 'description' => $role->description,
+                'active' => $role->present()->activeStatus,
             ];
         },null, null);
 

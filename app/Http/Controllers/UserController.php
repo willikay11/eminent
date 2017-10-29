@@ -160,7 +160,12 @@ class UserController extends Controller
 
         if($validation)
         {
-            return back()->withErrors($validation)->withInput();
+            $response = [
+                'success' => false,
+                'message' => "Validation failed"
+            ];
+
+            return $response;
         }
 
         $user = $this->usersRepository->save($request->all(), $request->get('userId'));

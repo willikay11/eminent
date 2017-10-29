@@ -22,6 +22,15 @@
                         label="Description">
                 </el-table-column>
                 <el-table-column
+                        prop="tag"
+                        label="Active">
+                    <template slot-scope="scope">
+                        <el-tag
+                                :type="scope.row.active === 'Active' ? 'success' : 'danger'"
+                                close-transition>{{scope.row.active}}</el-tag>
+                    </template>
+                </el-table-column>
+                <el-table-column
                         label="Actions"
                         width="120">
                     <template slot-scope="scope">

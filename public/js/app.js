@@ -83141,6 +83141,15 @@ Object.defineProperty(exports, "__esModule", {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 exports.default = {
     data: function data() {
@@ -83278,6 +83287,32 @@ var render = function() {
               _vm._v(" "),
               _c("el-table-column", {
                 attrs: { prop: "description", label: "Description" }
+              }),
+              _vm._v(" "),
+              _c("el-table-column", {
+                attrs: { prop: "tag", label: "Active" },
+                scopedSlots: _vm._u([
+                  {
+                    key: "default",
+                    fn: function(scope) {
+                      return [
+                        _c(
+                          "el-tag",
+                          {
+                            attrs: {
+                              type:
+                                scope.row.active === "Active"
+                                  ? "success"
+                                  : "danger",
+                              "close-transition": ""
+                            }
+                          },
+                          [_vm._v(_vm._s(scope.row.active))]
+                        )
+                      ]
+                    }
+                  }
+                ])
               }),
               _vm._v(" "),
               _c("el-table-column", {
@@ -85394,7 +85429,7 @@ exports.default = {
                         role_id: vm.ruleForm.role,
                         active: 0,
                         userId: vm.userId,
-                        employment_date: vm.employmentDate
+                        employment_date: vm.ruleForm.employmentDate
                     }).then(function (response) {
                         vm.dialogVisible = false;
 
@@ -85405,6 +85440,8 @@ exports.default = {
                                 type: 'success',
                                 message: response.data.message
                             });
+
+                            vm.$refs[formName].resetFields();
                         } else {
                             vm.$message({
                                 type: 'error',

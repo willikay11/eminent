@@ -351,7 +351,7 @@
                             role_id: vm.ruleForm.role,
                             active: 0,
                             userId: vm.userId,
-                            employment_date: vm.employmentDate
+                            employment_date: vm.ruleForm.employmentDate
                         })
                             .then(function (response)
                             {
@@ -365,6 +365,8 @@
                                         type: 'success',
                                         message: response.data.message
                                     });
+
+                                    vm.$refs[formName].resetFields();
                                 }
                                 else
                                 {

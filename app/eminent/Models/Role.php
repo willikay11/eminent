@@ -10,9 +10,11 @@ namespace eminent\Models;
 
 
 use Illuminate\Database\Eloquent\Model;
+use Laracasts\Presenter\PresentableTrait;
 
 class Role extends Model
 {
+    use PresentableTrait;
     /**
      * The database table used by the model.
      *
@@ -20,6 +22,7 @@ class Role extends Model
      */
     protected $table = 'roles';
 
+    protected $presenter = 'eminent\Roles\RolesPresenter';
     /**
      * The attributes that are mass assignable.
      *
