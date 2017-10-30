@@ -199,6 +199,10 @@ Route::group(['middleware' => 'auth'], function (){
         'as' => 'contacts.save',
         'uses' => 'ContactController@store'
     ]);
+
+    Route::get('/contact/details/{id}', [
+        'uses' => 'ContactController@details'
+    ]);
 });
 
 

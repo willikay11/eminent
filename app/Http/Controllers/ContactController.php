@@ -210,6 +210,14 @@ class ContactController extends Controller
         ]);
     }
 
+    public function details($id)
+    {
+        $contact = $this->contactsRepository->getContactById($id);
+
+        return view('contacts.details', [
+            'contact' => $contact
+        ]);
+    }
 
     /*
      * Format the email before saving

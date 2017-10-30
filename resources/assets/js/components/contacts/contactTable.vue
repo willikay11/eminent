@@ -5,7 +5,7 @@
                 <h4>Contacts</h4>
             </div>
             <div class="col-lg-6" style="text-align: right">
-                <button class="btn ebg-button" v-on:click="showAddDialog()">Add User</button>
+                <button class="btn ebg-button" v-on:click="showAddDialog()">Add Contact</button>
             </div>
         </div>
 
@@ -32,7 +32,7 @@
                     </el-form-item>
                 </el-col>
 
-                <el-col :span="5" class="right-margin">
+                <el-col :span="3" class="right-margin">
                     <el-form-item prop="source">
                         <el-select v-model="searchForm.source" placeholder="Select source">
                             <el-option
@@ -76,10 +76,10 @@
                     </template>
                 </el-table-column>
                 <el-table-column
-                        label="Actions"
-                        width="120">
+                        label="Actions">
                     <template slot-scope="scope">
                         <el-button @click="edit(scope.row)" size="small">Edit</el-button>
+                        <el-button @click="details(scope.row)" size="small">Details</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -466,6 +466,10 @@
             },
             filterTag(value, row) {
                 return row.tag === value;
+            },
+            details(user)
+            {
+                window.location.href = '/contact/details/' + user.contactId;
             }
         }
     }
