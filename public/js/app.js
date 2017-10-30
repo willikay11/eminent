@@ -87266,7 +87266,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, "\n.el-table{\n    border-left: none;\n    border-right: none;\n}\n.el-date-editor.el-input {\n    width: 90%;\n}\n.el-select {\n    width: 90%;\n}\n\n/*.panel-header{*/\n    /*padding-bottom: 20px;*/\n    /*border-bottom: 1px solid;*/\n    /*margin-bottom: 20px;*/\n/*}*/\n.search-container{\n    padding-bottom: 20px;\n    border-bottom: 1px solid;\n    margin-bottom: 20px;\n}\n.right-margin{\n    margin-right: 20px;\n}\n", ""]);
+exports.push([module.i, "\n.el-table {\n    border-left: none;\n    border-right: none;\n}\n.el-date-editor.el-input {\n    width: 100%;\n}\n.el-select {\n    width: 100%;\n}\n.el-input__inner {\n    border: 1px solid #b4b4b4;\n}\n.el-input__icon {\n    color: #b4b4b4 !important;\n}\n.search-container {\n    padding-bottom: 20px;\n    border-bottom: 1px solid;\n    margin-bottom: 20px;\n}\nlabel {\n    font-weight: normal\n}\n.el-table::after {\n    width: 0px;\n}\n", ""]);
 
 // exports
 
@@ -87281,6 +87281,59 @@ exports.push([module.i, "\n.el-table{\n    border-left: none;\n    border-right:
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -87555,12 +87608,14 @@ exports.default = {
             searchForm: {
                 startDate: '',
                 endDate: '',
-                source: ''
+                source: '',
+                status: ''
             },
             searchRules: {
                 startDate: [{ required: true, message: 'Please input start date', trigger: 'blur', type: 'date' }],
                 endDate: [{ required: true, message: 'Please input end date', trigger: 'blur', type: 'date' }],
-                source: [{ required: true, message: 'Please select status', trigger: 'change' }]
+                source: [{ required: true, message: 'Please select source', trigger: 'change' }],
+                status: [{ required: true, message: 'Please select status', trigger: 'change' }]
             },
             ruleForm: {
                 source: '',
@@ -87727,6 +87782,20 @@ var render = function() {
             "button",
             {
               staticClass: "btn ebg-button",
+              staticStyle: { "margin-right": "20px" },
+              on: {
+                click: function($event) {
+                  _vm.showAddDialog()
+                }
+              }
+            },
+            [_vm._v("Reasign Contact\n            ")]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn ebg-button",
               on: {
                 click: function($event) {
                   _vm.showAddDialog()
@@ -87736,7 +87805,9 @@ var render = function() {
             [_vm._v("Add Contact")]
           )
         ]
-      )
+      ),
+      _vm._v(" "),
+      _vm._m(1)
     ]),
     _vm._v(" "),
     _c(
@@ -87751,17 +87822,28 @@ var render = function() {
             attrs: {
               model: _vm.searchForm,
               rules: _vm.searchRules,
-              "label-position": "left"
+              "label-position": "top"
             }
           },
           [
             _c(
               "el-col",
-              { attrs: { span: 7 } },
+              { attrs: { span: 2 } },
+              [
+                _c("el-form-item", {
+                  attrs: { prop: "filter", label: "Filter By:" }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "el-col",
+              { attrs: { span: 5 } },
               [
                 _c(
                   "el-form-item",
-                  { attrs: { prop: "startDate" } },
+                  { attrs: { prop: "startDate", label: "From date:" } },
                   [
                     _c("el-date-picker", {
                       attrs: { type: "date", placeholder: "Start Date" },
@@ -87782,11 +87864,11 @@ var render = function() {
             _vm._v(" "),
             _c(
               "el-col",
-              { attrs: { span: 7 } },
+              { attrs: { span: 5 } },
               [
                 _c(
                   "el-form-item",
-                  { attrs: { prop: "endDate" } },
+                  { attrs: { prop: "endDate", label: "To date:" } },
                   [
                     _c("el-date-picker", {
                       attrs: { type: "date", placeholder: "End Date" },
@@ -87807,11 +87889,11 @@ var render = function() {
             _vm._v(" "),
             _c(
               "el-col",
-              { staticClass: "right-margin", attrs: { span: 3 } },
+              { attrs: { span: 5 } },
               [
                 _c(
                   "el-form-item",
-                  { attrs: { prop: "source" } },
+                  { attrs: { prop: "source", label: "Source:" } },
                   [
                     _c(
                       "el-select",
@@ -87844,12 +87926,30 @@ var render = function() {
               { attrs: { span: 5 } },
               [
                 _c(
-                  "el-button",
-                  {
-                    attrs: { type: "primary" },
-                    on: { click: function($event) {} }
-                  },
-                  [_vm._v("Filter")]
+                  "el-form-item",
+                  { attrs: { prop: "source", label: "Status:" } },
+                  [
+                    _c(
+                      "el-select",
+                      {
+                        attrs: { placeholder: "Select status" },
+                        model: {
+                          value: _vm.searchForm.status,
+                          callback: function($$v) {
+                            _vm.$set(_vm.searchForm, "status", $$v)
+                          },
+                          expression: "searchForm.status"
+                        }
+                      },
+                      _vm._l(_vm.sources, function(item) {
+                        return _c("el-option", {
+                          key: item.value,
+                          attrs: { label: item.label, value: item.value }
+                        })
+                      })
+                    )
+                  ],
+                  1
                 )
               ],
               1
@@ -87857,6 +87957,8 @@ var render = function() {
           ],
           1
         ),
+        _vm._v(" "),
+        _vm._m(2),
         _vm._v(" "),
         _c(
           "el-table",
@@ -87893,7 +87995,11 @@ var render = function() {
                             "close-transition": ""
                           }
                         },
-                        [_vm._v(_vm._s(scope.row.status))]
+                        [
+                          _vm._v(
+                            _vm._s(scope.row.status) + "\n                    "
+                          )
+                        ]
                       )
                     ]
                   }
@@ -87968,23 +88074,21 @@ var render = function() {
                 }
               },
               [
-                _c("div", { staticClass: "contact-add" }, [
-                  _c("span", [_vm._v("Contact Details")]),
-                  _vm._v(" "),
-                  _c("hr", { staticClass: "hr-section-divider" })
-                ]),
-                _vm._v(" "),
                 _c(
                   "div",
                   { staticClass: "form-item-container" },
                   [
                     _c(
-                      "el-form-item",
-                      { attrs: { label: "Name", required: "" } },
+                      "el-row",
+                      { attrs: { span: 24, gutter: 20 } },
                       [
+                        _c("el-col", { attrs: { span: 2 } }, [
+                          _c("span", [_vm._v("Name: ")])
+                        ]),
+                        _vm._v(" "),
                         _c(
                           "el-col",
-                          { staticClass: "right-margin", attrs: { span: 3 } },
+                          { attrs: { span: 2 } },
                           [
                             _c(
                               "el-form-item",
@@ -88021,7 +88125,7 @@ var render = function() {
                         _vm._v(" "),
                         _c(
                           "el-col",
-                          { staticClass: "right-margin", attrs: { span: 7 } },
+                          { attrs: { span: 7 } },
                           [
                             _c(
                               "el-form-item",
@@ -88073,12 +88177,16 @@ var render = function() {
                     ),
                     _vm._v(" "),
                     _c(
-                      "el-form-item",
-                      { attrs: { label: "Contact Details", required: "" } },
+                      "el-row",
+                      { attrs: { span: 24, gutter: 20 } },
                       [
+                        _c("el-col", { attrs: { span: 2 } }, [
+                          _c("span", [_vm._v("Contact Details: ")])
+                        ]),
+                        _vm._v(" "),
                         _c(
                           "el-col",
-                          { staticClass: "right-margin", attrs: { span: 7 } },
+                          { attrs: { span: 7 } },
                           [
                             _c(
                               "el-form-item",
@@ -88136,38 +88244,97 @@ var render = function() {
                     ),
                     _vm._v(" "),
                     _c(
-                      "el-form-item",
-                      { attrs: { label: "Other Details", required: "" } },
+                      "el-row",
+                      { attrs: { span: 24, gutter: 20 } },
                       [
+                        _c("el-col", { attrs: { span: 2 } }, [
+                          _c("span", [_vm._v("Other Details: ")])
+                        ]),
+                        _vm._v(" "),
                         _c(
-                          "el-col",
-                          { attrs: { span: 8 } },
+                          "el-row",
+                          { attrs: { span: 24, gutter: 20 } },
                           [
                             _c(
-                              "el-form-item",
-                              { attrs: { prop: "gender" } },
+                              "el-col",
+                              { attrs: { span: 7 } },
                               [
                                 _c(
-                                  "el-select",
-                                  {
-                                    attrs: { placeholder: "Select Gender" },
-                                    model: {
-                                      value: _vm.ruleForm.gender,
-                                      callback: function($$v) {
-                                        _vm.$set(_vm.ruleForm, "gender", $$v)
+                                  "el-form-item",
+                                  { attrs: { prop: "gender" } },
+                                  [
+                                    _c(
+                                      "el-select",
+                                      {
+                                        attrs: { placeholder: "Select Gender" },
+                                        model: {
+                                          value: _vm.ruleForm.gender,
+                                          callback: function($$v) {
+                                            _vm.$set(
+                                              _vm.ruleForm,
+                                              "gender",
+                                              $$v
+                                            )
+                                          },
+                                          expression: "ruleForm.gender"
+                                        }
                                       },
-                                      expression: "ruleForm.gender"
-                                    }
-                                  },
-                                  _vm._l(_vm.genders, function(item) {
-                                    return _c("el-option", {
-                                      key: item.value,
-                                      attrs: {
-                                        label: item.label,
-                                        value: item.value
-                                      }
-                                    })
-                                  })
+                                      _vm._l(_vm.genders, function(item) {
+                                        return _c("el-option", {
+                                          key: item.value,
+                                          attrs: {
+                                            label: item.label,
+                                            value: item.value
+                                          }
+                                        })
+                                      })
+                                    )
+                                  ],
+                                  1
+                                )
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "el-col",
+                              { attrs: { span: 7 } },
+                              [
+                                _c(
+                                  "el-form-item",
+                                  { attrs: { prop: "source" } },
+                                  [
+                                    _c(
+                                      "el-select",
+                                      {
+                                        attrs: {
+                                          filterable: "",
+                                          placeholder: "Select Source"
+                                        },
+                                        model: {
+                                          value: _vm.ruleForm.source,
+                                          callback: function($$v) {
+                                            _vm.$set(
+                                              _vm.ruleForm,
+                                              "source",
+                                              $$v
+                                            )
+                                          },
+                                          expression: "ruleForm.source"
+                                        }
+                                      },
+                                      _vm._l(_vm.sources, function(item) {
+                                        return _c("el-option", {
+                                          key: item.value,
+                                          attrs: {
+                                            label: item.label,
+                                            value: item.value
+                                          }
+                                        })
+                                      })
+                                    )
+                                  ],
+                                  1
                                 )
                               ],
                               1
@@ -88176,128 +88343,95 @@ var render = function() {
                           1
                         ),
                         _vm._v(" "),
+                        _c("el-col", { attrs: { span: 2 } }, [_c("span")]),
+                        _vm._v(" "),
                         _c(
-                          "el-col",
-                          { attrs: { span: 8 } },
+                          "el-row",
+                          { attrs: { span: 24, gutter: 20 } },
                           [
                             _c(
-                              "el-form-item",
-                              { attrs: { prop: "source" } },
+                              "el-col",
+                              { attrs: { span: 7 } },
                               [
                                 _c(
-                                  "el-select",
-                                  {
-                                    attrs: {
-                                      filterable: "",
-                                      placeholder: "Select Source"
-                                    },
-                                    model: {
-                                      value: _vm.ruleForm.source,
-                                      callback: function($$v) {
-                                        _vm.$set(_vm.ruleForm, "source", $$v)
+                                  "el-form-item",
+                                  { attrs: { prop: "profession" } },
+                                  [
+                                    _c(
+                                      "el-select",
+                                      {
+                                        attrs: {
+                                          filterable: "",
+                                          placeholder: "Select Profession"
+                                        },
+                                        model: {
+                                          value: _vm.ruleForm.profession,
+                                          callback: function($$v) {
+                                            _vm.$set(
+                                              _vm.ruleForm,
+                                              "profession",
+                                              $$v
+                                            )
+                                          },
+                                          expression: "ruleForm.profession"
+                                        }
                                       },
-                                      expression: "ruleForm.source"
-                                    }
-                                  },
-                                  _vm._l(_vm.sources, function(item) {
-                                    return _c("el-option", {
-                                      key: item.value,
-                                      attrs: {
-                                        label: item.label,
-                                        value: item.value
-                                      }
-                                    })
-                                  })
+                                      _vm._l(_vm.professions, function(item) {
+                                        return _c("el-option", {
+                                          key: item.value,
+                                          attrs: {
+                                            label: item.label,
+                                            value: item.value
+                                          }
+                                        })
+                                      })
+                                    )
+                                  ],
+                                  1
                                 )
                               ],
                               1
-                            )
-                          ],
-                          1
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "el-col",
-                          {
-                            staticStyle: { "margin-top": "15px" },
-                            attrs: { span: 8 }
-                          },
-                          [
+                            ),
+                            _vm._v(" "),
                             _c(
-                              "el-form-item",
-                              { attrs: { prop: "profession" } },
+                              "el-col",
+                              { attrs: { span: 7 } },
                               [
                                 _c(
-                                  "el-select",
-                                  {
-                                    attrs: {
-                                      filterable: "",
-                                      placeholder: "Select Profession"
-                                    },
-                                    model: {
-                                      value: _vm.ruleForm.profession,
-                                      callback: function($$v) {
-                                        _vm.$set(
-                                          _vm.ruleForm,
-                                          "profession",
-                                          $$v
-                                        )
+                                  "el-form-item",
+                                  { attrs: { prop: "religion" } },
+                                  [
+                                    _c(
+                                      "el-select",
+                                      {
+                                        attrs: {
+                                          filterable: "",
+                                          placeholder: "Select Religion"
+                                        },
+                                        model: {
+                                          value: _vm.ruleForm.religion,
+                                          callback: function($$v) {
+                                            _vm.$set(
+                                              _vm.ruleForm,
+                                              "religion",
+                                              $$v
+                                            )
+                                          },
+                                          expression: "ruleForm.religion"
+                                        }
                                       },
-                                      expression: "ruleForm.profession"
-                                    }
-                                  },
-                                  _vm._l(_vm.professions, function(item) {
-                                    return _c("el-option", {
-                                      key: item.value,
-                                      attrs: {
-                                        label: item.label,
-                                        value: item.value
-                                      }
-                                    })
-                                  })
-                                )
-                              ],
-                              1
-                            )
-                          ],
-                          1
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "el-col",
-                          {
-                            staticStyle: { "margin-top": "15px" },
-                            attrs: { span: 8 }
-                          },
-                          [
-                            _c(
-                              "el-form-item",
-                              { attrs: { prop: "religion" } },
-                              [
-                                _c(
-                                  "el-select",
-                                  {
-                                    attrs: {
-                                      filterable: "",
-                                      placeholder: "Select Religion"
-                                    },
-                                    model: {
-                                      value: _vm.ruleForm.religion,
-                                      callback: function($$v) {
-                                        _vm.$set(_vm.ruleForm, "religion", $$v)
-                                      },
-                                      expression: "ruleForm.religion"
-                                    }
-                                  },
-                                  _vm._l(_vm.religions, function(item) {
-                                    return _c("el-option", {
-                                      key: item.value,
-                                      attrs: {
-                                        label: item.label,
-                                        value: item.value
-                                      }
-                                    })
-                                  })
+                                      _vm._l(_vm.religions, function(item) {
+                                        return _c("el-option", {
+                                          key: item.value,
+                                          attrs: {
+                                            label: item.label,
+                                            value: item.value
+                                          }
+                                        })
+                                      })
+                                    )
+                                  ],
+                                  1
                                 )
                               ],
                               1
@@ -88310,9 +88444,13 @@ var render = function() {
                     ),
                     _vm._v(" "),
                     _c(
-                      "el-form-item",
-                      { attrs: { label: "Country", required: "" } },
+                      "el-row",
+                      { attrs: { span: 24, gutter: 20 } },
                       [
+                        _c("el-col", { attrs: { span: 2 } }, [
+                          _c("span", [_vm._v("Country: ")])
+                        ]),
+                        _vm._v(" "),
                         _c(
                           "el-col",
                           { attrs: { span: 7 } },
@@ -88357,12 +88495,16 @@ var render = function() {
                     ),
                     _vm._v(" "),
                     _c(
-                      "el-form-item",
-                      { attrs: { label: "Products", required: "" } },
+                      "el-row",
+                      { attrs: { span: 24, gutter: 20 } },
                       [
+                        _c("el-col", { attrs: { span: 2 } }, [
+                          _c("span", [_vm._v("Products")])
+                        ]),
+                        _vm._v(" "),
                         _c(
                           "el-col",
-                          { staticClass: "right-margin", attrs: { span: 14 } },
+                          { attrs: { span: 14 } },
                           [
                             _c(
                               "el-form-item",
@@ -88391,12 +88533,16 @@ var render = function() {
                     ),
                     _vm._v(" "),
                     _c(
-                      "el-form-item",
-                      { attrs: { label: "Address", required: "" } },
+                      "el-row",
+                      { attrs: { span: 24, gutter: 20 } },
                       [
+                        _c("el-col", { attrs: { span: 2 } }, [
+                          _c("span", [_vm._v("Address")])
+                        ]),
+                        _vm._v(" "),
                         _c(
                           "el-col",
-                          { staticClass: "right-margin", attrs: { span: 14 } },
+                          { attrs: { span: 14 } },
                           [
                             _c(
                               "el-form-item",
@@ -88499,6 +88645,18 @@ var staticRenderFns = [
     return _c("div", { staticClass: "col-lg-6" }, [
       _c("h4", [_vm._v("Contacts")])
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-lg-12" }, [_c("hr")])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-lg-12" }, [_c("hr")])
   }
 ]
 render._withStripped = true
@@ -88597,7 +88755,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, "\n.contact-container{\n    margin-left: 20px;\n    margin-right: 20px;\n}\n.avatar{\n    margin-right: 40px;\n    height: 150px;\n    max-width: 150px;\n    min-width: 150px;\n    background: rgba(163, 207, 95, 0.15);\n    border: 1px solid rgba(163, 207, 95, 0.5);\n}\n.span-holder{\n    display: inline-block;\n}\n.contact-row{\n    margin-top: 10px;\n}\n", ""]);
+exports.push([module.i, "\n.contact-container{\n    margin-left: 20px;\n    margin-right: 20px;\n}\n.avatar{\n    margin-right: 40px;\n    height: 250px;\n    max-width: 250px;\n    min-width: 250px;\n    background: #f2f2f2;\n    border: 1px solid #b5b5b5;\n}\n.span-holder{\n    display: inline-block;\n}\n.contact-row{\n    margin-top: 10px;\n}\n.interaction-container{\n    background-color: #f3f3f3;\n    padding: 15px;\n}\n.interaction-hr{\n    border-top: 1px solid #b0b0b0;\n    margin-top: 10px;\n}\n.input-label{\n    color: #4a4a4a;\n}\n.el-select{\n    width: 100%;\n}\n.el-date-editor.el-input {\n    width: 100%;\n}\nlabel{\n    font-weight: normal;\n}\n.ebg-anchor{\n    color: #eaa568;\n}\n", ""]);
 
 // exports
 
@@ -88607,6 +88765,119 @@ exports.push([module.i, "\n.contact-container{\n    margin-left: 20px;\n    marg
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -88656,6 +88927,44 @@ exports.push([module.i, "\n.contact-container{\n    margin-left: 20px;\n    marg
 //
 //
 
+exports.default = {
+    data: function data() {
+        return {
+            options: [{
+                value: 'Option1',
+                label: 'Option1'
+            }, {
+                value: 'Option2',
+                label: 'Option2'
+            }, {
+                value: 'Option3',
+                label: 'Option3'
+            }, {
+                value: 'Option4',
+                label: 'Option4'
+            }, {
+                value: 'Option5',
+                label: 'Option5'
+            }],
+            value: '',
+            textarea: '',
+            ruleForm: {
+                interactionRemarks: '',
+                feedback: '',
+                interaction: '',
+                interactionDate: '',
+                nextInteractionDate: ''
+            },
+            rules: {
+                interactionRemarks: [{ required: true, message: 'Please input interaction remarks', trigger: 'blur' }],
+                feedback: [{ required: false, message: 'Please input interaction remarks', trigger: 'blur' }],
+                interaction: [{ required: true, message: 'Please select interaction type', trigger: 'change' }],
+                interactionDate: [{ required: true, message: 'Please input interaction date', trigger: 'blur', type: 'date' }],
+                nextInteractionDate: [{ required: false, message: 'Please input interaction date', trigger: 'blur', type: 'date' }]
+            }
+        };
+    }
+};
 
 /***/ }),
 /* 160 */
@@ -88677,15 +88986,14 @@ var render = function() {
         [
           _c(
             "el-row",
-            { attrs: { gutter: 20 } },
             [
-              _c("el-col", { attrs: { span: 4 } }, [
+              _c("el-col", { attrs: { span: 5 } }, [
                 _c("div", { staticClass: "avatar" })
               ]),
               _vm._v(" "),
               _c(
                 "el-col",
-                { attrs: { span: 20 } },
+                { attrs: { span: 19 } },
                 [
                   _c("el-col", { attrs: { span: 24 } }, [
                     _c("h4", [_vm._v("Mr. Test Test")])
@@ -88701,11 +89009,14 @@ var render = function() {
                     "el-col",
                     { staticClass: "contact-row", attrs: { span: 24 } },
                     [
-                      _c("i", { staticClass: "el-icon-message" }),
+                      _c("span", [_vm._v("Email : ")]),
                       _c(
                         "a",
-                        { staticClass: "span-holder", attrs: { href: "#" } },
-                        [_vm._v("   willikay11@gmail.com")]
+                        {
+                          staticClass: "span-holder ebg-anchor",
+                          attrs: { href: "#" }
+                        },
+                        [_vm._v("   willikay11@gmail.com - Send Email")]
                       )
                     ]
                   ),
@@ -88714,7 +89025,7 @@ var render = function() {
                     "el-col",
                     { staticClass: "contact-row", attrs: { span: 24 } },
                     [
-                      _c("i", { staticClass: "el-icon-message" }),
+                      _c("span", [_vm._v("Phone Number :")]),
                       _c(
                         "a",
                         { staticClass: "span-holder", attrs: { href: "#" } },
@@ -88727,13 +89038,344 @@ var render = function() {
                     "el-col",
                     { staticClass: "contact-row", attrs: { span: 24 } },
                     [
-                      _c("i", { staticClass: "el-icon-time" }),
+                      _c("span", [_vm._v("Next Interaction Date :")]),
                       _c(
                         "a",
-                        { staticClass: "span-holder", attrs: { href: "#" } },
-                        [_vm._v("   October 29, 2017 05:25")]
+                        {
+                          staticClass: "span-holder ebg-anchor",
+                          attrs: { href: "#" }
+                        },
+                        [
+                          _vm._v(
+                            "   October 29, 2017 05:25 - Schedule Interaction"
+                          )
+                        ]
                       )
                     ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "el-row",
+                    { attrs: { gutter: 20 } },
+                    [
+                      _c(
+                        "el-col",
+                        { staticClass: "contact-row", attrs: { span: 24 } },
+                        [
+                          _c(
+                            "el-col",
+                            { attrs: { span: 3 } },
+                            [
+                              _c(
+                                "el-select",
+                                {
+                                  attrs: { placeholder: "Select" },
+                                  model: {
+                                    value: _vm.value,
+                                    callback: function($$v) {
+                                      _vm.value = $$v
+                                    },
+                                    expression: "value"
+                                  }
+                                },
+                                _vm._l(_vm.options, function(item) {
+                                  return _c("el-option", {
+                                    key: item.value,
+                                    attrs: {
+                                      label: item.label,
+                                      value: item.value
+                                    }
+                                  })
+                                })
+                              )
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c("el-col", { attrs: { span: 6 } }, [
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn ebg-button",
+                                on: {
+                                  click: function($event) {
+                                    _vm.showAddDialog()
+                                  }
+                                }
+                              },
+                              [_vm._v("Add Product Feedback")]
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("el-col", { attrs: { span: 6 } }, [
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn ebg-button",
+                                on: {
+                                  click: function($event) {
+                                    _vm.showAddDialog()
+                                  }
+                                }
+                              },
+                              [_vm._v("Add Client Note")]
+                            )
+                          ])
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c("el-row", { attrs: { span: 24 } }, [
+            _c("div", { staticClass: "col-lg-12" }, [_c("hr")])
+          ]),
+          _vm._v(" "),
+          _c(
+            "el-row",
+            { staticClass: "interaction-container", attrs: { span: 24 } },
+            [
+              _c("el-col", { attrs: { span: 24 } }, [
+                _c("p", { staticClass: "input-label" }, [
+                  _vm._v("Add Interaction")
+                ]),
+                _vm._v(" "),
+                _c("hr", { staticClass: "interaction-hr" })
+              ]),
+              _vm._v(" "),
+              _c(
+                "el-form",
+                {
+                  ref: "ruleForm",
+                  attrs: {
+                    model: _vm.ruleForm,
+                    rules: _vm.rules,
+                    "label-position": "top"
+                  }
+                },
+                [
+                  _c(
+                    "el-row",
+                    { attrs: { span: 24, gutter: 20 } },
+                    [
+                      _c(
+                        "el-col",
+                        { attrs: { span: 24 } },
+                        [
+                          _c(
+                            "el-form-item",
+                            { attrs: { prop: "interactionRemarks" } },
+                            [
+                              _c("el-input", {
+                                attrs: {
+                                  type: "textarea",
+                                  rows: 5,
+                                  placeholder: "Interaction Remarks"
+                                },
+                                model: {
+                                  value: _vm.ruleForm.interactionRemarks,
+                                  callback: function($$v) {
+                                    _vm.$set(
+                                      _vm.ruleForm,
+                                      "interactionRemarks",
+                                      $$v
+                                    )
+                                  },
+                                  expression: "ruleForm.interactionRemarks"
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "el-col",
+                        { attrs: { span: 8 } },
+                        [
+                          _c(
+                            "el-form-item",
+                            {
+                              attrs: {
+                                prop: "interaction",
+                                label: "How did you interact?"
+                              }
+                            },
+                            [
+                              _c(
+                                "el-select",
+                                {
+                                  attrs: {
+                                    placeholder:
+                                      "Select the type of interaction"
+                                  },
+                                  model: {
+                                    value: _vm.ruleForm.interaction,
+                                    callback: function($$v) {
+                                      _vm.$set(_vm.ruleForm, "interaction", $$v)
+                                    },
+                                    expression: "ruleForm.interaction"
+                                  }
+                                },
+                                _vm._l(_vm.options, function(item) {
+                                  return _c("el-option", {
+                                    key: item.value,
+                                    attrs: {
+                                      label: item.label,
+                                      value: item.value
+                                    }
+                                  })
+                                })
+                              )
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "el-col",
+                        { attrs: { span: 8 } },
+                        [
+                          _c(
+                            "el-form-item",
+                            {
+                              attrs: {
+                                prop: "interactionDate",
+                                label: "When was the interaction?"
+                              }
+                            },
+                            [
+                              _c("el-date-picker", {
+                                attrs: {
+                                  type: "date",
+                                  placeholder: "Select the interaction date"
+                                },
+                                model: {
+                                  value: _vm.ruleForm.interactionDate,
+                                  callback: function($$v) {
+                                    _vm.$set(
+                                      _vm.ruleForm,
+                                      "interactionDate",
+                                      $$v
+                                    )
+                                  },
+                                  expression: "ruleForm.interactionDate"
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "el-col",
+                        { attrs: { span: 8 } },
+                        [
+                          _c(
+                            "el-form-item",
+                            {
+                              attrs: {
+                                prop: "nextInteractionDate",
+                                label: "Add next interaction?"
+                              }
+                            },
+                            [
+                              _c("el-date-picker", {
+                                attrs: {
+                                  type: "date",
+                                  placeholder:
+                                    "Schedule a date for the next interaction"
+                                },
+                                model: {
+                                  value: _vm.ruleForm.nextInteractionDate,
+                                  callback: function($$v) {
+                                    _vm.$set(
+                                      _vm.ruleForm,
+                                      "nextInteractionDate",
+                                      $$v
+                                    )
+                                  },
+                                  expression: "ruleForm.nextInteractionDate"
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c("el-col", { attrs: { span: 24 } }, [
+                        _c("hr", { staticClass: "interaction-hr" })
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "el-col",
+                        { attrs: { span: 24 } },
+                        [
+                          _c(
+                            "el-form-item",
+                            {
+                              attrs: {
+                                prop: "feedback",
+                                label: "Did the client provide any feeedback?"
+                              }
+                            },
+                            [
+                              _c("el-input", {
+                                attrs: {
+                                  type: "textarea",
+                                  rows: 5,
+                                  placeholder: "Enter the feedback remarks"
+                                },
+                                model: {
+                                  value: _vm.ruleForm.feedback,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.ruleForm, "feedback", $$v)
+                                  },
+                                  expression: "ruleForm.feedback"
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c("el-col", { attrs: { span: 24 } }, [
+                        _c("hr", { staticClass: "interaction-hr" })
+                      ]),
+                      _vm._v(" "),
+                      _c("el-col", { attrs: { span: 6 } }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn ebg-button",
+                            on: {
+                              click: function($event) {
+                                _vm.showAddDialog()
+                              }
+                            }
+                          },
+                          [_vm._v("Save this Interaction")]
+                        )
+                      ])
+                    ],
+                    1
                   )
                 ],
                 1

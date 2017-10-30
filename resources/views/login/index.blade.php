@@ -5,8 +5,13 @@
     <div class="login-background">
         <div class="row">
             <div class="login-container">
+                <div class="login-overlay"></div>
                 <div class="col-lg-6 inner-left">
-                    <img class="login-image" src="/img/EBG-logo.png">
+                    <div class="inner-left-overlay"></div>
+                    <div style="z-index: 1">
+                        <img class="login-image" src="/img/EBG-logo.png">
+                    </div>
+
                 </div>
                 <div class="col-lg-6 inner-right">
 

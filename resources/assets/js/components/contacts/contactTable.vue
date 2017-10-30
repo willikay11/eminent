@@ -5,15 +5,25 @@
                 <h4>Contacts</h4>
             </div>
             <div class="col-lg-6" style="text-align: right">
+                <button class="btn ebg-button" v-on:click="showAddDialog()" style="margin-right: 20px">Reasign Contact
+                </button>
                 <button class="btn ebg-button" v-on:click="showAddDialog()">Add Contact</button>
+            </div>
+            <div class="col-lg-12">
+                <hr>
             </div>
         </div>
 
         <div class="panel-body">
 
-            <el-form :model="searchForm" :rules="searchRules" ref="searchForm" label-position="left" style="padding-left: 30px">
-                <el-col :span="7">
-                    <el-form-item prop="startDate">
+            <el-form :model="searchForm" :rules="searchRules" ref="searchForm" label-position="top"
+                     style="padding-left: 30px">
+                <el-col :span="2">
+                    <el-form-item prop="filter" label="Filter By:">
+                    </el-form-item>
+                </el-col>
+                <el-col :span="5">
+                    <el-form-item prop="startDate" label="From date:">
                         <el-date-picker
                                 v-model="searchForm.startDate"
                                 type="date"
@@ -22,8 +32,8 @@
                     </el-form-item>
                 </el-col>
 
-                <el-col :span="7">
-                    <el-form-item prop="endDate">
+                <el-col :span="5">
+                    <el-form-item prop="endDate" label="To date:">
                         <el-date-picker
                                 v-model="searchForm.endDate"
                                 type="date"
@@ -32,8 +42,8 @@
                     </el-form-item>
                 </el-col>
 
-                <el-col :span="3" class="right-margin">
-                    <el-form-item prop="source">
+                <el-col :span="5">
+                    <el-form-item prop="source" label="Source:">
                         <el-select v-model="searchForm.source" placeholder="Select source">
                             <el-option
                                     v-for="item in sources"
@@ -46,9 +56,23 @@
                 </el-col>
 
                 <el-col :span="5">
-                    <el-button type="primary" @click="">Filter</el-button>
+                    <el-form-item prop="source" label="Status:">
+                        <el-select v-model="searchForm.status" placeholder="Select status">
+                            <el-option
+                                    v-for="item in sources"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
                 </el-col>
+
             </el-form>
+
+            <div class="col-lg-12">
+                <hr>
+            </div>
 
             <el-table
                     :data="tableData"
@@ -72,7 +96,8 @@
                     <template slot-scope="scope">
                         <el-tag
                                 :type="scope.row.status === 'Client' ? 'success' : scope.row.status === 'Prospect' ? 'warning' : 'danger'"
-                                close-transition>{{scope.row.status}}</el-tag>
+                                close-transition>{{scope.row.status}}
+                        </el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -90,14 +115,12 @@
                     size="large">
                 <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-position="left">
 
-                    <div class="contact-add">
-                        <span>Contact Details</span>
-                        <hr class="hr-section-divider">
-                    </div>
-
                     <div class="form-item-container">
-                        <el-form-item label="Name" required>
-                            <el-col :span="3" class="right-margin">
+                        <el-row :span="24" :gutter="20">
+                            <el-col :span="2">
+                                <span>Name: </span>
+                            </el-col>
+                            <el-col :span="2">
                                 <el-form-item prop="title">
                                     <el-select v-model="ruleForm.title" placeholder="Select Title">
                                         <el-option
@@ -109,7 +132,7 @@
                                     </el-select>
                                 </el-form-item>
                             </el-col>
-                            <el-col :span="7" class="right-margin">
+                            <el-col :span="7">
                                 <el-form-item prop="firstname">
                                     <el-input placeholder="First Name" v-model="ruleForm.firstname"></el-input>
                                 </el-form-item>
@@ -119,13 +142,16 @@
                                     <el-input placeholder="Last Name" v-model="ruleForm.lastname"></el-input>
                                 </el-form-item>
                             </el-col>
-                        </el-form-item>
+                        </el-row>
 
-
-                        <el-form-item label="Contact Details" required>
-                            <el-col :span="7" class="right-margin">
+                        <el-row :span="24" :gutter="20">
+                            <el-col :span="2">
+                                <span>Contact Details: </span>
+                            </el-col>
+                            <el-col :span="7">
                                 <el-form-item prop="email">
-                                    <el-input placeholder="Email (email@eminent.co.ke)" v-model="ruleForm.email"></el-input>
+                                    <el-input placeholder="Email (email@eminent.co.ke)"
+                                              v-model="ruleForm.email"></el-input>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="7">
@@ -133,62 +159,80 @@
                                     <el-input placeholder="Phone Number" v-model.number="ruleForm.phone"></el-input>
                                 </el-form-item>
                             </el-col>
-                        </el-form-item>
+                        </el-row>
 
-                        <el-form-item label="Other Details" required>
-                            <el-col :span="8">
-                                <el-form-item prop="gender">
-                                    <el-select v-model="ruleForm.gender" placeholder="Select Gender">
-                                        <el-option
-                                                v-for="item in genders"
-                                                :key="item.value"
-                                                :label="item.label"
-                                                :value="item.value">
-                                        </el-option>
-                                    </el-select>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="8">
-                                <el-form-item prop="source">
-                                    <el-select v-model="ruleForm.source" filterable placeholder="Select Source">
-                                        <el-option
-                                                v-for="item in sources"
-                                                :key="item.value"
-                                                :label="item.label"
-                                                :value="item.value">
-                                        </el-option>
-                                    </el-select>
-                                </el-form-item>
+                        <el-row :span="24" :gutter="20">
+                            <el-col :span="2">
+                                <span>Other Details: </span>
                             </el-col>
 
-                            <el-col :span="8" style="margin-top: 15px">
-                                <el-form-item prop="profession">
-                                    <el-select v-model="ruleForm.profession" filterable placeholder="Select Profession">
-                                        <el-option
-                                                v-for="item in professions"
-                                                :key="item.value"
-                                                :label="item.label"
-                                                :value="item.value">
-                                        </el-option>
-                                    </el-select>
-                                </el-form-item>
+                            <el-row :span="24" :gutter="20">
+                                <el-col :span="7">
+                                    <el-form-item prop="gender">
+                                        <el-select v-model="ruleForm.gender" placeholder="Select Gender">
+                                            <el-option
+                                                    v-for="item in genders"
+                                                    :key="item.value"
+                                                    :label="item.label"
+                                                    :value="item.value">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="7">
+                                    <el-form-item prop="source">
+                                        <el-select v-model="ruleForm.source" filterable placeholder="Select Source">
+                                            <el-option
+                                                    v-for="item in sources"
+                                                    :key="item.value"
+                                                    :label="item.label"
+                                                    :value="item.value">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                            </el-row>
+
+                            <el-col :span="2">
+                                <span></span>
                             </el-col>
 
-                            <el-col :span="8" style="margin-top: 15px">
-                                <el-form-item prop="religion">
-                                    <el-select v-model="ruleForm.religion" filterable placeholder="Select Religion">
-                                        <el-option
-                                                v-for="item in religions"
-                                                :key="item.value"
-                                                :label="item.label"
-                                                :value="item.value">
-                                        </el-option>
-                                    </el-select>
-                                </el-form-item>
-                            </el-col>
-                        </el-form-item>
+                            <el-row :span="24" :gutter="20">
 
-                        <el-form-item label="Country" required>
+                                <el-col :span="7">
+                                    <el-form-item prop="profession">
+                                        <el-select v-model="ruleForm.profession" filterable
+                                                   placeholder="Select Profession">
+                                            <el-option
+                                                    v-for="item in professions"
+                                                    :key="item.value"
+                                                    :label="item.label"
+                                                    :value="item.value">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+
+                                <el-col :span="7">
+                                    <el-form-item prop="religion">
+                                        <el-select v-model="ruleForm.religion" filterable placeholder="Select Religion">
+                                            <el-option
+                                                    v-for="item in religions"
+                                                    :key="item.value"
+                                                    :label="item.label"
+                                                    :value="item.value">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                            </el-row>
+                        </el-row>
+
+
+                        <el-row :span="24" :gutter="20">
+                            <el-col :span="2">
+                                <span>Country: </span>
+                            </el-col>
                             <el-col :span="7">
                                 <el-form-item prop="country">
                                     <el-select v-model="ruleForm.country" filterable placeholder="Select Country">
@@ -201,24 +245,33 @@
                                     </el-select>
                                 </el-form-item>
                             </el-col>
-                        </el-form-item>
+                        </el-row>
 
 
-                        <el-form-item label="Products" required>
-                            <el-col :span="14" class="right-margin">
+                        <el-row :span="24" :gutter="20">
+                            <el-col :span="2">
+                                <span>Products</span>
+                            </el-col>
+                            <el-col :span="14">
                                 <el-form-item prop="email">
-                                    <el-input placeholder="Email (email@eminent.co.ke)" v-model="ruleForm.email"></el-input>
+                                    <el-input placeholder="Email (email@eminent.co.ke)"
+                                              v-model="ruleForm.email"></el-input>
                                 </el-form-item>
                             </el-col>
-                        </el-form-item>
+                        </el-row>
 
-                        <el-form-item label="Address" required>
-                            <el-col :span="14" class="right-margin">
+                        <el-row :span="24" :gutter="20">
+                            <el-col :span="2">
+                                <span>Address</span>
+                            </el-col>
+                            <el-col :span="14">
                                 <el-form-item prop="email">
-                                    <el-input placeholder="Email (email@eminent.co.ke)" v-model="ruleForm.email"></el-input>
+                                    <el-input placeholder="Email (email@eminent.co.ke)"
+                                              v-model="ruleForm.email"></el-input>
                                 </el-form-item>
                             </el-col>
-                        </el-form-item>
+                        </el-row>
+
 
                     </div>
 
@@ -253,7 +306,7 @@
             return {
                 tableData: [],
                 genders: [],
-                titles:[],
+                titles: [],
                 countries: [],
                 religions: [],
                 professions: [],
@@ -273,15 +326,19 @@
                     startDate: '',
                     endDate: '',
                     source: '',
+                    status: '',
                 },
                 searchRules: {
-                    startDate : [
+                    startDate: [
                         {required: true, message: 'Please input start date', trigger: 'blur', type: 'date'},
                     ],
-                    endDate : [
+                    endDate: [
                         {required: true, message: 'Please input end date', trigger: 'blur', type: 'date'},
                     ],
-                    source : [
+                    source: [
+                        {required: true, message: 'Please select source', trigger: 'change'},
+                    ],
+                    status: [
                         {required: true, message: 'Please select status', trigger: 'change'},
                     ],
                 },
@@ -303,52 +360,52 @@
                     religion: '',
                 },
                 rules: {
-                    startDate : [
+                    startDate: [
                         {required: true, message: 'Please input start date', trigger: 'blur', type: 'date'},
                     ],
-                    source : [
+                    source: [
                         {required: true, message: 'Please select status', trigger: 'change'},
                     ],
-                    designation : [
+                    designation: [
                         {required: true, message: 'Please input designation name', trigger: 'blur'},
                     ],
-                    active : [
+                    active: [
                         {required: true, message: 'Please select active status', trigger: 'change'},
                     ],
-                    title : [
+                    title: [
                         {required: true, message: 'Please select title', trigger: 'change'},
                     ],
-                    gender : [
+                    gender: [
                         {required: true, message: 'Please select gender', trigger: 'change'},
                     ],
-                    firstname : [
+                    firstname: [
                         {required: true, message: 'Please input First name', trigger: 'blur'},
                     ],
-                    lastname : [
+                    lastname: [
                         {required: true, message: 'Please input Last name', trigger: 'blur'},
                     ],
-                    email : [
+                    email: [
                         {required: true, message: 'Please input email', trigger: 'blur', type: 'email'},
                     ],
-                    phone : [
+                    phone: [
                         {required: true, message: 'Please input Phone Number', trigger: 'blur', type: 'number'},
                     ],
-                    role : [
+                    role: [
                         {required: true, message: 'Please select role', trigger: 'change'},
                     ],
-                    department : [
+                    department: [
                         {required: true, message: 'Please select department', trigger: 'change'},
                     ],
-                    country : [
+                    country: [
                         {required: true, message: 'Please select country', trigger: 'change'},
                     ],
-                    profession : [
+                    profession: [
                         {required: true, message: 'Please select profession', trigger: 'change'},
                     ],
-                    religion : [
+                    religion: [
                         {required: true, message: 'Please select religion', trigger: 'change'},
                     ],
-                    employmentDate : [
+                    employmentDate: [
                         {required: true, message: 'Please input employment date', trigger: 'blur', type: 'date'},
                     ],
                 },
@@ -362,7 +419,7 @@
             vm.getInformation();
         },
 
-        methods:{
+        methods: {
             handleClick() {
                 console.log('click');
             },
@@ -404,7 +461,8 @@
                     .then(_ => {
                         done();
                     })
-                    .catch(_ => {});
+                    .catch(_ => {
+                    });
             },
             add(formName)
             {
@@ -412,26 +470,24 @@
                     if (valid) {
                         let vm = this;
                         axios.post('/contacts/save', {
-                            type     : 1,
-                            title_id     : vm.ruleForm.title,
-                            firstname : vm.ruleForm.firstname,
-                            lastname : vm.ruleForm.lastname,
-                            email : vm.ruleForm.email,
-                            phone : vm.ruleForm.phone,
-                            profession_id : vm.ruleForm.profession,
-                            country_id : vm.ruleForm.country,
-                            religion_id : vm.ruleForm.religion,
-                            gender_id : vm.ruleForm.gender,
-                            source_id : vm.ruleForm.source,
+                            type: 1,
+                            title_id: vm.ruleForm.title,
+                            firstname: vm.ruleForm.firstname,
+                            lastname: vm.ruleForm.lastname,
+                            email: vm.ruleForm.email,
+                            phone: vm.ruleForm.phone,
+                            profession_id: vm.ruleForm.profession,
+                            country_id: vm.ruleForm.country,
+                            religion_id: vm.ruleForm.religion,
+                            gender_id: vm.ruleForm.gender,
+                            source_id: vm.ruleForm.source,
                         })
-                            .then(function (response)
-                            {
+                            .then(function (response) {
                                 vm.dialogVisible = false;
 
                                 vm.getUserContacts();
 
-                                if(response.data.success)
-                                {
+                                if (response.data.success) {
                                     vm.$message({
                                         type: 'success',
                                         message: response.data.message
@@ -439,8 +495,7 @@
 
                                     vm.$refs[formName].resetFields();
                                 }
-                                else
-                                {
+                                else {
                                     vm.$message({
                                         type: 'error',
                                         message: response.data.message
@@ -476,32 +531,38 @@
 </script>
 
 <style>
-    .el-table{
+    .el-table {
         border-left: none;
         border-right: none;
     }
 
     .el-date-editor.el-input {
-        width: 90%;
+        width: 100%;
     }
 
     .el-select {
-        width: 90%;
+        width: 100%;
     }
 
-    /*.panel-header{*/
-        /*padding-bottom: 20px;*/
-        /*border-bottom: 1px solid;*/
-        /*margin-bottom: 20px;*/
-    /*}*/
+    .el-input__inner {
+        border: 1px solid #b4b4b4;
+    }
 
-    .search-container{
+    .el-input__icon {
+        color: #b4b4b4 !important;
+    }
+
+    .search-container {
         padding-bottom: 20px;
         border-bottom: 1px solid;
         margin-bottom: 20px;
     }
 
-    .right-margin{
-        margin-right: 20px;
+    label {
+        font-weight: normal
+    }
+
+    .el-table::after {
+        width: 0px;
     }
 </style>
