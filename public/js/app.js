@@ -88785,7 +88785,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, "\n.contact-container{\n    margin-left: 20px;\n    margin-right: 20px;\n}\n.avatar{\n    margin-right: 40px;\n    height: 250px;\n    max-width: 250px;\n    min-width: 250px;\n    background: #f2f2f2;\n    border: 1px solid #b5b5b5;\n}\n.span-holder{\n    display: inline-block;\n}\n.contact-row{\n    margin-top: 10px;\n}\n.interaction-container{\n    background-color: #f3f3f3;\n    padding: 15px;\n}\n.interaction-hr{\n    border-top: 1px solid #b0b0b0;\n    margin-top: 10px;\n}\n.input-label{\n    color: #4a4a4a;\n}\n.el-select{\n    width: 100%;\n}\n.el-date-editor.el-input {\n    width: 100%;\n}\nlabel{\n    font-weight: normal;\n}\n.ebg-anchor{\n    color: #eaa568;\n}\n", ""]);
+exports.push([module.i, "\n.contact-container{\n    margin-left: 20px;\n    margin-right: 20px;\n}\n.avatar{\n    margin-right: 40px;\n    height: 250px;\n    max-width: 250px;\n    min-width: 250px;\n    background: #f2f2f2;\n    border: 1px solid #b5b5b5;\n}\n.span-holder{\n    display: inline-block;\n}\n.contact-row{\n    margin-top: 10px;\n}\n.interaction-container{\n    background-color: #f3f3f3;\n    padding: 15px;\n}\n.interaction-hr{\n    border-top: 1px solid #b0b0b0;\n    margin-top: 10px;\n}\n.input-label{\n    color: #4a4a4a;\n}\n.el-select{\n    width: 100%;\n}\n.el-date-editor.el-input {\n    width: 100%;\n}\nlabel{\n    font-weight: normal;\n}\n.ebg-anchor{\n    color: #eaa568;\n    z-index: 1;\n    position: relative;\n}\n", ""]);
 
 // exports
 
@@ -88963,6 +88963,26 @@ Object.defineProperty(exports, "__esModule", {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 exports.default = {
     props: ['userClientId'],
@@ -88970,6 +88990,7 @@ exports.default = {
         return {
             contact: [],
             statuses: [],
+            interactionTypes: [],
             options: [{
                 value: 'Option1',
                 label: 'Option1'
@@ -88986,9 +89007,16 @@ exports.default = {
                 value: 'Option5',
                 label: 'Option5'
             }],
+            interactionDialogVisible: false,
             value: '',
             statusValue: '',
             textarea: '',
+            scheduleForm: {
+                nextInteractionDate: ''
+            },
+            scheduleRules: {
+                nextInteractionDate: [{ required: true, message: 'Please input next interaction date', trigger: 'blur', type: 'date' }]
+            },
             ruleForm: {
                 interactionRemarks: '',
                 feedback: '',
@@ -88999,7 +89027,7 @@ exports.default = {
             rules: {
                 interactionRemarks: [{ required: true, message: 'Please input interaction remarks', trigger: 'blur' }],
                 feedback: [{ required: false, message: 'Please input interaction remarks', trigger: 'blur' }],
-                interaction: [{ required: true, message: 'Please select interaction type', trigger: 'change' }],
+                interaction: [{ required: true, message: 'Please select interaction type', trigger: 'change', type: 'number' }],
                 interactionDate: [{ required: true, message: 'Please input interaction date', trigger: 'blur', type: 'date' }],
                 nextInteractionDate: [{ required: false, message: 'Please input interaction date', trigger: 'blur', type: 'date' }]
             }
@@ -89012,15 +89040,108 @@ exports.default = {
     },
 
     methods: {
+        addInteractionSchedule: function addInteractionSchedule(formName) {
+            var _this = this;
+
+            this.$refs[formName].validate(function (valid) {
+                if (valid) {
+
+                    var vm = _this;
+
+                    vm.$message({
+                        type: 'info',
+                        message: 'Saving Interaction Schedule'
+                    });
+
+                    axios.post('/interactionSchedule/save', {
+                        next_interaction_date: vm.scheduleForm.nextInteractionDate + '',
+                        userClientId: vm.userClientId
+                    }).then(function (response) {
+                        vm.interactionDialogVisible = false;
+
+                        if (response.data.success) {
+                            vm.$message({
+                                type: 'success',
+                                message: response.data.message
+                            });
+
+                            vm.contact.interactionDate = response.data.schedule;
+                            vm.$refs[formName].resetFields();
+                        } else {
+                            vm.$message({
+                                type: 'error',
+                                message: response.data.message
+                            });
+                        }
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+                } else {
+                    return false;
+                }
+            });
+        },
+        addInteraction: function addInteraction(formName) {
+            var _this2 = this;
+
+            this.$refs[formName].validate(function (valid) {
+                if (valid) {
+
+                    var vm = _this2;
+
+                    vm.$message({
+                        type: 'info',
+                        message: 'Saving Interaction'
+                    });
+
+                    axios.post('/interaction/save', {
+                        remarks: vm.ruleForm.interactionRemarks,
+                        interaction_type_id: vm.ruleForm.interaction,
+                        interaction_date: vm.ruleForm.interactionDate + '',
+                        next_interaction_date: vm.ruleForm.nextInteractionDate + '',
+                        userClientId: vm.userClientId
+                    }).then(function (response) {
+                        vm.interactionDialogVisible = false;
+
+                        if (response.data.success) {
+                            vm.$message({
+                                type: 'success',
+                                message: response.data.message
+                            });
+
+                            vm.$refs[formName].resetFields();
+                        } else {
+                            vm.$message({
+                                type: 'error',
+                                message: response.data.message
+                            });
+                        }
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+                } else {
+                    return false;
+                }
+            });
+        },
         getContactInfo: function getContactInfo() {
             var vm = this;
             axios.get('/api/contact/details/' + vm.userClientId).then(function (response) {
                 vm.statuses = response.data.statuses;
+                vm.interactionTypes = response.data.interactionTypes;
                 vm.contact = response.data.contact;
                 vm.statusValue = vm.contact.status;
             }).catch(function (error) {
                 console.log(error);
             });
+        },
+        showInteraction: function showInteraction() {
+            var vm = this;
+
+            vm.interactionDialogVisible = true;
+        },
+        changeStatus: function changeStatus() {
+            console.log("Changing");
         }
     }
 };
@@ -89104,22 +89225,23 @@ var render = function() {
                   ),
                   _vm._v(" "),
                   _vm.contact.interactionDate == null
-                    ? _c(
-                        "el-col",
-                        { staticClass: "contact-row", attrs: { span: 24 } },
-                        [
-                          _c("span", [_vm._v("Next Interaction Date :")]),
-                          _vm._v(" "),
-                          _c(
-                            "a",
-                            {
-                              staticClass: "span-holder ebg-anchor",
-                              attrs: { href: "#" }
-                            },
-                            [_vm._v("   Not Scheduled - Schedule Interaction")]
-                          )
-                        ]
-                      )
+                    ? _c("el-col", { staticClass: "contact-row" }, [
+                        _c("span", [_vm._v("Next Interaction Date :")]),
+                        _vm._v(" "),
+                        _c(
+                          "a",
+                          {
+                            staticClass: "span-holder ebg-anchor",
+                            attrs: { href: "#" },
+                            on: {
+                              click: function($event) {
+                                _vm.showInteraction()
+                              }
+                            }
+                          },
+                          [_vm._v(" Not Scheduled - Schedule Interaction")]
+                        )
+                      ])
                     : _vm._e(),
                   _vm._v(" "),
                   _vm.contact.interactionDate != null
@@ -89133,7 +89255,12 @@ var render = function() {
                             "a",
                             {
                               staticClass: "span-holder ebg-anchor",
-                              attrs: { href: "#" }
+                              attrs: { href: "#" },
+                              on: {
+                                click: function($event) {
+                                  _vm.showInteraction()
+                                }
+                              }
                             },
                             [
                               _vm._v(
@@ -89176,7 +89303,8 @@ var render = function() {
                                     key: item.value,
                                     attrs: {
                                       label: item.label,
-                                      value: item.value
+                                      value: item.value,
+                                      change: _vm.changeStatus
                                     }
                                   })
                                 })
@@ -89319,7 +89447,7 @@ var render = function() {
                                     expression: "ruleForm.interaction"
                                   }
                                 },
-                                _vm._l(_vm.options, function(item) {
+                                _vm._l(_vm.interactionTypes, function(item) {
                                   return _c("el-option", {
                                     key: item.value,
                                     attrs: {
@@ -89460,7 +89588,7 @@ var render = function() {
                             staticClass: "btn ebg-button",
                             on: {
                               click: function($event) {
-                                _vm.showAddDialog()
+                                _vm.addInteraction("ruleForm")
                               }
                             }
                           },
@@ -89469,6 +89597,106 @@ var render = function() {
                       ])
                     ],
                     1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "el-dialog",
+            {
+              attrs: {
+                title: "Schedule Interaction for Client",
+                visible: _vm.interactionDialogVisible,
+                size: "tiny"
+              },
+              on: {
+                "update:visible": function($event) {
+                  _vm.interactionDialogVisible = $event
+                }
+              }
+            },
+            [
+              _c(
+                "el-form",
+                {
+                  ref: "scheduleForm",
+                  attrs: {
+                    model: _vm.scheduleForm,
+                    rules: _vm.scheduleRules,
+                    "label-position": "top"
+                  }
+                },
+                [
+                  _c(
+                    "el-form-item",
+                    {
+                      attrs: {
+                        prop: "nextInteractionDate",
+                        label: "Add next interaction"
+                      }
+                    },
+                    [
+                      _c("el-date-picker", {
+                        attrs: {
+                          type: "datetime",
+                          format: "yyyy-MM-dd:HH:mm",
+                          placeholder:
+                            "Schedule a date for the next interaction"
+                        },
+                        model: {
+                          value: _vm.scheduleForm.nextInteractionDate,
+                          callback: function($$v) {
+                            _vm.$set(
+                              _vm.scheduleForm,
+                              "nextInteractionDate",
+                              $$v
+                            )
+                          },
+                          expression: "scheduleForm.nextInteractionDate"
+                        }
+                      })
+                    ],
+                    1
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "span",
+                {
+                  staticClass: "dialog-footer",
+                  attrs: { slot: "footer" },
+                  slot: "footer"
+                },
+                [
+                  _c(
+                    "el-button",
+                    {
+                      on: {
+                        click: function($event) {
+                          _vm.interactionDialogVisible = false
+                        }
+                      }
+                    },
+                    [_vm._v("Cancel")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "el-button",
+                    {
+                      attrs: { type: "primary" },
+                      on: {
+                        click: function($event) {
+                          _vm.addInteractionSchedule("scheduleForm")
+                        }
+                      }
+                    },
+                    [_vm._v("Save")]
                   )
                 ],
                 1

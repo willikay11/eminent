@@ -8,6 +8,7 @@
  */
 namespace eminent\UserClients;
 
+use Carbon\Carbon;
 use eminent\Models\UserClient;
 
 class UserClientsRepository
@@ -27,5 +28,16 @@ class UserClientsRepository
     public function getUserClientById($id)
     {
         return UserClient::findOrFail($id);
+    }
+
+    public function saveScheduledInteraction(array $input)
+    {
+        $userClient = $this->getUserClientById($input['userClientId']);
+
+        $userClient->next_interaction_date = Carbon::parse($input['next_interaction_date'])->format('Y-m-d:H:m');
+
+        $userClient->save();
+
+        return $userClient;
     }
 }

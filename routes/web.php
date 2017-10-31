@@ -207,6 +207,18 @@ Route::group(['middleware' => 'auth'], function (){
     Route::get('/api/contact/details/{id}', [
         'uses' => 'ContactController@getDetails'
     ]);
+
+
+    /*
+     * Interaction Routes
+     */
+    Route::post('/interactionSchedule/save', [
+        'uses' => 'InteractionController@storeSchedule'
+    ]);
+
+    Route::post('/interaction/save', [
+        'uses' => 'InteractionController@store'
+    ]);
 });
 
 

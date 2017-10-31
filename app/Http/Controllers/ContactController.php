@@ -16,6 +16,7 @@ use eminent\Contacts\ContactsRepository;
 use eminent\Models\Contact;
 use eminent\Models\Country;
 use eminent\Models\Gender;
+use eminent\Models\InteractionType;
 use eminent\Models\Product;
 use eminent\Models\Profession;
 use eminent\Models\Religions;
@@ -193,9 +194,18 @@ class ContactController extends Controller
             ];
         });
 
+        $interactionTypes = InteractionType::all()->map(function ($interaction)
+        {
+            return [
+                'value' => $interaction->id,
+                'label' => $interaction->name
+            ];
+        });
+
         $data = [
             'contact' => $contact,
-            'statuses' => $statuses
+            'statuses' => $statuses,
+            'interactionTypes' => $interactionTypes
         ];
 
         return $this->toResponse(null, $data);

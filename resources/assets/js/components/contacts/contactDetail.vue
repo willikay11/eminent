@@ -36,14 +36,14 @@
                             <span>Phone Number :</span><a href="#" class="span-holder"> &nbsp; {{ contact.phone }}</a>
                         </el-col>
 
-                        <el-col :span="24" class="contact-row" v-if="contact.interactionDate == null">
+                        <el-col class="contact-row" v-if="contact.interactionDate == null">
                             <span>Next Interaction Date :</span>
-                            <a href="#" class="span-holder ebg-anchor"> &nbsp; Not Scheduled - Schedule Interaction</a>
+                            <a href="#" @click="showInteraction()" class="span-holder ebg-anchor"> Not Scheduled - Schedule Interaction</a>
                         </el-col>
 
                         <el-col :span="24" class="contact-row" v-if="contact.interactionDate != null">
                             <span>Next Interaction Date :</span>
-                            <a href="#" class="span-holder ebg-anchor"> &nbsp; {{ contact.interactionDate }} - Edit Scheduled Interaction</a>
+                            <a href="#" @click="showInteraction()" class="span-holder ebg-anchor"> &nbsp; {{ contact.interactionDate }} - Edit Scheduled Interaction</a>
                         </el-col>
 
                         <el-row :gutter="20">
@@ -54,7 +54,8 @@
                                                 v-for="item in statuses"
                                                 :key="item.value"
                                                 :label="item.label"
-                                                :value="item.value">
+                                                :value="item.value"
+                                                :change="changeStatus">
                                         </el-option>
                                     </el-select>
                                 </el-col>
@@ -100,7 +101,7 @@
                                 <el-form-item prop="interaction" label="How did you interact?">
                                     <el-select v-model="ruleForm.interaction" placeholder="Select the type of interaction">
                                         <el-option
-                                                v-for="item in options"
+                                                v-for="item in interactionTypes"
                                                 :key="item.value"
                                                 :label="item.label"
                                                 :value="item.value">
@@ -149,13 +150,32 @@
                             </el-col>
 
                             <el-col :span="6">
-                                <button class="btn ebg-button" v-on:click="showAddDialog()">Save this Interaction</button>
+                                <button class="btn ebg-button" v-on:click="addInteraction('ruleForm')">Save this Interaction</button>
                             </el-col>
                         </el-row>
                     </el-form>
 
-
                 </el-row>
+
+                <el-dialog
+                        title="Schedule Interaction for Client"
+                        :visible.sync="interactionDialogVisible"
+                        size="tiny">
+                    <el-form :model="scheduleForm" :rules="scheduleRules" ref="scheduleForm" label-position="top">
+                        <el-form-item prop="nextInteractionDate" label="Add next interaction">
+                            <el-date-picker
+                                    v-model="scheduleForm.nextInteractionDate"
+                                    type="datetime"
+                                    format="yyyy-MM-dd:HH:mm"
+                                    placeholder="Schedule a date for the next interaction">
+                            </el-date-picker>
+                        </el-form-item>
+                    </el-form>
+                    <span slot="footer" class="dialog-footer">
+                        <el-button @click="interactionDialogVisible = false">Cancel</el-button>
+                        <el-button type="primary"  @click="addInteractionSchedule('scheduleForm')">Save</el-button>
+                    </span>
+                </el-dialog>
             </div>
         </div>
     </div>
@@ -168,6 +188,7 @@
             return {
                 contact: [],
                 statuses: [],
+                interactionTypes: [],
                 options: [{
                     value: 'Option1',
                     label: 'Option1'
@@ -184,9 +205,18 @@
                     value: 'Option5',
                     label: 'Option5'
                 }],
+                interactionDialogVisible: false,
                 value: '',
                 statusValue: '',
                 textarea: '',
+                scheduleForm: {
+                    nextInteractionDate: ''
+                },
+                scheduleRules: {
+                    nextInteractionDate: [
+                        {required: true, message: 'Please input next interaction date', trigger: 'blur', type: 'date'},
+                    ],
+                },
                 ruleForm: {
                     interactionRemarks: '',
                     feedback: '',
@@ -202,7 +232,7 @@
                         {required: false, message: 'Please input interaction remarks', trigger: 'blur'},
                     ],
                     interaction: [
-                        {required: true, message: 'Please select interaction type', trigger: 'change'},
+                        {required: true, message: 'Please select interaction type', trigger: 'change', type: 'number'},
                     ],
                     interactionDate: [
                         {required: true, message: 'Please input interaction date', trigger: 'blur', type: 'date'},
@@ -221,17 +251,116 @@
 
         },
         methods:{
+            addInteractionSchedule(formName)
+            {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+
+                        let vm = this;
+
+                        vm.$message({
+                            type: 'info',
+                            message: 'Saving Interaction Schedule'
+                        });
+
+                        axios.post('/interactionSchedule/save', {
+                            next_interaction_date: vm.scheduleForm.nextInteractionDate+'',
+                            userClientId: vm.userClientId
+                        })
+                            .then(function (response) {
+                                vm.interactionDialogVisible = false;
+
+                                if (response.data.success) {
+                                    vm.$message({
+                                        type: 'success',
+                                        message: response.data.message
+                                    });
+
+                                    vm.contact.interactionDate = response.data.schedule;
+                                    vm.$refs[formName].resetFields();
+                                }
+                                else {
+                                    vm.$message({
+                                        type: 'error',
+                                        message: response.data.message
+                                    });
+                                }
+                            }).catch(function (error) {
+                            console.log(error);
+                        });
+                    } else {
+                        return false;
+                    }
+                });
+            },
+
+            addInteraction(formName)
+            {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+
+                        let vm = this;
+
+                        vm.$message({
+                            type: 'info',
+                            message: 'Saving Interaction'
+                        });
+
+                        axios.post('/interaction/save', {
+                            remarks: vm.ruleForm.interactionRemarks,
+                            interaction_type_id: vm.ruleForm.interaction,
+                            interaction_date: vm.ruleForm.interactionDate+'',
+                            next_interaction_date: vm.ruleForm.nextInteractionDate+'',
+                            userClientId: vm.userClientId
+                        })
+                            .then(function (response) {
+                                vm.interactionDialogVisible = false;
+
+                                if (response.data.success) {
+                                    vm.$message({
+                                        type: 'success',
+                                        message: response.data.message
+                                    });
+
+                                    vm.$refs[formName].resetFields();
+                                }
+                                else {
+                                    vm.$message({
+                                        type: 'error',
+                                        message: response.data.message
+                                    });
+                                }
+                            }).catch(function (error) {
+                            console.log(error);
+                        });
+                    } else {
+                        return false;
+                    }
+                });
+            },
+
             getContactInfo()
             {
                 let vm = this;
                 axios.get('/api/contact/details/'+vm.userClientId)
                     .then(function (response) {
                         vm.statuses = response.data.statuses;
+                        vm.interactionTypes = response.data.interactionTypes;
                         vm.contact = response.data.contact;
                         vm.statusValue = vm.contact.status;
                     }).catch(function (error) {
                     console.log(error);
                 })
+            },
+            showInteraction()
+            {
+              let vm = this;
+
+              vm.interactionDialogVisible = true;
+            },
+            changeStatus()
+            {
+                console.log("Changing");
             }
         }
     }
@@ -284,5 +413,7 @@
 
     .ebg-anchor{
         color: #eaa568;
+        z-index: 1;
+        position: relative;
     }
 </style>
