@@ -20,6 +20,7 @@ use eminent\Models\Product;
 use eminent\Models\Profession;
 use eminent\Models\Religions;
 use eminent\Models\Sources;
+use eminent\Models\Status;
 use eminent\Models\Title;
 use eminent\UserClients\UserClientsRepository;
 use Illuminate\Http\Request;
@@ -37,7 +38,8 @@ class ContactController extends Controller
     protected $userClientsRepository;
 
     public function __construct(ContactsRepository $contactsRepository,
-                                ClientsRepository $clientsRepository, UserClientsRepository $userClientsRepository)
+                                ClientsRepository $clientsRepository,
+                                UserClientsRepository $userClientsRepository)
     {
         $this->contactsRepository = $contactsRepository;
         $this->clientsRepository = $clientsRepository;
@@ -51,7 +53,7 @@ class ContactController extends Controller
         $titles = $titles->map(function ($title)
         {
             return [
-                'value' => (string)$title->id,
+                'value' => $title->id,
                 'label' => $title->name
             ];
         });
@@ -61,7 +63,7 @@ class ContactController extends Controller
         $countries = $countries->map(function ($country)
         {
             return [
-                'value' => (string)$country->id,
+                'value' => $country->id,
                 'label' => $country->name
             ];
         });
@@ -71,7 +73,7 @@ class ContactController extends Controller
         $genders = $genders->map(function ($gender)
         {
             return [
-                'value' => (string)$gender->id,
+                'value' => $gender->id,
                 'label' => $gender->name
             ];
         });
@@ -81,7 +83,7 @@ class ContactController extends Controller
         $sources = $sources->map(function ($source)
         {
             return [
-                'value' => (string)$source->id,
+                'value' => $source->id,
                 'label' => $source->name
             ];
         });
@@ -91,7 +93,7 @@ class ContactController extends Controller
         $products = $products->map(function ($product)
         {
             return [
-                'value' => (string)$product->id,
+                'value' => $product->id,
                 'label' => $product->name
             ];
         });
@@ -101,7 +103,7 @@ class ContactController extends Controller
         $religions = $religions->map(function ($religion)
         {
             return [
-                'value' => (string)$religion->id,
+                'value' => $religion->id,
                 'label' => $religion->name
             ];
         });
@@ -111,7 +113,7 @@ class ContactController extends Controller
         $professions = $professions->map(function ($profession)
         {
             return [
-                'value' => (string)$profession->id,
+                'value' => $profession->id,
                 'label' => $profession->name
             ];
         });
@@ -149,8 +151,16 @@ class ContactController extends Controller
                 'id' => $contact->present()->getUserClientId(Auth::id()),
                 'contactId' => $contact->id,
                 'name' => $contact->present()->fullName,
+                'firstName' => $contact->firstname,
+                'lastName' => $contact->lastname,
+                'title_id' => $contact->title_id,
+                'gender_id' => $contact->gender_id,
+                'profession_id' => $contact->profession_id,
+                'religion_id' => $contact->religion_id,
+                'country_id' => $contact->country_id,
+                'source_id' => $contact->clients->source_id,
                 'email' => $contact->email,
-                'phone' => $contact->phone,
+                'phone' => (int)$contact->phone,
                 'status' => $contact->present()->clientStatus,
                 'source' => $contact->present()->contactSource,
                 'type' => $contact->type,
@@ -158,6 +168,37 @@ class ContactController extends Controller
         },$filterFunc, null);
 
         return $this->toResponse(null, $contacts);
+    }
+
+    public function getDetails($id)
+    {
+        $userClient = $this->userClientsRepository->getUserClientById($id);
+
+        $contact = $userClient->client->contact;
+
+        $contact = [
+            'name' => $contact->titleName->name.' '.$contact->present()->fullName,
+            'email' => $contact->email,
+            'phone' => $contact->phone,
+            'interactionDate' => $userClient->next_interaction_date,
+            'user' => $userClient->user->contact->present()->fullName,
+            'status' => $userClient->client->status_id
+        ];
+
+        $statuses = Status::all()->map(function ($status)
+        {
+            return [
+                'value' => $status->id,
+                'label' => $status->name
+            ];
+        });
+
+        $data = [
+            'contact' => $contact,
+            'statuses' => $statuses
+        ];
+
+        return $this->toResponse(null, $data);
     }
 
     public function index()
@@ -177,45 +218,71 @@ class ContactController extends Controller
             $request->merge(['phone' => $this->formatPhoneNumber($request->get('phone'))]);
         }
 
-        $validation = $this->contactsCreate($request);
-
-        if($validation)
+        if(!is_null($request->get('contactId')))
         {
-            $validation = $this->checkValidationError($validation, $request);
+            $validation = $this->contactsEdit($request);
 
-            $errorArray = $validation->messages()->getMessages();
+            if($validation)
+            {
+                $validation = $this->checkValidationError($validation, $request);
+
+                $errorArray = $validation->messages()->getMessages();
+
+                return self::toResponse(null, [
+                    'success' => false,
+                    'errorMessages' => array_flatten($errorArray),
+                ]);
+            }
+
+            $contact = $this->contactsRepository->save($request->all());
+
+            $this->clientsRepository->save($contact, $request->get('source_id'), $request->get('contactId'));
 
             return self::toResponse(null, [
-                'success' => false,
-                'errorMessages' => array_flatten($errorArray),
+                'success' => true,
+                'message' => 'Contact updated successfully'
             ]);
-        }
-
-        $contact = $this->contactsRepository->save($request->all(), null);
-
-        $client = $this->clientsRepository->save($contact, $request->get('source_id'), null);
-
-        if($request->get('user_id') != '')
-        {
-            $userClient = $this->userClientsRepository->save($client, $request->get('user_id'));
         }
         else
         {
-            $userClient = $this->userClientsRepository->save($client, Auth::id());
-        }
+            $validation = $this->contactsCreate($request);
 
-        return self::toResponse(null, [
-            'success' => true,
-            'message' => 'Contact added successfully'
-        ]);
+            if($validation)
+            {
+                $validation = $this->checkValidationError($validation, $request);
+
+                $errorArray = $validation->messages()->getMessages();
+
+                return self::toResponse(null, [
+                    'success' => false,
+                    'errorMessages' => array_flatten($errorArray),
+                ]);
+            }
+
+            $contact = $this->contactsRepository->save($request->all());
+
+            $client = $this->clientsRepository->save($contact, $request->get('source_id'), null);
+
+            if($request->get('user_id') != '')
+            {
+                $userClient = $this->userClientsRepository->save($client, $request->get('user_id'));
+            }
+            else
+            {
+                $userClient = $this->userClientsRepository->save($client, Auth::id());
+            }
+
+            return self::toResponse(null, [
+                'success' => true,
+                'message' => 'Contact added successfully'
+            ]);
+        }
     }
 
     public function details($id)
     {
-        $contact = $this->contactsRepository->getContactById($id);
-
         return view('contacts.details', [
-            'contact' => $contact
+            'id' => $id
         ]);
     }
 

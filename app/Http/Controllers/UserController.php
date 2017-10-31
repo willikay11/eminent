@@ -64,7 +64,7 @@ class UserController extends Controller
         $departments = $departments->map(function ($department)
         {
             return [
-                'value' => (string)$department->id,
+                'value' => $department->id,
                 'label' => $department->name
             ];
         });

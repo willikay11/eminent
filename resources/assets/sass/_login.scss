@@ -25,6 +25,7 @@
 .login-image{
   width: 60%;
   z-index: 1;
+  position: relative;
 }
 
 .login-header{
@@ -60,6 +61,20 @@
   }
 }
 
+.login-text{
+  text-align: center;
+}
+
+.login-welcome-text{
+  color: white;
+  font-weight: 500;
+  font-size: 40px;
+  letter-spacing: 1px;
+}
+
+.login-banner{
+  color: white;
+}
 .ebg-input-container{
   margin-top: 20px;
 }

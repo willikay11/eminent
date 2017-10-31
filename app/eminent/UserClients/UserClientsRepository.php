@@ -20,4 +20,12 @@ class UserClientsRepository
             'user_id' => $user,
         ]);
     }
+
+    /*
+     * Get a user client via their id
+     */
+    public function getUserClientById($id)
+    {
+        return UserClient::findOrFail($id);
+    }
 }

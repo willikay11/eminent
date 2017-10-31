@@ -21,30 +21,37 @@
                     </el-col>
                     <el-col :span="19">
                         <el-col :span="24">
-                            <h4>Mr. Test Test</h4>
+                            <h4>{{ contact.name }}</h4>
                         </el-col>
 
                         <el-col :span="24" class="contact-row">
-                            <span>Contact assigned to William Kamuyu</span>
+                            <span>Contact assigned to {{ contact.user }}</span>
                         </el-col>
 
                         <el-col :span="24" class="contact-row">
-                            <span>Email : </span><a href="#" class="span-holder ebg-anchor"> &nbsp; willikay11@gmail.com - Send Email</a>
+                            <span>Email : </span><a href="#" class="span-holder ebg-anchor"> &nbsp; {{ contact.email }} - Send Email</a>
                         </el-col>
 
                         <el-col :span="24" class="contact-row">
-                            <span>Phone Number :</span><a href="#" class="span-holder"> &nbsp; 0789656789</a>
+                            <span>Phone Number :</span><a href="#" class="span-holder"> &nbsp; {{ contact.phone }}</a>
                         </el-col>
 
-                        <el-col :span="24" class="contact-row">
-                            <span>Next Interaction Date :</span><a href="#" class="span-holder ebg-anchor"> &nbsp; October 29, 2017 05:25 - Schedule Interaction</a>
+                        <el-col :span="24" class="contact-row" v-if="contact.interactionDate == null">
+                            <span>Next Interaction Date :</span>
+                            <a href="#" class="span-holder ebg-anchor"> &nbsp; Not Scheduled - Schedule Interaction</a>
                         </el-col>
+
+                        <el-col :span="24" class="contact-row" v-if="contact.interactionDate != null">
+                            <span>Next Interaction Date :</span>
+                            <a href="#" class="span-holder ebg-anchor"> &nbsp; {{ contact.interactionDate }} - Edit Scheduled Interaction</a>
+                        </el-col>
+
                         <el-row :gutter="20">
                             <el-col :span="24" class="contact-row">
-                                <el-col :span="3">
-                                    <el-select v-model="value" placeholder="Select">
+                                <el-col :span="5">
+                                    <el-select v-model="statusValue" placeholder="Select">
                                         <el-option
-                                                v-for="item in options"
+                                                v-for="item in statuses"
                                                 :key="item.value"
                                                 :label="item.label"
                                                 :value="item.value">
@@ -156,8 +163,11 @@
 
 <script>
     export default {
+        props:['userClientId'],
         data() {
             return {
+                contact: [],
+                statuses: [],
                 options: [{
                     value: 'Option1',
                     label: 'Option1'
@@ -175,6 +185,7 @@
                     label: 'Option5'
                 }],
                 value: '',
+                statusValue: '',
                 textarea: '',
                 ruleForm: {
                     interactionRemarks: '',
@@ -200,6 +211,27 @@
                         {required: false, message: 'Please input interaction date', trigger: 'blur', type: 'date'},
                     ],
                 }
+            }
+        },
+        created()
+        {
+            let vm = this;
+
+            vm.getContactInfo();
+
+        },
+        methods:{
+            getContactInfo()
+            {
+                let vm = this;
+                axios.get('/api/contact/details/'+vm.userClientId)
+                    .then(function (response) {
+                        vm.statuses = response.data.statuses;
+                        vm.contact = response.data.contact;
+                        vm.statusValue = vm.contact.status;
+                    }).catch(function (error) {
+                    console.log(error);
+                })
             }
         }
     }

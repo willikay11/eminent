@@ -5,8 +5,18 @@
     <div class="login-background">
         <div class="row">
             <div class="login-container">
+                <div class="login-overlay"></div>
                 <div class="col-lg-6 inner-left">
-                    <img class="login-image" src="/img/EBG-logo.png">
+                    <div class="inner-left-overlay"></div>
+                    <div class="vertical-center">
+                        <img class="login-image" src="/img/EBG-logo.png">
+                        <div class="login-text">
+                            <p class="login-welcome-text">Welcome</p>
+                            <p class="login-banner">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+                                ut labore et dolore magna aliqua.</p>
+                        </div>
+                    </div>
+
                 </div>
                 <div class="col-lg-6 inner-right">
 

@@ -5,7 +5,7 @@
 
     <div class="row">
         <div class="col-lg-12">
-            <contact-details></contact-details>
+            <contact-details :user-client-id="{!! $id !!}"></contact-details>
         </div>
     </div>
 

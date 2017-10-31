@@ -69,7 +69,7 @@ class Contact extends Model
      */
     public function titleName()
     {
-        return $this->belongsTo(Title::class);
+        return $this->belongsTo(Title::class, 'title_id');
     }
 
     /*

@@ -8,51 +8,60 @@
                 <div class="login-overlay"></div>
                 <div class="col-lg-6 inner-left">
                     <div class="inner-left-overlay"></div>
-                    <div style="z-index: 1">
+                    <div class="vertical-center">
                         <img class="login-image" src="/img/EBG-logo.png">
+                        <div class="login-text">
+                            <p class="login-welcome-text">Welcome</p>
+                            <p class="login-banner">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+                                ut labore et dolore magna aliqua.</p>
+                        </div>
                     </div>
 
                 </div>
                 <div class="col-lg-6 inner-right">
 
-                    <div class="ebg-input-container">
-                        @include('layouts.partials.errors')
+                    <div class="vertical-center">
+                        <div class="ebg-input-container">
 
-                        @include('layouts.partials.flash')
-                    </div>
+                            @include('layouts.partials.errors')
 
-                    <div class="col-lg-12 login-header">
-                        <h3>Login</h3>
-                        <p>Enter your login details </p>
-                    </div>
-
-                    {!! Form::open(['route' => 'login.auth']) !!}
-                    <div class="row">
-                        <div class="col-lg-12 form-group ebg-input-container">
-                            {!! Form::text('email', null, ['class' => 'form-control ebg-input', 'placeholder' => 'example@eminent.co.ke']) !!}
+                            @include('layouts.partials.flash')
                         </div>
 
-                        <div class="col-lg-12 form-group ebg-input-container">
-                            {!! Form::password('password', ['class' => 'form-control ebg-input', 'placeholder' => 'password']) !!}
+                        <div class="col-lg-12 login-header">
+                            <h3>Login</h3>
+                            <p>Enter your login details </p>
                         </div>
 
-                        <div class="col-lg-12 ebg-input-container">
-                            <div class="col-lg-6">
-                                {!! Form::submit('Continue', ['class' => 'btn ebg-button']) !!}
+                        {!! Form::open(['route' => 'login.auth']) !!}
+                        <div class="row">
+                            <div class="col-lg-12 form-group ebg-input-container">
+                                {!! Form::text('email', null, ['class' => 'form-control ebg-input', 'placeholder' => 'example@eminent.co.ke']) !!}
                             </div>
 
-                            <div class="col-lg-6">
-                                <a href="/password/remind">Forgot Password</a>
+                            <div class="col-lg-12 form-group ebg-input-container">
+                                {!! Form::password('password', ['class' => 'form-control ebg-input', 'placeholder' => 'password']) !!}
                             </div>
+
+                            <div class="col-lg-12 ebg-input-container">
+                                <div class="col-lg-6">
+                                    {!! Form::submit('Continue', ['class' => 'btn ebg-button']) !!}
+                                </div>
+
+                                <div class="col-lg-6" style="text-align: right">
+                                    <a href="/password/remind">Forgot Password</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        {!! Form::close() !!}
+
+                        <div class="login-header ebg-input-container">
+                            <p>To use this system you must be an employee of EGB</p>
+                            <p>If you do not have an account, kindly request one from the administrator </p>
                         </div>
                     </div>
 
-                    {!! Form::close() !!}
-
-                    <div class="login-header ebg-input-container">
-                        <p>To use this system you must be an employee of EGB</p>
-                        <p>If you do not have an account, kindly request one from the administrator </p>
-                    </div>
                 </div>
             </div>
         </div>

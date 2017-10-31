@@ -265,14 +265,14 @@
                                 <span>Address</span>
                             </el-col>
                             <el-col :span="14">
-                                <el-form-item prop="email">
-                                    <el-input placeholder="Email (email@eminent.co.ke)"
-                                              v-model="ruleForm.email"></el-input>
+                                <el-form-item prop="addres">
+                                    <el-input placeholder="Address"
+                                              type="textarea"
+                                              :rows="3"
+                                              v-model="ruleForm.address"></el-input>
                                 </el-form-item>
                             </el-col>
                         </el-row>
-
-
                     </div>
 
                     <hr>
@@ -281,7 +281,7 @@
                 <div class="form-item-container">
                 <span slot="footer" class="dialog-footer">
                     <el-button @click="dialogVisible = false">Cancel</el-button>
-                    <el-button type="primary" @click="add('ruleForm')">Save</el-button>
+                    <el-button type="primary" class="btn ebg-button" @click="add('ruleForm')">Save</el-button>
                 </span>
                 </div>
             </el-dialog>
@@ -321,7 +321,7 @@
                 }],
                 total: 0,
                 dialogVisible: false,
-                departmentId: null,
+                contactId: null,
                 searchForm: {
                     startDate: '',
                     endDate: '',
@@ -358,13 +358,14 @@
                     country: '',
                     profession: '',
                     religion: '',
+                    address: ''
                 },
                 rules: {
                     startDate: [
                         {required: true, message: 'Please input start date', trigger: 'blur', type: 'date'},
                     ],
                     source: [
-                        {required: true, message: 'Please select status', trigger: 'change'},
+                        {required: true, message: 'Please select status', trigger: 'change', type: 'number'},
                     ],
                     designation: [
                         {required: true, message: 'Please input designation name', trigger: 'blur'},
@@ -373,10 +374,10 @@
                         {required: true, message: 'Please select active status', trigger: 'change'},
                     ],
                     title: [
-                        {required: true, message: 'Please select title', trigger: 'change'},
+                        {required: true, message: 'Please select title', trigger: 'change', type: 'number'},
                     ],
                     gender: [
-                        {required: true, message: 'Please select gender', trigger: 'change'},
+                        {required: true, message: 'Please select gender', trigger: 'change', type: 'number'},
                     ],
                     firstname: [
                         {required: true, message: 'Please input First name', trigger: 'blur'},
@@ -390,20 +391,14 @@
                     phone: [
                         {required: true, message: 'Please input Phone Number', trigger: 'blur', type: 'number'},
                     ],
-                    role: [
-                        {required: true, message: 'Please select role', trigger: 'change'},
-                    ],
-                    department: [
-                        {required: true, message: 'Please select department', trigger: 'change'},
-                    ],
                     country: [
-                        {required: true, message: 'Please select country', trigger: 'change'},
+                        {required: true, message: 'Please select country', trigger: 'change', type: 'number'},
                     ],
                     profession: [
-                        {required: true, message: 'Please select profession', trigger: 'change'},
+                        {required: true, message: 'Please select profession', trigger: 'change', type: 'number'},
                     ],
                     religion: [
-                        {required: true, message: 'Please select religion', trigger: 'change'},
+                        {required: true, message: 'Please select religion', trigger: 'change', type: 'number'},
                     ],
                     employmentDate: [
                         {required: true, message: 'Please input employment date', trigger: 'blur', type: 'date'},
@@ -469,6 +464,12 @@
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         let vm = this;
+
+                        vm.$message({
+                            type: 'info',
+                            message: 'Saving Contact'
+                        });
+
                         axios.post('/contacts/save', {
                             type: 1,
                             title_id: vm.ruleForm.title,
@@ -481,6 +482,8 @@
                             religion_id: vm.ruleForm.religion,
                             gender_id: vm.ruleForm.gender,
                             source_id: vm.ruleForm.source,
+                            address: vm.ruleForm.address,
+                            contactId: vm.contactId
                         })
                             .then(function (response) {
                                 vm.dialogVisible = false;
@@ -509,22 +512,42 @@
                     }
                 });
             },
-            edit(department)
+            edit(contact)
             {
                 let vm = this;
 
                 vm.dialogVisible = true;
 
-                vm.ruleForm.name = department.name;
+                console.log(contact);
 
-                vm.departmentId = department.id;
+                vm.contactId = contact.contactId;
+
+                vm.ruleForm.firstname = contact.firstName;
+
+                vm.ruleForm.lastname = contact.lastName;
+
+                vm.ruleForm.email = contact.email;
+
+                vm.ruleForm.phone = contact.phone;
+
+                vm.ruleForm.profession = contact.profession_id;
+
+                vm.ruleForm.country = contact.country_id;
+
+                vm.ruleForm.religion = contact.religion_id;
+
+                vm.ruleForm.gender = contact.gender_id;
+
+                vm.ruleForm.source = contact.source_id;
+
+                vm.ruleForm.title = contact.title_id;
             },
             filterTag(value, row) {
                 return row.tag === value;
             },
             details(user)
             {
-                window.location.href = '/contact/details/' + user.contactId;
+                window.location.href = '/contact/details/' + user.id;
             }
         }
     }

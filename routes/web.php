@@ -203,6 +203,10 @@ Route::group(['middleware' => 'auth'], function (){
     Route::get('/contact/details/{id}', [
         'uses' => 'ContactController@details'
     ]);
+
+    Route::get('/api/contact/details/{id}', [
+        'uses' => 'ContactController@getDetails'
+    ]);
 });
 
 

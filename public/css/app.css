@@ -8385,6 +8385,13 @@ button.close {
   border-top: 2px solid #eeeeee;
 }
 
+.vertical-center {
+  position: relative;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
 body {
   font-family: 'Poppins', sans-serif;
   background: #fafafa;
@@ -8690,6 +8697,7 @@ a.article:hover {
 .login-image {
   width: 60%;
   z-index: 1;
+  position: relative;
 }
 
 .login-header {
@@ -8727,6 +8735,21 @@ a.article:hover {
   background: white;
   height: 100%;
   border-radius: 0px 5px 5px 0px;
+}
+
+.login-text {
+  text-align: center;
+}
+
+.login-welcome-text {
+  color: white;
+  font-weight: 500;
+  font-size: 40px;
+  letter-spacing: 1px;
+}
+
+.login-banner {
+  color: white;
 }
 
 .ebg-input-container {

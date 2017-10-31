@@ -87604,7 +87604,7 @@ exports.default = {
             }],
             total: 0,
             dialogVisible: false,
-            departmentId: null,
+            contactId: null,
             searchForm: {
                 startDate: '',
                 endDate: '',
@@ -87632,24 +87632,23 @@ exports.default = {
                 employmentDate: '',
                 country: '',
                 profession: '',
-                religion: ''
+                religion: '',
+                address: ''
             },
             rules: {
                 startDate: [{ required: true, message: 'Please input start date', trigger: 'blur', type: 'date' }],
-                source: [{ required: true, message: 'Please select status', trigger: 'change' }],
+                source: [{ required: true, message: 'Please select status', trigger: 'change', type: 'number' }],
                 designation: [{ required: true, message: 'Please input designation name', trigger: 'blur' }],
                 active: [{ required: true, message: 'Please select active status', trigger: 'change' }],
-                title: [{ required: true, message: 'Please select title', trigger: 'change' }],
-                gender: [{ required: true, message: 'Please select gender', trigger: 'change' }],
+                title: [{ required: true, message: 'Please select title', trigger: 'change', type: 'number' }],
+                gender: [{ required: true, message: 'Please select gender', trigger: 'change', type: 'number' }],
                 firstname: [{ required: true, message: 'Please input First name', trigger: 'blur' }],
                 lastname: [{ required: true, message: 'Please input Last name', trigger: 'blur' }],
                 email: [{ required: true, message: 'Please input email', trigger: 'blur', type: 'email' }],
                 phone: [{ required: true, message: 'Please input Phone Number', trigger: 'blur', type: 'number' }],
-                role: [{ required: true, message: 'Please select role', trigger: 'change' }],
-                department: [{ required: true, message: 'Please select department', trigger: 'change' }],
-                country: [{ required: true, message: 'Please select country', trigger: 'change' }],
-                profession: [{ required: true, message: 'Please select profession', trigger: 'change' }],
-                religion: [{ required: true, message: 'Please select religion', trigger: 'change' }],
+                country: [{ required: true, message: 'Please select country', trigger: 'change', type: 'number' }],
+                profession: [{ required: true, message: 'Please select profession', trigger: 'change', type: 'number' }],
+                religion: [{ required: true, message: 'Please select religion', trigger: 'change', type: 'number' }],
                 employmentDate: [{ required: true, message: 'Please input employment date', trigger: 'blur', type: 'date' }]
             }
         };
@@ -87706,6 +87705,12 @@ exports.default = {
             this.$refs[formName].validate(function (valid) {
                 if (valid) {
                     var vm = _this;
+
+                    vm.$message({
+                        type: 'info',
+                        message: 'Saving Contact'
+                    });
+
                     axios.post('/contacts/save', {
                         type: 1,
                         title_id: vm.ruleForm.title,
@@ -87717,7 +87722,9 @@ exports.default = {
                         country_id: vm.ruleForm.country,
                         religion_id: vm.ruleForm.religion,
                         gender_id: vm.ruleForm.gender,
-                        source_id: vm.ruleForm.source
+                        source_id: vm.ruleForm.source,
+                        address: vm.ruleForm.address,
+                        contactId: vm.contactId
                     }).then(function (response) {
                         vm.dialogVisible = false;
 
@@ -87744,20 +87751,40 @@ exports.default = {
                 }
             });
         },
-        edit: function edit(department) {
+        edit: function edit(contact) {
             var vm = this;
 
             vm.dialogVisible = true;
 
-            vm.ruleForm.name = department.name;
+            console.log(contact);
 
-            vm.departmentId = department.id;
+            vm.contactId = contact.contactId;
+
+            vm.ruleForm.firstname = contact.firstName;
+
+            vm.ruleForm.lastname = contact.lastName;
+
+            vm.ruleForm.email = contact.email;
+
+            vm.ruleForm.phone = contact.phone;
+
+            vm.ruleForm.profession = contact.profession_id;
+
+            vm.ruleForm.country = contact.country_id;
+
+            vm.ruleForm.religion = contact.religion_id;
+
+            vm.ruleForm.gender = contact.gender_id;
+
+            vm.ruleForm.source = contact.source_id;
+
+            vm.ruleForm.title = contact.title_id;
         },
         filterTag: function filterTag(value, row) {
             return row.tag === value;
         },
         details: function details(user) {
-            window.location.href = '/contact/details/' + user.contactId;
+            window.location.href = '/contact/details/' + user.id;
         }
     }
 };
@@ -88546,18 +88573,20 @@ var render = function() {
                           [
                             _c(
                               "el-form-item",
-                              { attrs: { prop: "email" } },
+                              { attrs: { prop: "addres" } },
                               [
                                 _c("el-input", {
                                   attrs: {
-                                    placeholder: "Email (email@eminent.co.ke)"
+                                    placeholder: "Address",
+                                    type: "textarea",
+                                    rows: 3
                                   },
                                   model: {
-                                    value: _vm.ruleForm.email,
+                                    value: _vm.ruleForm.address,
                                     callback: function($$v) {
-                                      _vm.$set(_vm.ruleForm, "email", $$v)
+                                      _vm.$set(_vm.ruleForm, "address", $$v)
                                     },
-                                    expression: "ruleForm.email"
+                                    expression: "ruleForm.address"
                                   }
                                 })
                               ],
@@ -88601,6 +88630,7 @@ var render = function() {
                   _c(
                     "el-button",
                     {
+                      staticClass: "btn ebg-button",
                       attrs: { type: "primary" },
                       on: {
                         click: function($event) {
@@ -88926,10 +88956,20 @@ Object.defineProperty(exports, "__esModule", {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 exports.default = {
+    props: ['userClientId'],
     data: function data() {
         return {
+            contact: [],
+            statuses: [],
             options: [{
                 value: 'Option1',
                 label: 'Option1'
@@ -88947,6 +88987,7 @@ exports.default = {
                 label: 'Option5'
             }],
             value: '',
+            statusValue: '',
             textarea: '',
             ruleForm: {
                 interactionRemarks: '',
@@ -88963,6 +89004,24 @@ exports.default = {
                 nextInteractionDate: [{ required: false, message: 'Please input interaction date', trigger: 'blur', type: 'date' }]
             }
         };
+    },
+    created: function created() {
+        var vm = this;
+
+        vm.getContactInfo();
+    },
+
+    methods: {
+        getContactInfo: function getContactInfo() {
+            var vm = this;
+            axios.get('/api/contact/details/' + vm.userClientId).then(function (response) {
+                vm.statuses = response.data.statuses;
+                vm.contact = response.data.contact;
+                vm.statusValue = vm.contact.status;
+            }).catch(function (error) {
+                console.log(error);
+            });
+        }
     }
 };
 
@@ -88996,13 +89055,19 @@ var render = function() {
                 { attrs: { span: 19 } },
                 [
                   _c("el-col", { attrs: { span: 24 } }, [
-                    _c("h4", [_vm._v("Mr. Test Test")])
+                    _c("h4", [_vm._v(_vm._s(_vm.contact.name))])
                   ]),
                   _vm._v(" "),
                   _c(
                     "el-col",
                     { staticClass: "contact-row", attrs: { span: 24 } },
-                    [_c("span", [_vm._v("Contact assigned to William Kamuyu")])]
+                    [
+                      _c("span", [
+                        _vm._v(
+                          "Contact assigned to " + _vm._s(_vm.contact.user)
+                        )
+                      ])
+                    ]
                   ),
                   _vm._v(" "),
                   _c(
@@ -89016,7 +89081,11 @@ var render = function() {
                           staticClass: "span-holder ebg-anchor",
                           attrs: { href: "#" }
                         },
-                        [_vm._v("   willikay11@gmail.com - Send Email")]
+                        [
+                          _vm._v(
+                            "   " + _vm._s(_vm.contact.email) + " - Send Email"
+                          )
+                        ]
                       )
                     ]
                   ),
@@ -89029,30 +89098,54 @@ var render = function() {
                       _c(
                         "a",
                         { staticClass: "span-holder", attrs: { href: "#" } },
-                        [_vm._v("   0789656789")]
+                        [_vm._v("   " + _vm._s(_vm.contact.phone))]
                       )
                     ]
                   ),
                   _vm._v(" "),
-                  _c(
-                    "el-col",
-                    { staticClass: "contact-row", attrs: { span: 24 } },
-                    [
-                      _c("span", [_vm._v("Next Interaction Date :")]),
-                      _c(
-                        "a",
-                        {
-                          staticClass: "span-holder ebg-anchor",
-                          attrs: { href: "#" }
-                        },
+                  _vm.contact.interactionDate == null
+                    ? _c(
+                        "el-col",
+                        { staticClass: "contact-row", attrs: { span: 24 } },
                         [
-                          _vm._v(
-                            "   October 29, 2017 05:25 - Schedule Interaction"
+                          _c("span", [_vm._v("Next Interaction Date :")]),
+                          _vm._v(" "),
+                          _c(
+                            "a",
+                            {
+                              staticClass: "span-holder ebg-anchor",
+                              attrs: { href: "#" }
+                            },
+                            [_vm._v("   Not Scheduled - Schedule Interaction")]
                           )
                         ]
                       )
-                    ]
-                  ),
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.contact.interactionDate != null
+                    ? _c(
+                        "el-col",
+                        { staticClass: "contact-row", attrs: { span: 24 } },
+                        [
+                          _c("span", [_vm._v("Next Interaction Date :")]),
+                          _vm._v(" "),
+                          _c(
+                            "a",
+                            {
+                              staticClass: "span-holder ebg-anchor",
+                              attrs: { href: "#" }
+                            },
+                            [
+                              _vm._v(
+                                "   " +
+                                  _vm._s(_vm.contact.interactionDate) +
+                                  " - Edit Scheduled Interaction"
+                              )
+                            ]
+                          )
+                        ]
+                      )
+                    : _vm._e(),
                   _vm._v(" "),
                   _c(
                     "el-row",
@@ -89064,21 +89157,21 @@ var render = function() {
                         [
                           _c(
                             "el-col",
-                            { attrs: { span: 3 } },
+                            { attrs: { span: 5 } },
                             [
                               _c(
                                 "el-select",
                                 {
                                   attrs: { placeholder: "Select" },
                                   model: {
-                                    value: _vm.value,
+                                    value: _vm.statusValue,
                                     callback: function($$v) {
-                                      _vm.value = $$v
+                                      _vm.statusValue = $$v
                                     },
-                                    expression: "value"
+                                    expression: "statusValue"
                                   }
                                 },
-                                _vm._l(_vm.options, function(item) {
+                                _vm._l(_vm.statuses, function(item) {
                                   return _c("el-option", {
                                     key: item.value,
                                     attrs: {

@@ -23,18 +23,20 @@ class ContactsRepository
         return Contact::find($id);
     }
 
-    public function save(array $input, $id = null)
+    public function save(array $input)
     {
-        if(is_null($id))
+        if(is_null($input['contactId']))
         {
             $contact = Contact::create($input);
 
             return $contact;
         }else
         {
-            $contact = Contact::findOrFail($id);
+            $contact = Contact::findOrFail($input['contactId']);
 
-            return $this->updateContact($contact, $input);
+            $this->updateContact($contact, $input);
+
+            return $contact;
         }
     }
 
