@@ -4,7 +4,7 @@
 @section('dashboard-content')
 
     <div class="row">
-        <div class="col-lg-offset-1 col-lg-10">
+        <div class="col-lg-12">
             <users-table></users-table>
         </div>
     </div>

@@ -4,7 +4,7 @@
 @section('dashboard-content')
 
     <div class="row">
-        <div class="col-lg-offset-1 col-lg-10">
+        <div class="col-lg-12">
             <div class="panel panel-default">
                 <div class="col-lg-12 panel-header">
                     <div class="col-lg-6">
