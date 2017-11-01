@@ -12,7 +12,7 @@
 
             <ul class="list-unstyled components">
                 <li class="active">
-                    <a href="#" aria-expanded="false">
+                    <a href="/" aria-expanded="false">
                         <i class="glyphicon glyphicon-home"></i>
                         Dashboard
                     </a>
@@ -64,10 +64,18 @@
             <!-- Fixed navbar -->
             <div id="fixedNav" class="navbar navbar-fixed-top" role="navigation">
                     <div class="navbar-header">
-                        <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
-                            <i class="glyphicon glyphicon-align-left"></i>
-                            <span>Toggle</span>
-                        </button>
+                        <div class="navbar-left">
+                            <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
+                                <i class="glyphicon glyphicon-align-left"></i>
+                                <span></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="navbar-right" style="margin-right: 40px">
+                        <a href="/logout">
+                            <span style="margin-right: 10px; margin-top: 7px;margin-bottom: 7px;">{{ \Illuminate\Support\Facades\Auth::user()->contact->present()->fullName }}</span>
+                            <i class="glyphicon glyphicon-log-in"></i>
+                        </a>
                     </div>
             </div>
 

@@ -17,3 +17,7 @@ Vue.component('usersTable', require('./users/usersTable.vue'));
 Vue.component('contactsTable', require('./contacts/contactTable.vue'));
 
 Vue.component('contactDetails', require('./contacts/contactDetail.vue'));
+
+Vue.component('dashboardContacts', require('./dashboards/contacts.vue'));
+
+Vue.component('dashboardInteractions', require('./dashboards/interactions.vue'));

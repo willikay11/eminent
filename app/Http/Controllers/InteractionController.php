@@ -14,8 +14,10 @@ use eminent\API\SortFilterPaginate;
 use eminent\Clients\ClientsRepository;
 use eminent\Contacts\ContactsRepository;
 use eminent\Interactions\InteractionsRepository;
+use eminent\Models\Interaction;
 use eminent\UserClients\UserClientsRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class InteractionController extends Controller
 {
@@ -35,6 +37,28 @@ class InteractionController extends Controller
         $this->clientsRepository = $clientsRepository;
         $this->userClientsRepository = $userClientsRepository;
         $this->interactionsRepository = $interactionsRepository;
+    }
+
+    public function getInteractions()
+    {
+        $filter = [
+            'column' => 'user_id',
+            'sign' => '=',
+            'value' => Auth::id()
+        ];
+
+        $interactions = $this->sortFilterPaginate(new Interaction(), [$filter], function ($interaction)
+        {
+            return[
+                'id' => $interaction->id,
+                'client' => $interaction->client->contact->present()->fullName,
+                'interactionType' => $interaction->interactionType->name,
+                'date' => Carbon::parse($interaction->interaction_date)->format('jS F Y'),
+                'remarks' => $interaction->remarks,
+            ];
+        },null, null);
+
+        return self::toResponse(null, $interactions);
     }
 
     public function storeSchedule(Request $request)

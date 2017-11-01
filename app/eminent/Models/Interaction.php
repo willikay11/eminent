@@ -38,4 +38,28 @@ class Interaction extends Model
      * @var array
      */
     protected $guarded = array('id', 'created_at', 'updated_at');
+
+    /*
+     * Relationship between a user and an interaction
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /*
+     * Relationship between a client and an interaction
+     */
+    public function client()
+    {
+        return $this->belongsTo(Client::class);
+    }
+
+    /*
+     * Relationship between an interaction and an interactiontype
+     */
+    public function interactionType()
+    {
+        return $this->belongsTo(InteractionType::class);
+    }
 }

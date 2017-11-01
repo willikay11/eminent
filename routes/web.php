@@ -219,6 +219,10 @@ Route::group(['middleware' => 'auth'], function (){
     Route::post('/interaction/save', [
         'uses' => 'InteractionController@store'
     ]);
+
+    Route::get('/api/interactions', [
+        'uses' => 'InteractionController@getInteractions'
+    ]);
 });
 
 
