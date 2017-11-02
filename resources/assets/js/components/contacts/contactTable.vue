@@ -315,7 +315,7 @@
                 religions: [],
                 professions: [],
                 sources: [],
-                products: [],
+                services: [],
                 options: [{
                     value: '1',
                     label: 'Active'
@@ -427,7 +427,7 @@
                 let vm = this;
                 axios.get('/contacts/info')
                     .then(function (response) {
-                        vm.products = response.data.products;
+                        vm.services = response.data.services;
                         vm.countries = response.data.countries;
                         vm.titles = response.data.titles;
                         vm.sources = response.data.sources;

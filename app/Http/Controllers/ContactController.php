@@ -17,7 +17,7 @@ use eminent\Models\Contact;
 use eminent\Models\Country;
 use eminent\Models\Gender;
 use eminent\Models\InteractionType;
-use eminent\Models\Product;
+use eminent\Models\Service;
 use eminent\Models\Profession;
 use eminent\Models\Religions;
 use eminent\Models\Sources;
@@ -89,13 +89,13 @@ class ContactController extends Controller
             ];
         });
 
-        $products = Product::where('active', 1)->get();
+        $services = Service::where('active', 1)->get();
 
-        $products = $products->map(function ($product)
+        $services = $services->map(function ($service)
         {
             return [
-                'value' => $product->id,
-                'label' => $product->name
+                'value' => $service->id,
+                'label' => $service->name
             ];
         });
 

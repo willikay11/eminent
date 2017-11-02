@@ -2,10 +2,10 @@
     <div class="panel panel-default">
         <div class="col-lg-12 panel-header">
             <div class="col-lg-6">
-                <h4>Departments</h4>
+                <h4>Services</h4>
             </div>
             <div class="col-lg-6" style="text-align: right">
-                <button class="btn ebg-button" v-on:click="showAddDialog()">Add Department</button>
+                <button class="btn ebg-button" v-on:click="showAddDialog()">Add Service</button>
             </div>
         </div>
         <div class="panel-body">
@@ -16,6 +16,10 @@
                 <el-table-column
                         prop="name"
                         label="Name">
+                </el-table-column>
+                <el-table-column
+                        prop="abbrev"
+                        label="Abbreviation">
                 </el-table-column>
                 <el-table-column
                         prop="tag"
@@ -46,13 +50,17 @@
         </div>
 
         <el-dialog
-                title="New/Edit Profession"
+                title="New/Edit Service"
                 :visible.sync="dialogVisible"
                 size="tiny">
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-position="top">
 
-                <el-form-item prop="name" label="Department Name">
-                    <el-input placeholder="Input Name" v-model="ruleForm.name"></el-input>
+                <el-form-item prop="name" label="Service Name">
+                    <el-input placeholder="Input Service" v-model="ruleForm.name"></el-input>
+                </el-form-item>
+
+                <el-form-item prop="name" label="Service Abbreviation">
+                    <el-input placeholder="Input AbbreVIATION" v-model="ruleForm.abbrev"></el-input>
                 </el-form-item>
 
                 <el-form-item prop="active" label="Active">
@@ -88,14 +96,18 @@
                 }],
                 total: 0,
                 dialogVisible: false,
-                departmentId: null,
+                serviceId: null,
                 ruleForm: {
                     name: '',
+                    abbrev: '',
                     active: ''
                 },
                 rules: {
                     name : [
-                        {required: true, message: 'Please input department name', trigger: 'blur'},
+                        {required: true, message: 'Please input service name', trigger: 'blur'},
+                    ],
+                    abbrev : [
+                        {required: true, message: 'Please input abbreviation', trigger: 'blur'},
                     ],
                     active : [
                         {required: true, message: 'Please active status', trigger: 'change'},
@@ -106,17 +118,17 @@
         created: function () {
             let vm = this;
 
-            vm.getDepartments();
+            vm.getServices();
         },
 
         methods:{
             handleClick() {
                 console.log('click');
             },
-            getDepartments()
+            getServices()
             {
                 let vm = this;
-                axios.get('/api/departments')
+                axios.get('/api/services')
                     .then(function (response) {
                         vm.tableData = [].concat(response.data.data);
                         vm.total = response.data.last_page;
@@ -142,16 +154,17 @@
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         let vm = this;
-                        axios.post('/departments/save', {
+                        axios.post('/services/save', {
                             name     : vm.ruleForm.name,
                             active : vm.ruleForm.active,
-                            departmentId: vm.departmentId
+                            abbrev : vm.ruleForm.abbrev,
+                            serviceId: vm.serviceId
                         })
                             .then(function (response)
                             {
                                 vm.dialogVisible = false;
 
-                                vm.getDepartments();
+                                vm.getServices();
 
                                 if(response.data.success)
                                 {
@@ -175,15 +188,17 @@
                     }
                 });
             },
-            edit(department)
+            edit(service)
             {
                 let vm = this;
 
                 vm.dialogVisible = true;
 
-                vm.ruleForm.name = department.name;
+                vm.ruleForm.name = service.name;
 
-                vm.departmentId = department.id;
+                vm.ruleForm.abbrev = service.abbrev;
+
+                vm.serviceId = service.id;
             },
             filterTag(value, row) {
                 return row.tag === value;

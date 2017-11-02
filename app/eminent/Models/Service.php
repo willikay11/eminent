@@ -12,7 +12,7 @@ namespace eminent\Models;
 use Illuminate\Database\Eloquent\Model;
 use Laracasts\Presenter\PresentableTrait;
 
-class Product extends Model
+class Service extends Model
 {
     use PresentableTrait;
     /**
@@ -20,7 +20,9 @@ class Product extends Model
      *
      * @var string
      */
-    protected $table = 'products';
+    protected $table = 'services';
+
+    protected $presenter = 'eminent\Services\ServicesPresenter';
 
     /**
      * The attributes that are mass assignable.

@@ -12,6 +12,8 @@ Vue.component('sourcesTable', require('./sources/sourceTable.vue'));
 
 Vue.component('departmentsTable', require('./departments/departmentTable.vue'));
 
+Vue.component('servicesTable', require('./services/servicesTable.vue'));
+
 Vue.component('usersTable', require('./users/usersTable.vue'));
 
 Vue.component('contactsTable', require('./contacts/contactTable.vue'));

@@ -2,53 +2,55 @@
 /**
  * Created by PhpStorm.
  * User: mac-intern
- * Date: 10/29/17
- * Time: 9:34 AM
+ * Date: 11/2/17
+ * Time: 7:08 PM
  */
 
 namespace App\Http\Controllers;
 
 
 use eminent\API\SortFilterPaginate;
-use eminent\Departments\DepartmentsRepository;
-use eminent\Departments\DepartmentsRules;
-use eminent\Models\Department;
+use eminent\Models\Service;
+use eminent\Services\ServicesRepository;
+use eminent\Services\ServicesRules;
 use Illuminate\Http\Request;
 
-class DepartmentController extends Controller
+class ServiceController extends Controller
 {
     use SortFilterPaginate;
-    use DepartmentsRules;
 
-    protected $departmentsRepository;
+    use ServicesRules;
 
-    public function __construct(DepartmentsRepository $departmentsRepository)
+    protected $servicesRepository;
+
+    public function __construct(ServicesRepository $servicesRepository)
     {
-        $this->departmentsRepository = $departmentsRepository;
+        $this->servicesRepository = $servicesRepository;
     }
 
-    public function getDepartments()
+    public function getServices()
     {
-        $departments = $this->sortFilterPaginate(new Department(), [], function ($department)
+        $services = $this->sortFilterPaginate(new Service(), [], function ($service)
         {
             return[
-                'id' => $department->id,
-                'name' => $department->name,
-                'active' => $department->present()->activeStatus
+                'id' => $service->id,
+                'name' => $service->name,
+                'abbrev' => $service->abbrev,
+                'active' => $service->present()->activeStatus
             ];
         },null, null);
 
-        return self::toResponse(null, $departments);
+        return self::toResponse(null, $services);
     }
 
     public function index()
     {
-        return view('departments.index');
+        return view('services.index');
     }
 
     public function store(Request $request)
     {
-        if(is_null($request->get('departmentId')))
+        if(is_null($request->get('serviceId')))
         {
             return $this->save($request);
         }
@@ -59,7 +61,7 @@ class DepartmentController extends Controller
 
     public function save($request)
     {
-        $validation = $this->validateDepartmentCreate($request);
+        $validation = $this->validateServiceCreate($request);
 
         if($validation)
         {
@@ -71,13 +73,13 @@ class DepartmentController extends Controller
             return $response;
         }
 
-        $department = $this->departmentsRepository->createDepartment($request->toArray());
+        $department = $this->servicesRepository->createService($request->toArray());
 
         if($department)
         {
             $response = [
                 'success' => true,
-                'message' => 'Department added successfully'
+                'message' => 'Service added successfully'
             ];
 
             return $response;
@@ -93,7 +95,7 @@ class DepartmentController extends Controller
 
     public function edit($request)
     {
-        $validation = $this->validateDepartmentEdit($request);
+        $validation = $this->validateServiceEdit($request);
 
         if($validation)
         {
@@ -105,13 +107,13 @@ class DepartmentController extends Controller
             return $response;
         }
 
-        $department = $this->departmentsRepository->updateDepartment($request->toArray());
+        $department = $this->servicesRepository->updateService($request->toArray());
 
         if($department)
         {
             $response = [
                 'success' => true,
-                'message' => 'Department edited successfully'
+                'message' => 'Service edited successfully'
             ];
 
             return $response;

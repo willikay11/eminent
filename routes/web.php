@@ -214,6 +214,23 @@ Route::group(['middleware' => 'auth'], function (){
     Route::post('/notes/save', [
         'uses' => 'NoteController@save'
     ]);
+
+    /*
+     * Services Routes
+     */
+    Route::get('/services', [
+        'uses' => 'ServiceController@index'
+    ]);
+
+    Route::get('/api/services', [
+        'uses' => 'ServiceController@getServices'
+    ]);
+
+    Route::post('/services/save', [
+        'as' => 'services.save',
+        'uses' => 'ServiceController@store'
+    ]);
+
     /*
      * Interaction Routes
      */
