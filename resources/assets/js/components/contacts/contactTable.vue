@@ -254,12 +254,17 @@
 
                         <el-row :span="24" :gutter="20">
                             <el-col :span="2">
-                                <span>Products</span>
+                                <span>Services</span>
                             </el-col>
                             <el-col :span="14">
-                                <el-form-item prop="email">
-                                    <el-input placeholder="Email (email@eminent.co.ke)"
-                                              v-model="ruleForm.email"></el-input>
+                                <el-form-item prop="service">
+                                    <multiselect
+                                            v-model="ruleForm.service"
+                                            :options="services"
+                                            :multiple="true"
+                                            track-by="value"
+                                            :custom-label="customLabel">
+                                    </multiselect>
                                 </el-form-item>
                             </el-col>
                         </el-row>
@@ -305,7 +310,10 @@
 </template>
 
 <script>
+    import Multiselect from 'vue-multiselect';
+
     export default {
+        components: { Multiselect },
         data() {
             return {
                 tableData: [],
@@ -362,7 +370,8 @@
                     country: '',
                     profession: '',
                     religion: '',
-                    address: ''
+                    address: '',
+                    service: ''
                 },
                 rules: {
                     startDate: [
@@ -406,6 +415,9 @@
                     ],
                     employmentDate: [
                         {required: true, message: 'Please input employment date', trigger: 'blur', type: 'date'},
+                    ],
+                    service: [
+                        {required: true, message: 'Please select service', trigger: 'change', type: 'array'},
                     ],
                 },
             }
@@ -489,6 +501,7 @@
                             gender_id: vm.ruleForm.gender,
                             source_id: vm.ruleForm.source,
                             address: vm.ruleForm.address,
+                            services: vm.ruleForm.service,
                             contactId: vm.contactId
                         })
                             .then(function (response) {
@@ -554,6 +567,9 @@
             details(user)
             {
                 window.location.href = '/contact/details/' + user.id;
+            },
+            customLabel (option) {
+                return `${option.label}`
             }
         }
     }
@@ -595,3 +611,5 @@
         width: 0px;
     }
 </style>
+
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

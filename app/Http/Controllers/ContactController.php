@@ -13,6 +13,7 @@ use eminent\API\SortFilterPaginate;
 use eminent\Clients\ClientsRepository;
 use eminent\Contacts\ContactRules;
 use eminent\Contacts\ContactsRepository;
+use eminent\Interests\InterestsRepository;
 use eminent\Models\Contact;
 use eminent\Models\Country;
 use eminent\Models\Gender;
@@ -37,14 +38,17 @@ class ContactController extends Controller
     protected $contactsRepository;
     protected $clientsRepository;
     protected $userClientsRepository;
+    protected $interestsRepository;
 
     public function __construct(ContactsRepository $contactsRepository,
                                 ClientsRepository $clientsRepository,
-                                UserClientsRepository $userClientsRepository)
+                                UserClientsRepository $userClientsRepository,
+                                InterestsRepository $interestsRepository)
     {
         $this->contactsRepository = $contactsRepository;
         $this->clientsRepository = $clientsRepository;
         $this->userClientsRepository = $userClientsRepository;
+        $this->interestsRepository = $interestsRepository;
     }
 
     public function getInfo()
@@ -124,7 +128,7 @@ class ContactController extends Controller
             'sources' => $sources,
             'titles' => $titles,
             'countries' => $countries,
-            'products' => $products,
+            'services' => $services,
             'genders' => $genders,
             'professions' => $professions,
             'religions' => $religions
@@ -272,6 +276,16 @@ class ContactController extends Controller
             $contact = $this->contactsRepository->save($request->all());
 
             $client = $this->clientsRepository->save($contact, $request->get('source_id'), null);
+
+            if($request->get('services') != '')
+            {
+                $services = $request->get('services');
+
+                foreach ($services as $service)
+                {
+                    $this->interestsRepository->save($service['value'], $client->id);
+                }
+            }
 
             if($request->get('user_id') != '')
             {
