@@ -208,7 +208,12 @@ Route::group(['middleware' => 'auth'], function (){
         'uses' => 'ContactController@getDetails'
     ]);
 
-
+    /*
+     * Note Routes
+     */
+    Route::post('/notes/save', [
+        'uses' => 'NoteController@save'
+    ]);
     /*
      * Interaction Routes
      */

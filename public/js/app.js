@@ -10862,6 +10862,88 @@ module.exports = Vue$3;
 
 /***/ }),
 /* 3 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function(useSourceMap) {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		return this.map(function (item) {
+			var content = cssWithMappingToString(item, useSourceMap);
+			if(item[2]) {
+				return "@media " + item[2] + "{" + content + "}";
+			} else {
+				return content;
+			}
+		}).join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+function cssWithMappingToString(item, useSourceMap) {
+	var content = item[1] || '';
+	var cssMapping = item[3];
+	if (!cssMapping) {
+		return content;
+	}
+
+	if (useSourceMap && typeof btoa === 'function') {
+		var sourceMapping = toComment(cssMapping);
+		var sourceURLs = cssMapping.sources.map(function (source) {
+			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
+		});
+
+		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
+	}
+
+	return [content].join('\n');
+}
+
+// Adapted from convert-source-map (MIT)
+function toComment(sourceMap) {
+	// eslint-disable-next-line no-undef
+	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
+	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
+
+	return '/*# ' + data + ' */';
+}
+
+
+/***/ }),
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11168,88 +11250,6 @@ module.exports = {
   extend: extend,
   trim: trim
 };
-
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-// css base code, injected by the css-loader
-module.exports = function(useSourceMap) {
-	var list = [];
-
-	// return the list of modules as css string
-	list.toString = function toString() {
-		return this.map(function (item) {
-			var content = cssWithMappingToString(item, useSourceMap);
-			if(item[2]) {
-				return "@media " + item[2] + "{" + content + "}";
-			} else {
-				return content;
-			}
-		}).join("");
-	};
-
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
-};
-
-function cssWithMappingToString(item, useSourceMap) {
-	var content = item[1] || '';
-	var cssMapping = item[3];
-	if (!cssMapping) {
-		return content;
-	}
-
-	if (useSourceMap && typeof btoa === 'function') {
-		var sourceMapping = toComment(cssMapping);
-		var sourceURLs = cssMapping.sources.map(function (source) {
-			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
-		});
-
-		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
-	}
-
-	return [content].join('\n');
-}
-
-// Adapted from convert-source-map (MIT)
-function toComment(sourceMap) {
-	// eslint-disable-next-line no-undef
-	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
-	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
-
-	return '/*# ' + data + ' */';
-}
 
 
 /***/ }),
@@ -13041,7 +13041,7 @@ module.exports = exports['default'];
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 
-var utils = __webpack_require__(3);
+var utils = __webpack_require__(4);
 var normalizeHeaderName = __webpack_require__(96);
 
 var DEFAULT_CONTENT_TYPE = {
@@ -14630,7 +14630,7 @@ module.exports = function bind(fn, thisArg) {
 "use strict";
 
 
-var utils = __webpack_require__(3);
+var utils = __webpack_require__(4);
 var settle = __webpack_require__(97);
 var buildURL = __webpack_require__(99);
 var parseHeaders = __webpack_require__(100);
@@ -14878,7 +14878,7 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(36);
-module.exports = __webpack_require__(166);
+module.exports = __webpack_require__(171);
 
 
 /***/ }),
@@ -51427,7 +51427,7 @@ if(false) {
 /* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(4)(undefined);
+exports = module.exports = __webpack_require__(3)(undefined);
 // imports
 
 
@@ -81792,7 +81792,7 @@ module.exports = __webpack_require__(93);
 "use strict";
 
 
-var utils = __webpack_require__(3);
+var utils = __webpack_require__(4);
 var bind = __webpack_require__(30);
 var Axios = __webpack_require__(95);
 var defaults = __webpack_require__(19);
@@ -81879,7 +81879,7 @@ function isSlowBuffer (obj) {
 
 
 var defaults = __webpack_require__(19);
-var utils = __webpack_require__(3);
+var utils = __webpack_require__(4);
 var InterceptorManager = __webpack_require__(104);
 var dispatchRequest = __webpack_require__(105);
 var isAbsoluteURL = __webpack_require__(107);
@@ -81971,7 +81971,7 @@ module.exports = Axios;
 "use strict";
 
 
-var utils = __webpack_require__(3);
+var utils = __webpack_require__(4);
 
 module.exports = function normalizeHeaderName(headers, normalizedName) {
   utils.forEach(headers, function processHeader(value, name) {
@@ -82051,7 +82051,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
 "use strict";
 
 
-var utils = __webpack_require__(3);
+var utils = __webpack_require__(4);
 
 function encode(val) {
   return encodeURIComponent(val).
@@ -82126,7 +82126,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 "use strict";
 
 
-var utils = __webpack_require__(3);
+var utils = __webpack_require__(4);
 
 /**
  * Parse headers into an object
@@ -82170,7 +82170,7 @@ module.exports = function parseHeaders(headers) {
 "use strict";
 
 
-var utils = __webpack_require__(3);
+var utils = __webpack_require__(4);
 
 module.exports = (
   utils.isStandardBrowserEnv() ?
@@ -82288,7 +82288,7 @@ module.exports = btoa;
 "use strict";
 
 
-var utils = __webpack_require__(3);
+var utils = __webpack_require__(4);
 
 module.exports = (
   utils.isStandardBrowserEnv() ?
@@ -82348,7 +82348,7 @@ module.exports = (
 "use strict";
 
 
-var utils = __webpack_require__(3);
+var utils = __webpack_require__(4);
 
 function InterceptorManager() {
   this.handlers = [];
@@ -82407,7 +82407,7 @@ module.exports = InterceptorManager;
 "use strict";
 
 
-var utils = __webpack_require__(3);
+var utils = __webpack_require__(4);
 var transformData = __webpack_require__(106);
 var isCancel = __webpack_require__(33);
 var defaults = __webpack_require__(19);
@@ -82493,7 +82493,7 @@ module.exports = function dispatchRequest(config) {
 "use strict";
 
 
-var utils = __webpack_require__(3);
+var utils = __webpack_require__(4);
 
 /**
  * Transform the data for a request or a response
@@ -82682,7 +82682,7 @@ Vue.component('contactDetails', __webpack_require__(156));
 
 Vue.component('dashboardContacts', __webpack_require__(161));
 
-Vue.component('dashboardInteractions', __webpack_require__(174));
+Vue.component('dashboardInteractions', __webpack_require__(166));
 
 /***/ }),
 /* 112 */
@@ -82766,7 +82766,7 @@ if(false) {
 /* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(4)(undefined);
+exports = module.exports = __webpack_require__(3)(undefined);
 // imports
 
 
@@ -83069,7 +83069,7 @@ if(false) {
 /* 120 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(4)(undefined);
+exports = module.exports = __webpack_require__(3)(undefined);
 // imports
 
 
@@ -84021,7 +84021,7 @@ if(false) {
 /* 128 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(4)(undefined);
+exports = module.exports = __webpack_require__(3)(undefined);
 // imports
 
 
@@ -84560,7 +84560,7 @@ if(false) {
 /* 133 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(4)(undefined);
+exports = module.exports = __webpack_require__(3)(undefined);
 // imports
 
 
@@ -85097,7 +85097,7 @@ if(false) {
 /* 138 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(4)(undefined);
+exports = module.exports = __webpack_require__(3)(undefined);
 // imports
 
 
@@ -85634,7 +85634,7 @@ if(false) {
 /* 143 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(4)(undefined);
+exports = module.exports = __webpack_require__(3)(undefined);
 // imports
 
 
@@ -86171,7 +86171,7 @@ if(false) {
 /* 148 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(4)(undefined);
+exports = module.exports = __webpack_require__(3)(undefined);
 // imports
 
 
@@ -87265,7 +87265,7 @@ if(false) {
 /* 153 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(4)(undefined);
+exports = module.exports = __webpack_require__(3)(undefined);
 // imports
 
 
@@ -87285,6 +87285,10 @@ exports.push([module.i, "\n.el-table {\n    border-left: none;\n    border-right
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+//
+//
+//
+//
 //
 //
 //
@@ -87649,7 +87653,7 @@ exports.default = {
                 firstname: [{ required: true, message: 'Please input First name', trigger: 'blur' }],
                 lastname: [{ required: true, message: 'Please input Last name', trigger: 'blur' }],
                 email: [{ required: true, message: 'Please input email', trigger: 'blur', type: 'email' }],
-                phone: [{ required: true, message: 'Please input Phone Number', trigger: 'blur', type: 'number' }],
+                phone: [{ required: true, message: 'Please input Phone Number', trigger: 'blur', type: 'integer' }],
                 country: [{ required: true, message: 'Please select country', trigger: 'change', type: 'number' }],
                 profession: [{ required: true, message: 'Please select profession', trigger: 'change', type: 'number' }],
                 religion: [{ required: true, message: 'Please select religion', trigger: 'change', type: 'number' }],
@@ -87714,6 +87718,8 @@ exports.default = {
                         type: 'info',
                         message: 'Saving Contact'
                     });
+
+                    console.log(vm.ruleForm.phone);
 
                     axios.post('/contacts/save', {
                         type: 1,
@@ -88001,6 +88007,10 @@ var render = function() {
             _c("el-table-column", { attrs: { prop: "name", label: "Name" } }),
             _vm._v(" "),
             _c("el-table-column", { attrs: { prop: "email", label: "Email" } }),
+            _vm._v(" "),
+            _c("el-table-column", {
+              attrs: { prop: "phone", label: "Phone Number" }
+            }),
             _vm._v(" "),
             _c("el-table-column", {
               attrs: { prop: "source", label: "Source" }
@@ -88784,7 +88794,7 @@ if(false) {
 /* 158 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(4)(undefined);
+exports = module.exports = __webpack_require__(3)(undefined);
 // imports
 
 
@@ -88804,6 +88814,26 @@ exports.push([module.i, "\n.contact-container{\n    margin-left: 20px;\n    marg
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -89012,6 +89042,7 @@ exports.default = {
                 label: 'Option5'
             }],
             interactionDialogVisible: false,
+            clientNoteDialogVisible: false,
             value: '',
             statusValue: '',
             textarea: '',
@@ -89020,6 +89051,12 @@ exports.default = {
             },
             scheduleRules: {
                 nextInteractionDate: [{ required: true, message: 'Please input next interaction date', trigger: 'blur', type: 'date' }]
+            },
+            noteForm: {
+                note: ''
+            },
+            noteRules: {
+                note: [{ required: true, message: 'Please input next client note', trigger: 'blur' }]
             },
             ruleForm: {
                 interactionRemarks: '',
@@ -89044,13 +89081,53 @@ exports.default = {
     },
 
     methods: {
-        addInteractionSchedule: function addInteractionSchedule(formName) {
+        addClientNote: function addClientNote(formName) {
             var _this = this;
 
             this.$refs[formName].validate(function (valid) {
                 if (valid) {
 
                     var vm = _this;
+
+                    vm.$message({
+                        type: 'info',
+                        message: 'Saving client Note'
+                    });
+
+                    axios.post('/notes/save', {
+                        note: vm.noteForm.note,
+                        userClientId: vm.userClientId
+                    }).then(function (response) {
+                        vm.clientNoteDialogVisible = false;
+
+                        if (response.data.success) {
+                            vm.$message({
+                                type: 'success',
+                                message: response.data.message
+                            });
+
+                            vm.$refs[formName].resetFields();
+                        } else {
+                            vm.$message({
+                                type: 'error',
+                                message: response.data.message
+                            });
+                        }
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+                } else {
+                    return false;
+                }
+            });
+        },
+        addInteractionSchedule: function addInteractionSchedule(formName) {
+            var _this2 = this;
+
+            this.$refs[formName].validate(function (valid) {
+                if (valid) {
+
+                    var vm = _this2;
 
                     vm.$message({
                         type: 'info',
@@ -89086,12 +89163,12 @@ exports.default = {
             });
         },
         addInteraction: function addInteraction(formName) {
-            var _this2 = this;
+            var _this3 = this;
 
             this.$refs[formName].validate(function (valid) {
                 if (valid) {
 
-                    var vm = _this2;
+                    var vm = _this3;
 
                     vm.$message({
                         type: 'info',
@@ -89143,6 +89220,11 @@ exports.default = {
             var vm = this;
 
             vm.interactionDialogVisible = true;
+        },
+        showClientNoteDialog: function showClientNoteDialog() {
+            var vm = this;
+
+            vm.clientNoteDialogVisible = true;
         },
         changeStatus: function changeStatus() {
             console.log("Changing");
@@ -89339,7 +89421,7 @@ var render = function() {
                                 staticClass: "btn ebg-button",
                                 on: {
                                   click: function($event) {
-                                    _vm.showAddDialog()
+                                    _vm.showClientNoteDialog()
                                   }
                                 }
                               },
@@ -89707,6 +89789,102 @@ var render = function() {
               )
             ],
             1
+          ),
+          _vm._v(" "),
+          _c(
+            "el-dialog",
+            {
+              attrs: {
+                title: "Add Client Note",
+                visible: _vm.clientNoteDialogVisible,
+                size: "tiny"
+              },
+              on: {
+                "update:visible": function($event) {
+                  _vm.clientNoteDialogVisible = $event
+                }
+              }
+            },
+            [
+              _c(
+                "el-form",
+                {
+                  ref: "noteForm",
+                  attrs: {
+                    model: _vm.noteForm,
+                    rules: _vm.noteRules,
+                    "label-position": "top"
+                  }
+                },
+                [
+                  _c(
+                    "el-form-item",
+                    {
+                      attrs: {
+                        prop: "note",
+                        label:
+                          "Enter a note about the client e.g. enjoys playing golf"
+                      }
+                    },
+                    [
+                      _c("el-input", {
+                        attrs: {
+                          type: "textarea",
+                          rows: 5,
+                          placeholder: "Enter the feedback remarks"
+                        },
+                        model: {
+                          value: _vm.noteForm.note,
+                          callback: function($$v) {
+                            _vm.$set(_vm.noteForm, "note", $$v)
+                          },
+                          expression: "noteForm.note"
+                        }
+                      })
+                    ],
+                    1
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "span",
+                {
+                  staticClass: "dialog-footer",
+                  attrs: { slot: "footer" },
+                  slot: "footer"
+                },
+                [
+                  _c(
+                    "el-button",
+                    {
+                      on: {
+                        click: function($event) {
+                          _vm.clientNoteDialogVisible = false
+                        }
+                      }
+                    },
+                    [_vm._v("Cancel")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "el-button",
+                    {
+                      attrs: { type: "primary" },
+                      on: {
+                        click: function($event) {
+                          _vm.addClientNote("noteForm")
+                        }
+                      }
+                    },
+                    [_vm._v("Save")]
+                  )
+                ],
+                1
+              )
+            ],
+            1
           )
         ],
         1
@@ -89820,7 +89998,7 @@ if(false) {
 /* 163 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(4)(undefined);
+exports = module.exports = __webpack_require__(3)(undefined);
 // imports
 
 
@@ -90025,31 +90203,18 @@ if (false) {
 
 /***/ }),
 /* 166 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 167 */,
-/* 168 */,
-/* 169 */,
-/* 170 */,
-/* 171 */,
-/* 172 */,
-/* 173 */,
-/* 174 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(175)
+  __webpack_require__(167)
 }
 var normalizeComponent = __webpack_require__(5)
 /* script */
-var __vue_script__ = __webpack_require__(177)
+var __vue_script__ = __webpack_require__(169)
 /* template */
-var __vue_template__ = __webpack_require__(178)
+var __vue_template__ = __webpack_require__(170)
 /* template functional */
   var __vue_template_functional__ = false
 /* styles */
@@ -90089,13 +90254,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 175 */
+/* 167 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(176);
+var content = __webpack_require__(168);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -90115,10 +90280,10 @@ if(false) {
 }
 
 /***/ }),
-/* 176 */
+/* 168 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(4)(undefined);
+exports = module.exports = __webpack_require__(3)(undefined);
 // imports
 
 
@@ -90129,7 +90294,7 @@ exports.push([module.i, "\n.el-table{\n    border-left: none;\n    border-right:
 
 
 /***/ }),
-/* 177 */
+/* 169 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -90217,7 +90382,7 @@ exports.default = {
 };
 
 /***/ }),
-/* 178 */
+/* 170 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -90334,6 +90499,12 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-3f97dcec", module.exports)
   }
 }
+
+/***/ }),
+/* 171 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);

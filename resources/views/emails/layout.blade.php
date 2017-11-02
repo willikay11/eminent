@@ -30,7 +30,7 @@
             width: 100%;
             color: #176A5D;
             background: #f6f8fa">
-        <p>Eminent</p>
+        <p>Eminent CRM</p>
     </div>
     <div class="email-description" style="padding: 10px;
             line-height: 1.5em;

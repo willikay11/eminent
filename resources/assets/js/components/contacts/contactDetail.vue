@@ -64,7 +64,7 @@
                                 </el-col>
 
                                 <el-col :span="6">
-                                    <button class="btn ebg-button" v-on:click="showAddDialog()">Add Client Note</button>
+                                    <button class="btn ebg-button" v-on:click="showClientNoteDialog()">Add Client Note</button>
                                 </el-col>
                             </el-col>
                         </el-row>
@@ -176,6 +176,26 @@
                         <el-button type="primary"  @click="addInteractionSchedule('scheduleForm')">Save</el-button>
                     </span>
                 </el-dialog>
+
+                <el-dialog
+                        title="Add Client Note"
+                        :visible.sync="clientNoteDialogVisible"
+                        size="tiny">
+                    <el-form :model="noteForm" :rules="noteRules" ref="noteForm" label-position="top">
+                        <el-form-item prop="note" label="Enter a note about the client e.g. enjoys playing golf">
+                            <el-input
+                                    type="textarea"
+                                    :rows="5"
+                                    placeholder="Enter the feedback remarks"
+                                    v-model="noteForm.note">
+                            </el-input>
+                        </el-form-item>
+                    </el-form>
+                    <span slot="footer" class="dialog-footer">
+                        <el-button @click="clientNoteDialogVisible = false">Cancel</el-button>
+                        <el-button type="primary"  @click="addClientNote('noteForm')">Save</el-button>
+                    </span>
+                </el-dialog>
             </div>
         </div>
     </div>
@@ -206,6 +226,7 @@
                     label: 'Option5'
                 }],
                 interactionDialogVisible: false,
+                clientNoteDialogVisible: false,
                 value: '',
                 statusValue: '',
                 textarea: '',
@@ -215,6 +236,14 @@
                 scheduleRules: {
                     nextInteractionDate: [
                         {required: true, message: 'Please input next interaction date', trigger: 'blur', type: 'date'},
+                    ],
+                },
+                noteForm: {
+                    note: ''
+                },
+                noteRules: {
+                    note: [
+                        {required: true, message: 'Please input next client note', trigger: 'blur'},
                     ],
                 },
                 ruleForm: {
@@ -251,6 +280,48 @@
 
         },
         methods:{
+            addClientNote(formName)
+            {
+                this.$refs[formName].validate((valid) => {
+                if (valid) {
+
+                    let vm = this;
+
+                    vm.$message({
+                        type: 'info',
+                        message: 'Saving client Note'
+                    });
+
+                    axios.post('/notes/save', {
+                        note: vm.noteForm.note,
+                        userClientId: vm.userClientId
+                    })
+                        .then(function (response) {
+                            vm.clientNoteDialogVisible = false;
+
+                            if (response.data.success) {
+                                vm.$message({
+                                    type: 'success',
+                                    message: response.data.message
+                                });
+
+                                vm.$refs[formName].resetFields();
+                            }
+                            else {
+                                vm.$message({
+                                    type: 'error',
+                                    message: response.data.message
+                                });
+                            }
+                        }).catch(function (error) {
+                        console.log(error);
+                    });
+                } else {
+                    return false;
+                }
+            });
+            },
+
             addInteractionSchedule(formName)
             {
                 this.$refs[formName].validate((valid) => {
@@ -357,6 +428,13 @@
               let vm = this;
 
               vm.interactionDialogVisible = true;
+            },
+
+            showClientNoteDialog()
+            {
+              let vm = this;
+
+              vm.clientNoteDialogVisible = true;
             },
             changeStatus()
             {

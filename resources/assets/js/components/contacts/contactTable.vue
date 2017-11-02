@@ -87,6 +87,10 @@
                         label="Email">
                 </el-table-column>
                 <el-table-column
+                        prop="phone"
+                        label="Phone Number">
+                </el-table-column>
+                <el-table-column
                         prop="source"
                         label="Source">
                 </el-table-column>
@@ -389,7 +393,7 @@
                         {required: true, message: 'Please input email', trigger: 'blur', type: 'email'},
                     ],
                     phone: [
-                        {required: true, message: 'Please input Phone Number', trigger: 'blur', type: 'number'},
+                        {required: true, message: 'Please input Phone Number', trigger: 'blur', type: 'integer'},
                     ],
                     country: [
                         {required: true, message: 'Please select country', trigger: 'change', type: 'number'},
@@ -469,6 +473,8 @@
                             type: 'info',
                             message: 'Saving Contact'
                         });
+
+                        console.log(vm.ruleForm.phone);
 
                         axios.post('/contacts/save', {
                             type: 1,
