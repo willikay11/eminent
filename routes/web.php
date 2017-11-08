@@ -13,9 +13,9 @@
 
 Route::group(['middleware' => 'auth'], function (){
 
-    Route::get('/', function () {
-        return view('dashboard.dashboard');
-    });
+    Route::get('/', [
+        'uses' => 'DashboardController@index'
+    ]);
 
     Route::get('/logout', [
         'as' => 'auth.logout',

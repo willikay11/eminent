@@ -24,7 +24,7 @@
                                 <el-col :span="8">
                                     <span>Date: {{ scope.row.date }}</span>
                                 </el-col>
-                                <el-col :span="6">
+                                <el-col :span="8">
                                     <span>Interacted over a {{ scope.row.interactionType }}</span>
                                 </el-col>
                             </el-col>

@@ -5,7 +5,7 @@
 
     <div class="row">
         <div class="col-lg-6">
-            <dashboard-contacts></dashboard-contacts>
+            <dashboard-contacts user-id="{!! $userId !!}"></dashboard-contacts>
         </div>
 
         <div class="col-lg-6">

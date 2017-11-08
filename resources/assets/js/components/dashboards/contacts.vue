@@ -39,6 +39,7 @@
 
 <script>
     export default {
+        props:['userId'],
         data() {
             return {
                 tableData: [],
@@ -58,7 +59,7 @@
             getUsers()
             {
                 let vm = this;
-                axios.get('/api/contacts/user')
+                axios.get('/api/contacts/user/'+vm.userId)
                     .then(function (response) {
                         vm.tableData = [].concat(response.data.data);
                     }).catch(function (error) {

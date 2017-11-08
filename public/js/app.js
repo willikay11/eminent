@@ -91009,6 +91009,7 @@ Object.defineProperty(exports, "__esModule", {
 //
 
 exports.default = {
+    props: ['userId'],
     data: function data() {
         return {
             tableData: [],
@@ -91028,7 +91029,7 @@ exports.default = {
         },
         getUsers: function getUsers() {
             var vm = this;
-            axios.get('/api/contacts/user').then(function (response) {
+            axios.get('/api/contacts/user/' + vm.userId).then(function (response) {
                 vm.tableData = [].concat(response.data.data);
             }).catch(function (error) {
                 console.log(error);
@@ -91386,7 +91387,7 @@ var render = function() {
                                   ])
                                 ]),
                                 _vm._v(" "),
-                                _c("el-col", { attrs: { span: 6 } }, [
+                                _c("el-col", { attrs: { span: 8 } }, [
                                   _c("span", [
                                     _vm._v(
                                       "Interacted over a " +
