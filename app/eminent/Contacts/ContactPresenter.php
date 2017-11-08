@@ -61,6 +61,17 @@ class ContactPresenter extends Presenter
         }
     }
 
+    public function checkContactType()
+    {
+        if($this->clients)
+        {
+            return "Client";
+        }
+        else
+        {
+            return "User";
+        }
+    }
     /*
      * Check if a client Exists for the contact
      */

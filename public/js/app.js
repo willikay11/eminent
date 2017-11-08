@@ -82680,6 +82680,8 @@ Vue.component('usersTable', __webpack_require__(151));
 
 Vue.component('contactsTable', __webpack_require__(156));
 
+Vue.component('allContactsTable', __webpack_require__(187));
+
 Vue.component('contactDetails', __webpack_require__(164));
 
 Vue.component('dashboardContacts', __webpack_require__(169));
@@ -88014,7 +88016,6 @@ exports.default = {
                 vm.professions = response.data.professions;
                 vm.users = response.data.users;
                 vm.selectedUser = response.data.selectedUser;
-                console.log(vm.selectedUser);
             }).catch(function (error) {
                 console.log(error);
             });
@@ -91454,6 +91455,471 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 180 */,
+/* 181 */,
+/* 182 */,
+/* 183 */,
+/* 184 */,
+/* 185 */,
+/* 186 */,
+/* 187 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(188)
+}
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(190)
+/* template */
+var __vue_template__ = __webpack_require__(191)
+/* template functional */
+  var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/contacts/allContactsTable.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-3a1e2fcf", Component.options)
+  } else {
+    hotAPI.reload("data-v-3a1e2fcf", Component.options)
+' + '  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 188 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(189);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(3)("2d469ce4", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-3a1e2fcf\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./allContactsTable.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-3a1e2fcf\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./allContactsTable.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 189 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(2)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, "\n.el-table {\n    border-left: none;\n    border-right: none;\n}\n.el-date-editor.el-input {\n    width: 100%;\n}\n.el-select {\n    width: 100%;\n}\n.el-input__inner {\n    border: 1px solid #b4b4b4;\n}\n.el-input__icon {\n    color: #b4b4b4 !important;\n}\n.search-container {\n    padding-bottom: 20px;\n    border-bottom: 1px solid;\n    margin-bottom: 20px;\n}\nlabel {\n    font-weight: normal\n}\n.el-table::after {\n    width: 0px;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 190 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+exports.default = {
+    data: function data() {
+        return {
+            tableData: [],
+            genders: [],
+            titles: [],
+            countries: [],
+            religions: [],
+            professions: [],
+            users: [],
+            sources: [],
+            services: [],
+            selectedUser: [],
+            options: [{
+                value: '1',
+                label: 'Active'
+            }, {
+                value: '0',
+                label: 'Inactive'
+            }],
+            total: 0,
+            dialogVisible: false,
+            reassignContactsDialogVisible: false,
+            contactId: null,
+            ruleForm: {
+                source: '',
+                designation: '',
+                active: '',
+                title: '',
+                gender: '',
+                firstname: '',
+                lastname: '',
+                email: '',
+                phone: '',
+                role: '',
+                department: '',
+                employmentDate: '',
+                country: '',
+                profession: '',
+                religion: '',
+                address: '',
+                service: ''
+            },
+            rules: {
+                startDate: [{ required: true, message: 'Please input start date', trigger: 'blur', type: 'date' }],
+                source: [{ required: true, message: 'Please select status', trigger: 'change', type: 'number' }],
+                designation: [{ required: true, message: 'Please input designation name', trigger: 'blur' }],
+                active: [{ required: true, message: 'Please select active status', trigger: 'change' }],
+                title: [{ required: true, message: 'Please select title', trigger: 'change', type: 'number' }],
+                gender: [{ required: true, message: 'Please select gender', trigger: 'change', type: 'number' }],
+                firstname: [{ required: true, message: 'Please input First name', trigger: 'blur' }],
+                lastname: [{ required: true, message: 'Please input Last name', trigger: 'blur' }],
+                email: [{ required: true, message: 'Please input email', trigger: 'blur', type: 'email' }],
+                phone: [{ required: true, message: 'Please input Phone Number', trigger: 'blur', type: 'integer' }],
+                country: [{ required: true, message: 'Please select country', trigger: 'change', type: 'number' }],
+                profession: [{ required: true, message: 'Please select profession', trigger: 'change', type: 'number' }],
+                religion: [{ required: true, message: 'Please select religion', trigger: 'change', type: 'number' }],
+                employmentDate: [{ required: true, message: 'Please input employment date', trigger: 'blur', type: 'date' }],
+                service: [{ required: true, message: 'Please select service', trigger: 'change', type: 'array' }]
+            }
+        };
+    },
+
+    created: function created() {
+        var vm = this;
+
+        vm.geContacts();
+    },
+
+    methods: {
+        handleClick: function handleClick() {
+            console.log('click');
+        },
+        geContacts: function geContacts() {
+            var vm = this;
+            axios.get('/api/contacts').then(function (response) {
+                vm.tableData = [].concat(response.data.data);
+                vm.total = response.data.last_page;
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        showAddDialog: function showAddDialog() {
+            var vm = this;
+
+            vm.dialogVisible = true;
+        },
+        handleClose: function handleClose(done) {
+            this.$confirm('Are you sure to close this dialog?').then(function (_) {
+                done();
+            }).catch(function (_) {});
+        },
+        add: function add(formName) {
+            var _this = this;
+
+            this.$refs[formName].validate(function (valid) {
+                if (valid) {
+                    var vm = _this;
+
+                    vm.$message({
+                        type: 'info',
+                        message: 'Saving Contact'
+                    });
+
+                    axios.post('/contacts/save', {
+                        type: 1,
+                        title_id: vm.ruleForm.title,
+                        firstname: vm.ruleForm.firstname,
+                        lastname: vm.ruleForm.lastname,
+                        email: vm.ruleForm.email,
+                        phone: vm.ruleForm.phone,
+                        profession_id: vm.ruleForm.profession,
+                        country_id: vm.ruleForm.country,
+                        religion_id: vm.ruleForm.religion,
+                        gender_id: vm.ruleForm.gender,
+                        source_id: vm.ruleForm.source,
+                        address: vm.ruleForm.address,
+                        services: vm.ruleForm.service,
+                        contactId: vm.contactId
+                    }).then(function (response) {
+                        vm.dialogVisible = false;
+
+                        vm.getUserContacts();
+
+                        if (response.data.success) {
+                            vm.$message({
+                                type: 'success',
+                                message: response.data.message
+                            });
+
+                            vm.$refs[formName].resetFields();
+                        } else {
+                            vm.$message({
+                                type: 'error',
+                                message: response.data.message
+                            });
+                        }
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+                } else {
+                    return false;
+                }
+            });
+        },
+        details: function details(user) {
+            window.location.href = '/contact/details/' + user.id;
+        }
+    }
+};
+
+/***/ }),
+/* 191 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "panel panel-default" }, [
+    _vm._m(0),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "panel-body" },
+      [
+        _c(
+          "el-table",
+          {
+            staticStyle: { width: "100%" },
+            attrs: { data: _vm.tableData, stripe: "" }
+          },
+          [
+            _c("el-table-column", { attrs: { prop: "name", label: "Name" } }),
+            _vm._v(" "),
+            _c("el-table-column", { attrs: { prop: "email", label: "Email" } }),
+            _vm._v(" "),
+            _c("el-table-column", {
+              attrs: { prop: "phone", label: "Phone Number" }
+            }),
+            _vm._v(" "),
+            _c("el-table-column", {
+              attrs: { prop: "source", label: "Source" }
+            }),
+            _vm._v(" "),
+            _c("el-table-column", {
+              attrs: { prop: "tag", label: "Status" },
+              scopedSlots: _vm._u([
+                {
+                  key: "default",
+                  fn: function(scope) {
+                    return [
+                      _c(
+                        "el-tag",
+                        {
+                          attrs: {
+                            type:
+                              scope.row.clientExists === 1
+                                ? "success"
+                                : "warning",
+                            "close-transition": ""
+                          }
+                        },
+                        [
+                          _vm._v(
+                            _vm._s(scope.row.status) + "\n                    "
+                          )
+                        ]
+                      )
+                    ]
+                  }
+                }
+              ])
+            }),
+            _vm._v(" "),
+            _c("el-table-column", {
+              attrs: { label: "Actions" },
+              scopedSlots: _vm._u([
+                {
+                  key: "default",
+                  fn: function(scope) {
+                    return [
+                      _c(
+                        "el-button",
+                        {
+                          attrs: { size: "small" },
+                          on: {
+                            click: function($event) {
+                              _vm.details(scope.row)
+                            }
+                          }
+                        },
+                        [_vm._v("Details")]
+                      )
+                    ]
+                  }
+                }
+              ])
+            })
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c("hr", { staticClass: "panel-hr" }),
+        _vm._v(" "),
+        _c("div", { staticClass: "panel-footer" }, [
+          _c(
+            "div",
+            { staticClass: "block" },
+            [
+              _c("el-pagination", {
+                attrs: { layout: "prev, pager, next", total: _vm.total }
+              })
+            ],
+            1
+          )
+        ])
+      ],
+      1
+    )
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-lg-12 panel-header" }, [
+      _c("div", { staticClass: "col-lg-6" }, [_c("h4", [_vm._v("Contacts")])]),
+      _vm._v(" "),
+      _c("div", {
+        staticClass: "col-lg-6",
+        staticStyle: { "text-align": "right" }
+      }),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-lg-12" }, [_c("hr")])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-3a1e2fcf", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

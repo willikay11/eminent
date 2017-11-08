@@ -53,7 +53,7 @@
                         <li><a href="/departments">Departments</a></li>
                         <li><a href="/designations">Designations</a></li>
                         <li><a href="/professions">Professions</a></li>
-                        <li><a href="#">All Contacts</a></li>
+                        <li><a href="/contacts">All Contacts</a></li>
                     </ul>
                 </li>
             </ul>

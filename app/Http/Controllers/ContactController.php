@@ -161,6 +161,27 @@ class ContactController extends Controller
         return self::toResponse(null, $data);
     }
 
+
+    public function getContacts()
+    {
+        $contacts = $this->sortFilterPaginate(new Contact(), [], function ($contact)
+        {
+            return[
+                'id' => $contact->id,
+                'name' => $contact->present()->fullName,
+                'email' => $contact->email,
+                'phone' => $contact->phone,
+                'clientExists' => $contact->present()->clientExists,
+                'status' => $contact->present()->checkContactType,
+                'type' => $contact->type,
+                'source' => $contact->present()->contactSource
+            ];
+        },null, null);
+
+        return $this->toResponse(null, $contacts);
+    }
+
+
     public function getUserClients($userId)
     {
         $filterFunc = function ($q) use ($userId)
@@ -249,6 +270,11 @@ class ContactController extends Controller
         return view('contacts.index', [
             'userId' => $userId
         ]);
+    }
+
+    public function contacts()
+    {
+        return view('contacts.contacts');
     }
 
     public function store(Request $request)

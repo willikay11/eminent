@@ -183,8 +183,16 @@ Route::group(['middleware' => 'auth'], function (){
     /*
      * Contacts Routes
      */
+    Route::get('/api/contacts', [
+        'uses' => 'ContactController@getContacts'
+    ]);
+
     Route::get('/api/contacts/user/{userId}', [
         'uses' => 'ContactController@getUserClients'
+    ]);
+
+    Route::get('/contacts', [
+        'uses' =>'ContactController@contacts'
     ]);
 
     Route::get('/contacts/user/{userId?}', [

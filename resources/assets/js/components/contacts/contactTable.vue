@@ -527,7 +527,6 @@
                         vm.professions = response.data.professions;
                         vm.users = response.data.users;
                         vm.selectedUser = response.data.selectedUser
-                        console.log(vm.selectedUser);
                     }).catch(function (error) {
                     console.log(error);
                 })
