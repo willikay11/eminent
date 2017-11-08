@@ -25,6 +25,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Users\UserRegistered' => [
             'App\Listeners\Users\WhenUserRegistered',
         ],
+        'App\Events\Contacts\ContactsAssigned' => [
+            'App\Listeners\Contacts\WhenContactsAssigned',
+        ],
     ];
 
     /**

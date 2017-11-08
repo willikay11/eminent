@@ -40,4 +40,26 @@ class UserClientsRepository
 
         return $userClient;
     }
+
+    public function saveAssignedContacts($chuckedClients, $userArray)
+    {
+        foreach($chuckedClients as $chuckedClient)
+        {
+            $index = 0;
+
+            foreach($chuckedClient as $userClient)
+            {
+                UserClient::create([
+                    'client_id' => $userClient['client_id'],
+                    'user_id' => $userArray[$index]['id'],
+                ]);
+
+                $userArray[$index]['total'] += 1;
+
+                $index ++;
+            }
+        }
+
+        return $userArray;
+    }
 }

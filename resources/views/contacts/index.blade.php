@@ -5,7 +5,7 @@
 
     <div class="row">
         <div class="col-lg-12">
-            <contacts-table></contacts-table>
+            <contacts-table user-id="{!! $userId !!}"></contacts-table>
         </div>
     </div>
 @stop

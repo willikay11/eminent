@@ -35,6 +35,15 @@ class UsersRepository
         return $user;
     }
 
+    public function getAllActiveUsers()
+    {
+        return User::where('active', 1)->get();
+    }
+
+    public function getAllActiveUsersForReassign($userId)
+    {
+        return User::where('active', 1)->where('id', '!=', $userId)->get();
+    }
     /*
      * Save Last Login and Reset the Logins
      */

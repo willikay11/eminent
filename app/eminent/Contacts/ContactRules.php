@@ -69,4 +69,15 @@ trait ContactRules
         return $this->verdict($request, $rules, $messages);
     }
 
+    public function clientReassign($request)
+    {
+        $rules = [
+            'user_id' => 'required',
+            'assigned' => 'required',
+            'contacts' => 'required',
+        ];
+
+        return $this->verdict($request, $rules);
+    }
+
 }

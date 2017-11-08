@@ -5,7 +5,8 @@
                 <h4>Contacts</h4>
             </div>
             <div class="col-lg-6" style="text-align: right">
-                <button class="btn ebg-button" v-on:click="showAddDialog()" style="margin-right: 20px">Reasign Contact
+                <button class="btn ebg-button" v-on:click="showReassignContactsDialog()" style="margin-right: 20px">
+                    Reassign Contact
                 </button>
                 <button class="btn ebg-button" v-on:click="showAddDialog()">Add Contact</button>
             </div>
@@ -295,6 +296,72 @@
                 </div>
             </el-dialog>
 
+            <el-dialog
+                    title="Assign User Contacts"
+                    :visible.sync="reassignContactsDialogVisible"
+                    size="small">
+                <el-form :model="reassignForm" :rules="reassignRules" ref="reassignForm" label-position="top">
+                    <el-row :span="24" :gutter="20" style="margin-bottom: 10px">
+                        <el-col :span="4">
+                            <span>User Name: </span>
+                        </el-col>
+
+                        <el-col :span="20">
+                            <span>{{ selectedUser.name }}</span>
+                        </el-col>
+                    </el-row>
+
+                    <el-row :span="24" :gutter="20" style="margin-bottom: 10px">
+                        <el-col :span="4">
+                            <span>Email: </span>
+                        </el-col>
+
+                        <el-col :span="20">
+                            <span>{{ selectedUser.email }}</span>
+                        </el-col>
+                    </el-row>
+
+                    <el-row :span="24" :gutter="20" style="margin-bottom: 10px">
+                        <el-col :span="4">
+                            <span>No of Contacts: </span>
+                        </el-col>
+
+                        <el-col :span="20">
+                            <span> {{ tableData.length }}</span>
+                        </el-col>
+                    </el-row>
+
+                    <el-row :span="24" :gutter="20" style="margin-bottom: 10px">
+                        <el-col :span="4">
+                            <span>Users: </span>
+                        </el-col>
+
+                        <el-col :span="14">
+                            <el-form-item prop="reassign"
+                                          label="Please select the users you wish to assign the contacts to:">
+                                <multiselect
+                                        v-model="reassignForm.users"
+                                        :options="users"
+                                        :multiple="true"
+                                        track-by="id"
+                                        :custom-label="userLabel">
+                                </multiselect>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+
+                    <hr style="margin-top: 0px">
+
+                </el-form>
+
+                <div class="form-item-container">
+                    <span slot="footer" class="dialog-footer">
+                        <el-button @click="dialogVisible = false">Cancel</el-button>
+                        <el-button type="primary" class="btn ebg-button" @click="reassignContacts('reassignForm')">Reassign</el-button>
+                    </span>
+                </div>
+            </el-dialog>
+
             <hr class="panel-hr">
 
             <div class="panel-footer">
@@ -313,7 +380,8 @@
     import Multiselect from 'vue-multiselect';
 
     export default {
-        components: { Multiselect },
+        props: ['userId'],
+        components: {Multiselect},
         data() {
             return {
                 tableData: [],
@@ -322,8 +390,10 @@
                 countries: [],
                 religions: [],
                 professions: [],
+                users: [],
                 sources: [],
                 services: [],
+                selectedUser: [],
                 options: [{
                     value: '1',
                     label: 'Active'
@@ -333,12 +403,21 @@
                 }],
                 total: 0,
                 dialogVisible: false,
+                reassignContactsDialogVisible: false,
                 contactId: null,
                 searchForm: {
                     startDate: '',
                     endDate: '',
                     source: '',
                     status: '',
+                },
+                reassignForm: {
+                    users: ''
+                },
+                reassignRules: {
+                    users: [
+                        {required: true, message: 'Please input select users', trigger: 'change', type: 'array'},
+                    ],
                 },
                 searchRules: {
                     startDate: [
@@ -437,7 +516,7 @@
             getInformation()
             {
                 let vm = this;
-                axios.get('/contacts/info')
+                axios.get('/contacts/info/'+vm.userId)
                     .then(function (response) {
                         vm.services = response.data.services;
                         vm.countries = response.data.countries;
@@ -446,6 +525,9 @@
                         vm.genders = response.data.genders;
                         vm.religions = response.data.religions;
                         vm.professions = response.data.professions;
+                        vm.users = response.data.users;
+                        vm.selectedUser = response.data.selectedUser
+                        console.log(vm.selectedUser);
                     }).catch(function (error) {
                     console.log(error);
                 })
@@ -453,7 +535,7 @@
             getUserContacts()
             {
                 let vm = this;
-                axios.get('/api/contacts/user')
+                axios.get('/api/contacts/user/'+vm.userId)
                     .then(function (response) {
                         vm.tableData = [].concat(response.data.data);
                         vm.total = response.data.last_page;
@@ -485,8 +567,6 @@
                             type: 'info',
                             message: 'Saving Contact'
                         });
-
-                        console.log(vm.ruleForm.phone);
 
                         axios.post('/contacts/save', {
                             type: 1,
@@ -570,6 +650,61 @@
             },
             customLabel (option) {
                 return `${option.label}`
+            },
+            userLabel (option) {
+                return `${option.name}`
+            },
+            showReassignContactsDialog()
+            {
+                let vm = this;
+
+                vm.reassignContactsDialogVisible = true;
+            },
+            reassignContacts(formName)
+            {
+                console.log('here');
+
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        let vm = this;
+
+                        vm.$message({
+                            type: 'info',
+                            message: 'Reassigning Contacts'
+                        });
+
+                        axios.post('/contacts/reassign', {
+                            user_id: vm.userId,
+                            assigned: vm.reassignForm.users,
+                            contacts: vm.tableData.length
+                        })
+                            .then(function (response) {
+
+                                vm.getUserContacts();
+
+                                if (response.data.success) {
+                                    vm.$message({
+                                        type: 'success',
+                                        message: response.data.message
+                                    });
+
+                                    vm.reassignContactsDialogVisible = false;
+
+                                    vm.$refs[formName].resetFields();
+                                }
+                                else {
+                                    vm.$message({
+                                        type: 'error',
+                                        message: response.data.message
+                                    });
+                                }
+                            }).catch(function (error) {
+                            console.log(error);
+                        });
+                    } else {
+                        return false;
+                    }
+                });
             }
         }
     }

@@ -9,6 +9,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Events\Contacts\ContactsAssigned;
 use eminent\API\SortFilterPaginate;
 use eminent\Clients\ClientsRepository;
 use eminent\Contacts\ContactRules;
@@ -25,6 +26,7 @@ use eminent\Models\Sources;
 use eminent\Models\Status;
 use eminent\Models\Title;
 use eminent\UserClients\UserClientsRepository;
+use eminent\Users\UsersRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -39,19 +41,22 @@ class ContactController extends Controller
     protected $clientsRepository;
     protected $userClientsRepository;
     protected $interestsRepository;
+    protected $usersRepository;
 
     public function __construct(ContactsRepository $contactsRepository,
                                 ClientsRepository $clientsRepository,
                                 UserClientsRepository $userClientsRepository,
-                                InterestsRepository $interestsRepository)
+                                InterestsRepository $interestsRepository,
+                                UsersRepository $usersRepository)
     {
         $this->contactsRepository = $contactsRepository;
         $this->clientsRepository = $clientsRepository;
         $this->userClientsRepository = $userClientsRepository;
         $this->interestsRepository = $interestsRepository;
+        $this->usersRepository = $usersRepository;
     }
 
-    public function getInfo()
+    public function getInfo($userId)
     {
         $titles = Title::where('active', 1)->get();
 
@@ -123,6 +128,23 @@ class ContactController extends Controller
             ];
         });
 
+        $users = $this->usersRepository->getAllActiveUsersForReassign($userId);
+
+        $users = $users->map(function ($user)
+        {
+            return [
+                'id' => $user->id,
+                'name' => $user->contact->present()->fullName
+            ];
+        });
+
+        $selectedUser = $this->usersRepository->getUserById($userId);
+
+        $selectedUser = [
+            'id' => $selectedUser->id,
+            'name' => $selectedUser->contact->present()->fullName,
+            'email' => $selectedUser->email
+        ];
 
         $data = [
             'sources' => $sources,
@@ -131,21 +153,23 @@ class ContactController extends Controller
             'services' => $services,
             'genders' => $genders,
             'professions' => $professions,
-            'religions' => $religions
+            'religions' => $religions,
+            'users' => $users->toArray(),
+            'selectedUser' => $selectedUser
         ];
 
         return self::toResponse(null, $data);
     }
 
-    public function getUserClients()
+    public function getUserClients($userId)
     {
-        $filterFunc = function ($q)
+        $filterFunc = function ($q) use ($userId)
         {
-            return $q->whereHas('clients', function ($q)
+            return $q->whereHas('clients', function ($q) use ($userId)
             {
-                $q->whereHas('userClient', function ($q)
+                $q->whereHas('userClient', function ($q) use ($userId)
                 {
-                    $q->where('user_id', Auth::id());
+                    $q->where('user_id', $userId);
                 });
             });
         };
@@ -215,9 +239,16 @@ class ContactController extends Controller
         return $this->toResponse(null, $data);
     }
 
-    public function index()
+    public function index($userId = null)
     {
-        return view('contacts.index');
+        if(is_null($userId))
+        {
+            $userId = Auth::id();
+        }
+
+        return view('contacts.index', [
+            'userId' => $userId
+        ]);
     }
 
     public function store(Request $request)
@@ -385,6 +416,49 @@ class ContactController extends Controller
         }
 
         return $validation;
+    }
+
+    public function reassignContacts(Request $request)
+    {
+        $validation = $this->clientReassign($request);
+
+        if($validation)
+        {
+            return self::toResponse([
+                'success' => false,
+                'message' => 'Validation Failed'
+            ]);
+        }
+
+        $assignedUsers = $request->get('assigned');
+
+        $userArray = array();
+
+        foreach($assignedUsers as $assignedUser)
+        {
+            $user = $this->usersRepository->getUserById($assignedUser['id']);
+
+            $userArray[] = [
+                'firstname' => $user->contact->firstname,
+                'email' => $user->email,
+                'id' => $user->id,
+                'total' => 0
+            ];
+
+        }
+
+        $user = $this->usersRepository->getUserById($request->get('user_id'));
+
+        $chuckedClients = array_chunk($user->userClients->toArray(), count($assignedUsers));
+
+        $userArray = $this->userClientsRepository->saveAssignedContacts($chuckedClients, $userArray);
+
+        event(new ContactsAssigned($userArray));
+
+        return self::toResponse(null, [
+            'success' => true,
+            'message' => 'The contacts have been assigned successfully to other users'
+        ]);
     }
 
     public function toResponse($request = null, $data)
