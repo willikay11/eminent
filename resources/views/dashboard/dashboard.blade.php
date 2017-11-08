@@ -9,7 +9,7 @@
         </div>
 
         <div class="col-lg-6">
-            <dashboard-interactions></dashboard-interactions>
+            <dashboard-interactions user-id="{!! $userId !!}"></dashboard-interactions>
         </div>
     </div>
 

@@ -8,7 +8,9 @@
 
             </div>
         </div>
+
         <div class="panel-body">
+
             <el-table
                     :data="tableData"
                     stripe
@@ -35,13 +37,14 @@
         </div>
         <hr class="panel-hr">
         <div class="panel-footer">
-            <button class="btn ebg-button" v-on:click="">See More</button>
+            <button class="btn ebg-button" v-on:click="showMore()">See More</button>
         </div>
     </div>
 </template>
 
 <script>
     export default {
+        props: ['userId'],
         data() {
             return {
                 tableData: [],
@@ -61,7 +64,7 @@
             getInteractions()
             {
                 let vm = this;
-                axios.get('/api/interactions')
+                axios.get('/api/interactions/'+vm.userId)
                     .then(function (response) {
                         vm.tableData = [].concat(response.data.data);
                     }).catch(function (error) {
@@ -70,12 +73,8 @@
             },
             showMore()
             {
-                window.location.href = '/contacts/user';
+                window.location.href = '/interactions/user';
             },
-            showDetails(user)
-            {
-                window.location.href = '/contact/details/' + user.id;
-            }
         }
     }
 </script>

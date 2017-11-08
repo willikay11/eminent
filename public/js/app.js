@@ -82688,6 +82688,8 @@ Vue.component('dashboardContacts', __webpack_require__(169));
 
 Vue.component('dashboardInteractions', __webpack_require__(174));
 
+Vue.component('interactionsTable', __webpack_require__(194));
+
 /***/ }),
 /* 112 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -91296,8 +91298,11 @@ Object.defineProperty(exports, "__esModule", {
 //
 //
 //
+//
+//
 
 exports.default = {
+    props: ['userId'],
     data: function data() {
         return {
             tableData: [],
@@ -91317,17 +91322,14 @@ exports.default = {
         },
         getInteractions: function getInteractions() {
             var vm = this;
-            axios.get('/api/interactions').then(function (response) {
+            axios.get('/api/interactions/' + vm.userId).then(function (response) {
                 vm.tableData = [].concat(response.data.data);
             }).catch(function (error) {
                 console.log(error);
             });
         },
         showMore: function showMore() {
-            window.location.href = '/contacts/user';
-        },
-        showDetails: function showDetails(user) {
-            window.location.href = '/contact/details/' + user.id;
+            window.location.href = '/interactions/user';
         }
     }
 };
@@ -91418,7 +91420,14 @@ var render = function() {
       _c("div", { staticClass: "panel-footer" }, [
         _c(
           "button",
-          { staticClass: "btn ebg-button", on: { click: function($event) {} } },
+          {
+            staticClass: "btn ebg-button",
+            on: {
+              click: function($event) {
+                _vm.showMore()
+              }
+            }
+          },
           [_vm._v("See More")]
         )
       ])
@@ -91919,6 +91928,488 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-3a1e2fcf", module.exports)
+  }
+}
+
+/***/ }),
+/* 192 */,
+/* 193 */,
+/* 194 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(195)
+}
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(197)
+/* template */
+var __vue_template__ = __webpack_require__(198)
+/* template functional */
+  var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/interactions/interactionsTable.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-5d0c4a96", Component.options)
+  } else {
+    hotAPI.reload("data-v-5d0c4a96", Component.options)
+' + '  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 195 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(196);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(3)("61f1e86c", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-5d0c4a96\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./interactionsTable.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-5d0c4a96\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./interactionsTable.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 196 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(2)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, "\n.el-table{\n    border-left: none;\n    border-right: none;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 197 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+exports.default = {
+    props: ['userId'],
+    data: function data() {
+        return {
+            tableData: [],
+            total: 0,
+            searchForm: {
+                startDate: '',
+                endDate: '',
+                status: ''
+            },
+            searchRules: {
+                startDate: [{ required: true, message: 'Please input start date', trigger: 'blur', type: 'date' }],
+                endDate: [{ required: true, message: 'Please input end date', trigger: 'blur', type: 'date' }],
+                status: [{ required: true, message: 'Please select status', trigger: 'change' }]
+            }
+        };
+    },
+
+    created: function created() {
+        var vm = this;
+
+        vm.getInteractions();
+    },
+
+    methods: {
+        handleClick: function handleClick() {
+            console.log('click');
+        },
+        getInteractions: function getInteractions() {
+            var vm = this;
+            axios.get('/api/interactions/' + vm.userId).then(function (response) {
+                vm.tableData = [].concat(response.data.data);
+                vm.total = response.data.last_page;
+            }).catch(function (error) {
+                console.log(error);
+            });
+        }
+    }
+};
+
+/***/ }),
+/* 198 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "panel panel-default" }, [
+    _vm._m(0),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "panel-body" },
+      [
+        _c(
+          "el-form",
+          {
+            ref: "searchForm",
+            staticStyle: { "padding-left": "30px" },
+            attrs: {
+              model: _vm.searchForm,
+              rules: _vm.searchRules,
+              "label-position": "top"
+            }
+          },
+          [
+            _c(
+              "el-col",
+              { attrs: { span: 2 } },
+              [
+                _c("el-form-item", {
+                  attrs: { prop: "filter", label: "Filter By:" }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "el-col",
+              { attrs: { span: 5 } },
+              [
+                _c(
+                  "el-form-item",
+                  { attrs: { prop: "startDate", label: "From date:" } },
+                  [
+                    _c("el-date-picker", {
+                      attrs: { type: "date", placeholder: "Start Date" },
+                      model: {
+                        value: _vm.searchForm.startDate,
+                        callback: function($$v) {
+                          _vm.$set(_vm.searchForm, "startDate", $$v)
+                        },
+                        expression: "searchForm.startDate"
+                      }
+                    })
+                  ],
+                  1
+                )
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "el-col",
+              { attrs: { span: 5 } },
+              [
+                _c(
+                  "el-form-item",
+                  { attrs: { prop: "endDate", label: "To date:" } },
+                  [
+                    _c("el-date-picker", {
+                      attrs: { type: "date", placeholder: "End Date" },
+                      model: {
+                        value: _vm.searchForm.endDate,
+                        callback: function($$v) {
+                          _vm.$set(_vm.searchForm, "endDate", $$v)
+                        },
+                        expression: "searchForm.endDate"
+                      }
+                    })
+                  ],
+                  1
+                )
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "el-col",
+              { attrs: { span: 5 } },
+              [
+                _c(
+                  "el-form-item",
+                  { attrs: { prop: "source", label: "Status:" } },
+                  [
+                    _c(
+                      "el-select",
+                      {
+                        attrs: { placeholder: "Select status" },
+                        model: {
+                          value: _vm.searchForm.status,
+                          callback: function($$v) {
+                            _vm.$set(_vm.searchForm, "status", $$v)
+                          },
+                          expression: "searchForm.status"
+                        }
+                      },
+                      _vm._l(_vm.sources, function(item) {
+                        return _c("el-option", {
+                          key: item.value,
+                          attrs: { label: item.label, value: item.value }
+                        })
+                      })
+                    )
+                  ],
+                  1
+                )
+              ],
+              1
+            )
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _vm._m(1),
+        _vm._v(" "),
+        _c(
+          "el-table",
+          {
+            staticStyle: { width: "100%" },
+            attrs: { data: _vm.tableData, stripe: "" }
+          },
+          [
+            _c("el-table-column", {
+              attrs: { label: "Name" },
+              scopedSlots: _vm._u([
+                {
+                  key: "default",
+                  fn: function(scope) {
+                    return [
+                      _c(
+                        "el-row",
+                        [
+                          _c("el-col", { attrs: { span: 24 } }, [
+                            _c("span", [_vm._v(_vm._s(scope.row.remarks))])
+                          ]),
+                          _vm._v(" "),
+                          _c(
+                            "el-col",
+                            {
+                              staticStyle: { "margin-top": "10px" },
+                              attrs: { span: 24, gutter: 10 }
+                            },
+                            [
+                              _c("el-col", { attrs: { span: 8 } }, [
+                                _c("span", [
+                                  _vm._v("Date: " + _vm._s(scope.row.date))
+                                ])
+                              ]),
+                              _vm._v(" "),
+                              _c("el-col", { attrs: { span: 8 } }, [
+                                _c("span", [
+                                  _vm._v(
+                                    "Interacted over a " +
+                                      _vm._s(scope.row.interactionType)
+                                  )
+                                ])
+                              ])
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      )
+                    ]
+                  }
+                }
+              ])
+            })
+          ],
+          1
+        )
+      ],
+      1
+    ),
+    _vm._v(" "),
+    _c("hr", { staticClass: "panel-hr" }),
+    _vm._v(" "),
+    _c("div", { staticClass: "panel-footer" }, [
+      _c(
+        "div",
+        { staticClass: "block" },
+        [
+          _c("el-pagination", {
+            attrs: { layout: "prev, pager, next", total: _vm.total }
+          })
+        ],
+        1
+      )
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-lg-12 panel-header" }, [
+      _c("div", { staticClass: "col-lg-6" }, [
+        _c("h4", [_vm._v("Interactions")])
+      ]),
+      _vm._v(" "),
+      _c("div", {
+        staticClass: "col-lg-6",
+        staticStyle: { "text-align": "right" }
+      }),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-lg-12" }, [_c("hr")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-lg-12" }, [_c("hr")])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-5d0c4a96", module.exports)
   }
 }
 

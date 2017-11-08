@@ -22,7 +22,7 @@
                         <i class="glyphicon glyphicon-briefcase"></i>
                         Contacts
                     </a>
-                    <a href="#" aria-expanded="false">
+                    <a href="/interactions/user" aria-expanded="false">
                         <i class="glyphicon glyphicon-duplicate"></i>
                         Interactions
                     </a>

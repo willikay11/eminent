@@ -39,12 +39,12 @@ class InteractionController extends Controller
         $this->interactionsRepository = $interactionsRepository;
     }
 
-    public function getInteractions()
+    public function getInteractions($userId)
     {
         $filter = [
             'column' => 'user_id',
             'sign' => '=',
-            'value' => Auth::id()
+            'value' => $userId
         ];
 
         $interactions = $this->sortFilterPaginate(new Interaction(), [$filter], function ($interaction)
@@ -115,6 +115,17 @@ class InteractionController extends Controller
 
     }
 
+    public function userInteractions($userId = null)
+    {
+        if(is_null($userId))
+        {
+            $userId = Auth::id();
+        }
+
+        return view('interactions.index', [
+            'userId' => $userId
+        ]);
+    }
 
     public function toResponse($request = null, $data)
     {

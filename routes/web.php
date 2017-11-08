@@ -254,8 +254,12 @@ Route::group(['middleware' => 'auth'], function (){
         'uses' => 'InteractionController@store'
     ]);
 
-    Route::get('/api/interactions', [
+    Route::get('/api/interactions/{userId}', [
         'uses' => 'InteractionController@getInteractions'
+    ]);
+
+    Route::get('/interactions/user/{userId?}', [
+        'uses' => 'InteractionController@userInteractions'
     ]);
 });
 
