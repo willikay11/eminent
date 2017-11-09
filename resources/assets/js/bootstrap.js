@@ -34,6 +34,12 @@ import locale from 'element-ui/lib/locale/lang/en'
 Vue.use(ElementUI, { locale })
 
 /**
+ * Use Vue Draggable
+ */
+import draggable from 'vuedraggable';
+Vue.use(draggable);
+
+/**
  * Next we will register the CSRF Token as a common header with Axios so that
  * all outgoing HTTP requests automatically have it attached. This is just
  * a simple convenience so we don't have to attach every token manually.

@@ -27,3 +27,5 @@ Vue.component('dashboardContacts', require('./dashboards/contacts.vue'));
 Vue.component('dashboardInteractions', require('./dashboards/interactions.vue'));
 
 Vue.component('interactionsTable', require('./interactions/interactionsTable.vue'));
+
+Vue.component('activities', require('./activities/activities.vue'));

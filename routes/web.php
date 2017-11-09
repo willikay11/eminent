@@ -261,6 +261,24 @@ Route::group(['middleware' => 'auth'], function (){
     Route::get('/interactions/user/{userId?}', [
         'uses' => 'InteractionController@userInteractions'
     ]);
+    /*
+     * Activities
+     */
+    Route::get('/activities', [
+        'uses' => 'ActivitiesController@index'
+    ]);
+
+    Route::get('/activities/info', [
+        'uses' => 'ActivitiesController@getInformation'
+    ]);
+
+    Route::post('/activity/save', [
+        'uses' => 'ActivitiesController@save'
+    ]);
+
+    Route::get('/api/activities', [
+        'uses' => 'ActivitiesController@getActivities'
+    ]);
 });
 
 

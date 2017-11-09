@@ -15,7 +15,9 @@ use eminent\Clients\ClientsRepository;
 use eminent\Contacts\ContactsRepository;
 use eminent\Interactions\InteractionsRepository;
 use eminent\Models\Interaction;
+use eminent\Models\PriorityType;
 use eminent\UserClients\UserClientsRepository;
+use eminent\Users\UsersRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -28,15 +30,19 @@ class InteractionController extends Controller
     protected $clientsRepository;
     protected $userClientsRepository;
     protected $interactionsRepository;
+    protected $usersRepository;
 
     public function __construct(ContactsRepository $contactsRepository,
                                 ClientsRepository $clientsRepository,
-                                UserClientsRepository $userClientsRepository, InteractionsRepository $interactionsRepository)
+                                UserClientsRepository $userClientsRepository,
+                                InteractionsRepository $interactionsRepository,
+                                UsersRepository $usersRepository)
     {
         $this->contactsRepository = $contactsRepository;
         $this->clientsRepository = $clientsRepository;
         $this->userClientsRepository = $userClientsRepository;
         $this->interactionsRepository = $interactionsRepository;
+        $this->usersRepository = $usersRepository;
     }
 
     public function getInteractions($userId)

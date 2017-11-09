@@ -34,7 +34,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="/activities">
                         <i class="glyphicon glyphicon-paperclip"></i>
                         Activities
                     </a>
