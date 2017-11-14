@@ -15344,6 +15344,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
  * Use Element UI
  */
 
+
 Vue.use(_elementUi2.default, { locale: _en2.default });
 
 /**
@@ -94436,7 +94437,7 @@ exports = module.exports = __webpack_require__(1)(undefined);
 
 
 // module
-exports.push([module.i, "\n.dragArea {\n    min-height: 50px;\n}\n.dragElements {\n    margin: 15px 10px 0px 10px;\n    background-color: #ffffff;\n    min-height: 100px;\n    border-radius: 5px;\n    color: black;\n    padding: 10px;\n}\n.element-container {\n    margin-top: 20px;\n    margin-bottom: 20px;\n}\n.to-do-panel {\n    border-color: transparent;\n    border-top: 5px solid #e43e52;\n    background-color: #f7f8fc !important;\n}\n.panel-heading {\n    color: black !important;\n    background-color: transparent !important;\n    border-color: transparent !important;\n}\n.in-progress-panel {\n    border-color: transparent;\n    border-top: 5px solid #f5a622;\n    background-color: #f7f8fc !important;\n}\n.in-review-panel {\n    border-color: transparent;\n    border-top: 5px solid #4b8fe3;\n    background-color: #f7f8fc !important;\n}\n.done-panel {\n    border-color: transparent;\n    border-top: 5px solid #12884b;\n    background-color: #f7f8fc !important;\n}\n.low-priority-span {\n    padding: 1px 10px 1px 10px;\n    background-color: #4b8fe3;\n    color: white;\n    border-radius: 5px;\n    font-size: 12px;\n}\n.med-priority-span {\n    padding: 1px 10px 1px 10px;\n    background-color: #12884b;\n    color: white;\n    border-radius: 5px;\n    font-size: 12px;\n}\n.high-priority-span {\n    padding: 1px 10px 1px 10px;\n    background-color: #e43e52;\n    color: white;\n    border-radius: 5px;\n    font-size: 12px;\n}\n", ""]);
+exports.push([module.i, "\n.el-select{\n    width: 100%;\n}\n.el-date-editor.el-input{\n    width: 100%;\n}\n.dragArea {\n    min-height: 50px;\n}\n.dragElements {\n    margin: 15px 10px 0px 10px;\n    background-color: #ffffff;\n    min-height: 100px;\n    border-radius: 5px;\n    color: black;\n    padding: 10px;\n}\n.element-container {\n    margin-top: 20px;\n    margin-bottom: 20px;\n}\n.to-do-panel {\n    border-color: transparent;\n    border-top: 5px solid #e43e52;\n    background-color: #f7f8fc !important;\n}\n.panel-heading {\n    color: black !important;\n    background-color: transparent !important;\n    border-color: transparent !important;\n}\n.in-progress-panel {\n    border-color: transparent;\n    border-top: 5px solid #f5a622;\n    background-color: #f7f8fc !important;\n}\n.in-review-panel {\n    border-color: transparent;\n    border-top: 5px solid #4b8fe3;\n    background-color: #f7f8fc !important;\n}\n.done-panel {\n    border-color: transparent;\n    border-top: 5px solid #12884b;\n    background-color: #f7f8fc !important;\n}\n.low-priority-span {\n    padding: 5px 10px 5px 10px;\n    background-color: #4b8fe3;\n    color: white;\n    border-radius: 5px;\n    font-size: 12px;\n}\n.med-priority-span {\n    padding: 5px 10px 5px 10px;\n    background-color: #12884b;\n    color: white;\n    border-radius: 5px;\n    font-size: 12px;\n}\n.high-priority-span {\n    padding: 5px 10px 5px 10px;\n    background-color: #e43e52;\n    color: white;\n    border-radius: 5px;\n    font-size: 12px;\n}\n", ""]);
 
 // exports
 
@@ -94464,16 +94465,15 @@ exports.default = {
     data: function data() {
         return {
             todo: [],
-            inProgress: [{
-                name: "Juan"
-            }, {
-                name: "Edgard"
-            }, {
-                name: "Johnson"
-            }],
+            inProgress: [],
             inReview: [],
             done: [],
             taskDialogVisible: false,
+            activity_status_id: '',
+            targetElementName: '',
+            draggedElement: '',
+            from: '',
+            to: '',
             users: [],
             priorityTypes: [],
             options: [{
@@ -94511,8 +94511,39 @@ exports.default = {
         vm.getActivities();
     },
     methods: {
-        showMove: function showMove() {
-            console.log("MOVED!");
+        showMove: function showMove(evt, originalEvent) {
+            var vm = this;
+
+            vm.draggedElement = evt.draggedContext;
+
+            vm.from = evt.from.id;
+
+            vm.to = evt.to.id;
+        },
+        onEnd: function onEnd(evt) {
+            var vm = this;
+
+            if (vm.from != vm.to) {
+                axios.post('/update/activities', {
+                    activity_id: vm.draggedElement.element.id,
+                    activity_status_id: vm.to
+                }).then(function (response) {
+
+                    if (response.data.success) {
+                        vm.$message({
+                            type: 'success',
+                            message: response.data.message
+                        });
+                    } else {
+                        vm.$message({
+                            type: 'error',
+                            message: response.data.message
+                        });
+                    }
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            }
         },
         getInformation: function getInformation() {
             var vm = this;
@@ -94526,7 +94557,10 @@ exports.default = {
         getActivities: function getActivities() {
             var vm = this;
             axios.get('/api/activities').then(function (response) {
-                vm.todo = response.data;
+                vm.todo = response.data.todo == undefined ? [] : response.data.todo;
+                vm.inProgress = response.data.progress == undefined ? [] : response.data.progress;
+                vm.inReview = response.data.review == undefined ? [] : response.data.review;
+                vm.done = response.data.done == undefined ? [] : response.data.done;
             }).catch(function (error) {
                 console.log(error);
             });
@@ -94765,6 +94799,25 @@ exports.default = {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /***/ }),
 /* 195 */
@@ -94796,9 +94849,11 @@ var render = function() {
                     {
                       staticClass: "dragArea",
                       attrs: {
+                        id: "1",
                         options: { group: "people" },
                         move: _vm.showMove
                       },
+                      on: { end: _vm.onEnd },
                       model: {
                         value: _vm.todo,
                         callback: function($$v) {
@@ -94808,17 +94863,45 @@ var render = function() {
                       }
                     },
                     _vm._l(_vm.todo, function(element) {
-                      return _c("div", { staticClass: "dragElements" }, [
-                        _c("div", [
-                          _c("span", { staticClass: "low-priority-span" }, [
-                            _vm._v("Low Priority")
+                      return _c(
+                        "div",
+                        { key: element.id, staticClass: "dragElements" },
+                        [
+                          _c("div", [
+                            element.priority_type == "Low"
+                              ? _c(
+                                  "span",
+                                  { staticClass: "low-priority-span" },
+                                  [_vm._v("Low Priority")]
+                                )
+                              : _vm._e()
+                          ]),
+                          _vm._v(" "),
+                          _c("div", [
+                            element.priority_type == "Medium"
+                              ? _c(
+                                  "span",
+                                  { staticClass: "med-priority-span" },
+                                  [_vm._v("Med Priority")]
+                                )
+                              : _vm._e()
+                          ]),
+                          _vm._v(" "),
+                          _c("div", [
+                            element.priority_type == "High"
+                              ? _c(
+                                  "span",
+                                  { staticClass: "high-priority-span" },
+                                  [_vm._v("High Priority")]
+                                )
+                              : _vm._e()
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "element-container" }, [
+                            _vm._v(_vm._s(element.name))
                           ])
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "element-container" }, [
-                          _vm._v(_vm._s(element.name))
-                        ])
-                      ])
+                        ]
+                      )
                     })
                   )
                 ],
@@ -94866,7 +94949,12 @@ var render = function() {
                       "draggable",
                       {
                         staticClass: "dragArea",
-                        attrs: { options: { group: "people" } },
+                        attrs: {
+                          id: "2",
+                          options: { group: "people" },
+                          move: _vm.showMove
+                        },
+                        on: { end: _vm.onEnd },
                         model: {
                           value: _vm.inProgress,
                           callback: function($$v) {
@@ -94878,9 +94966,33 @@ var render = function() {
                       _vm._l(_vm.inProgress, function(element) {
                         return _c("div", { staticClass: "dragElements" }, [
                           _c("div", [
-                            _c("span", { staticClass: "med-priority-span" }, [
-                              _vm._v("Med Priority")
-                            ])
+                            element.priority_type == "Low"
+                              ? _c(
+                                  "span",
+                                  { staticClass: "low-priority-span" },
+                                  [_vm._v("Low Priority")]
+                                )
+                              : _vm._e()
+                          ]),
+                          _vm._v(" "),
+                          _c("div", [
+                            element.priority_type == "Medium"
+                              ? _c(
+                                  "span",
+                                  { staticClass: "med-priority-span" },
+                                  [_vm._v("Med Priority")]
+                                )
+                              : _vm._e()
+                          ]),
+                          _vm._v(" "),
+                          _c("div", [
+                            element.priority_type == "High"
+                              ? _c(
+                                  "span",
+                                  { staticClass: "high-priority-span" },
+                                  [_vm._v("High Priority")]
+                                )
+                              : _vm._e()
                           ]),
                           _vm._v(" "),
                           _c("div", { staticClass: "element-container" }, [
@@ -94910,7 +95022,12 @@ var render = function() {
                     "draggable",
                     {
                       staticClass: "dragArea",
-                      attrs: { options: { group: "people" } },
+                      attrs: {
+                        id: "3",
+                        options: { group: "people" },
+                        move: _vm.showMove
+                      },
+                      on: { end: _vm.onEnd },
                       model: {
                         value: _vm.inReview,
                         callback: function($$v) {
@@ -94922,9 +95039,29 @@ var render = function() {
                     _vm._l(_vm.inReview, function(element) {
                       return _c("div", { staticClass: "dragElements" }, [
                         _c("div", [
-                          _c("span", { staticClass: "med-priority-span" }, [
-                            _vm._v("Med Priority")
-                          ])
+                          element.priority_type == "Low"
+                            ? _c("span", { staticClass: "low-priority-span" }, [
+                                _vm._v("Low Priority")
+                              ])
+                            : _vm._e()
+                        ]),
+                        _vm._v(" "),
+                        _c("div", [
+                          element.priority_type == "Medium"
+                            ? _c("span", { staticClass: "med-priority-span" }, [
+                                _vm._v("Med Priority")
+                              ])
+                            : _vm._e()
+                        ]),
+                        _vm._v(" "),
+                        _c("div", [
+                          element.priority_type == "High"
+                            ? _c(
+                                "span",
+                                { staticClass: "high-priority-span" },
+                                [_vm._v("High Priority")]
+                              )
+                            : _vm._e()
                         ]),
                         _vm._v(" "),
                         _c("div", { staticClass: "element-container" }, [
@@ -94953,7 +95090,12 @@ var render = function() {
                     "draggable",
                     {
                       staticClass: "dragArea",
-                      attrs: { options: { group: "people" } },
+                      attrs: {
+                        id: "4",
+                        options: { group: "people" },
+                        move: _vm.showMove
+                      },
+                      on: { end: _vm.onEnd },
                       model: {
                         value: _vm.done,
                         callback: function($$v) {
@@ -94965,9 +95107,29 @@ var render = function() {
                     _vm._l(_vm.done, function(element) {
                       return _c("div", { staticClass: "dragElements" }, [
                         _c("div", [
-                          _c("span", { staticClass: "med-priority-span" }, [
-                            _vm._v("Med Priority")
-                          ])
+                          element.priority_type == "Low"
+                            ? _c("span", { staticClass: "low-priority-span" }, [
+                                _vm._v("Low Priority")
+                              ])
+                            : _vm._e()
+                        ]),
+                        _vm._v(" "),
+                        _c("div", [
+                          element.priority_type == "Medium"
+                            ? _c("span", { staticClass: "med-priority-span" }, [
+                                _vm._v("Med Priority")
+                              ])
+                            : _vm._e()
+                        ]),
+                        _vm._v(" "),
+                        _c("div", [
+                          element.priority_type == "High"
+                            ? _c(
+                                "span",
+                                { staticClass: "high-priority-span" },
+                                [_vm._v("High Priority")]
+                              )
+                            : _vm._e()
                         ]),
                         _vm._v(" "),
                         _c("div", { staticClass: "element-container" }, [

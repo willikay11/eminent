@@ -31,6 +31,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
 import locale from 'element-ui/lib/locale/lang/en'
+
 Vue.use(ElementUI, { locale })
 
 /**
@@ -67,3 +68,4 @@ Vue.use(draggable);
 //     broadcaster: 'pusher',
 //     key: 'your-pusher-key'
 // });
+

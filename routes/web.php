@@ -279,6 +279,10 @@ Route::group(['middleware' => 'auth'], function (){
     Route::get('/api/activities', [
         'uses' => 'ActivitiesController@getActivities'
     ]);
+
+    Route::post('/update/activities', [
+        'uses' => 'ActivitiesController@updateActivityStatus'
+    ]);
 });
 
 

@@ -8,13 +8,17 @@
                     </div>
                     <div class="panel-body">
                         <draggable
+                                id="1"
                                 class="dragArea"
                                 v-model="todo"
                                 :options="{group:'people'}"
-                                :move="showMove">
-                            <div class="dragElements" v-for="element in todo">
-                                <div><span class="low-priority-span">Low Priority</span></div>
-                                <div class="element-container">{{element.name}}</div>
+                                :move="showMove"
+                                @end="onEnd">
+                            <div class="dragElements" v-for="element in todo" :key="element.id">
+                                <div><span v-if="element.priority_type == 'Low'" class="low-priority-span">Low Priority</span></div>
+                                <div><span v-if="element.priority_type == 'Medium'" class="med-priority-span">Med Priority</span></div>
+                                <div><span v-if="element.priority_type == 'High'" class="high-priority-span">High Priority</span></div>
+                                <div class="element-container">{{ element.name }}</div>
                             </div>
                         </draggable>
                     </div>
@@ -31,12 +35,17 @@
                     </div>
                     <div class="panel-body">
                         <draggable
+                                id="2"
                                 class="dragArea"
                                 v-model="inProgress"
-                                :options="{group:'people'}">
+                                :options="{group:'people'}"
+                                :move="showMove"
+                                @end="onEnd">
                             <div class="dragElements" v-for="element in inProgress">
-                                <div><span class="med-priority-span">Med Priority</span></div>
-                                <div class="element-container">{{element.name}}</div>
+                                <div><span v-if="element.priority_type == 'Low'" class="low-priority-span">Low Priority</span></div>
+                                <div><span v-if="element.priority_type == 'Medium'" class="med-priority-span">Med Priority</span></div>
+                                <div><span v-if="element.priority_type == 'High'" class="high-priority-span">High Priority</span></div>
+                                <div class="element-container">{{ element.name }}</div>
                             </div>
                         </draggable>
                     </div>
@@ -50,12 +59,17 @@
                     </div>
                     <div class="panel-body">
                         <draggable
+                                id="3"
                                 class="dragArea"
                                 v-model="inReview"
-                                :options="{group:'people'}">
+                                :options="{group:'people'}"
+                                :move="showMove"
+                                @end="onEnd">
                             <div class="dragElements" v-for="element in inReview">
-                                <div><span class="med-priority-span">Med Priority</span></div>
-                                <div class="element-container">{{element.name}}</div>
+                                <div><span v-if="element.priority_type == 'Low'" class="low-priority-span">Low Priority</span></div>
+                                <div><span v-if="element.priority_type == 'Medium'" class="med-priority-span">Med Priority</span></div>
+                                <div><span v-if="element.priority_type == 'High'" class="high-priority-span">High Priority</span></div>
+                                <div class="element-container">{{ element.name }}</div>
                             </div>
                         </draggable>
                     </div>
@@ -69,12 +83,17 @@
                     </div>
                     <div class="panel-body">
                         <draggable
+                                id="4"
                                 class="dragArea"
                                 v-model="done"
-                                :options="{group:'people'}">
+                                :options="{group:'people'}"
+                                :move="showMove"
+                                @end="onEnd">
                             <div class="dragElements" v-for="element in done">
-                                <div><span class="med-priority-span">Med Priority</span></div>
-                                <div class="element-container">{{element.name}}</div>
+                                <div><span v-if="element.priority_type == 'Low'" class="low-priority-span">Low Priority</span></div>
+                                <div><span v-if="element.priority_type == 'Medium'" class="med-priority-span">Med Priority</span></div>
+                                <div><span v-if="element.priority_type == 'High'" class="high-priority-span">High Priority</span></div>
+                                <div class="element-container">{{ element.name }}</div>
                             </div>
                         </draggable>
                     </div>
@@ -195,16 +214,15 @@
         data (){
             return {
                 todo: [],
-                inProgress: [{
-                    name: "Juan"
-                }, {
-                    name: "Edgard"
-                }, {
-                    name: "Johnson"
-                }],
+                inProgress: [],
                 inReview: [],
                 done: [],
                 taskDialogVisible: false,
+                activity_status_id: '',
+                targetElementName: '',
+                draggedElement: '',
+                from: '',
+                to: '',
                 users:[],
                 priorityTypes:[],
                 options: [{
@@ -249,8 +267,42 @@
             vm.getActivities();
         },
         methods: {
-            showMove(){
-                console.log("MOVED!");
+            showMove(evt, originalEvent){
+                let vm  = this;
+
+                vm.draggedElement = evt.draggedContext;
+
+                vm.from = evt.from.id;
+
+                vm.to = evt.to.id;
+            },
+            onEnd(evt){
+                let vm = this;
+
+                if(vm.from != vm.to)
+                {
+                    axios.post('/update/activities', {
+                        activity_id: vm.draggedElement.element.id,
+                        activity_status_id: vm.to
+                    })
+                        .then(function (response) {
+
+                            if (response.data.success) {
+                                vm.$message({
+                                    type: 'success',
+                                    message: response.data.message
+                                });
+                            }
+                            else {
+                                vm.$message({
+                                    type: 'error',
+                                    message: response.data.message
+                                });
+                            }
+                        }).catch(function (error) {
+                        console.log(error);
+                    });
+                }
             },
             getInformation()
             {
@@ -268,7 +320,10 @@
                 let vm = this;
                 axios.get('/api/activities')
                     .then(function (response) {
-                        vm.todo = response.data;
+                        vm.todo = (response.data.todo == undefined)?[]:response.data.todo;
+                        vm.inProgress = (response.data.progress == undefined)?[]:response.data.progress;
+                        vm.inReview = (response.data.review == undefined)?[]:response.data.review;
+                        vm.done = (response.data.done == undefined)?[]:response.data.done;
                     }).catch(function (error) {
                     console.log(error);
                 })
@@ -325,6 +380,14 @@
 </script>
 
 <style>
+    .el-select{
+        width: 100%;
+    }
+
+    .el-date-editor.el-input{
+        width: 100%;
+    }
+
     .dragArea {
         min-height: 50px;
     }
@@ -374,7 +437,7 @@
     }
 
     .low-priority-span {
-        padding: 1px 10px 1px 10px;
+        padding: 5px 10px 5px 10px;
         background-color: #4b8fe3;
         color: white;
         border-radius: 5px;
@@ -382,7 +445,7 @@
     }
 
     .med-priority-span {
-        padding: 1px 10px 1px 10px;
+        padding: 5px 10px 5px 10px;
         background-color: #12884b;
         color: white;
         border-radius: 5px;
@@ -390,7 +453,7 @@
     }
 
     .high-priority-span {
-        padding: 1px 10px 1px 10px;
+        padding: 5px 10px 5px 10px;
         background-color: #e43e52;
         color: white;
         border-radius: 5px;
