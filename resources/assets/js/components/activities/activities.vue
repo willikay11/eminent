@@ -19,6 +19,15 @@
                                 <div><span v-if="element.priority_type == 'Medium'" class="med-priority-span">Med Priority</span></div>
                                 <div><span v-if="element.priority_type == 'High'" class="high-priority-span">High Priority</span></div>
                                 <div class="element-container">{{ element.name }}</div>
+                                <el-row :span="24" :gutter="20">
+                                    <el-col :span="12">
+                                        <el-button @click="getSelectedTask(element)">Comments</el-button>
+                                    </el-col>
+                                    <el-col :span="12">
+                                        <el-button>File</el-button>
+                                    </el-col>
+
+                                </el-row>
                             </div>
                         </draggable>
                     </div>
@@ -199,6 +208,59 @@
                   </span>
             </div>
         </el-dialog>
+
+        <el-dialog
+                title="Tips"
+                :visible.sync="commentsDialog"
+                size="large">
+            <span>{{ selectedTask.name }}</span>
+
+            <ol class="chat" v-if="selectedTask.comments.length != 0" >
+                <div v-for="comment in selectedTask.comments">
+
+                    <div v-if="comment.user_id == 5">
+                        <li class="self">
+                            <div class="avatar"><img :src="comment.avatar" draggable="false"/></div>
+                            <div class="msg">
+                                <p v-html="comment.comment"></p>
+                                <img v-if="comment.image != '' " :src="comment.image" draggable="false"/>
+                                <a v-if="comment.file != '' "  class="edit" :href="comment.file" download>
+                                    <i class="fa fa-paperclip" aria-hidden="true"></i>comment.filename</a>
+                                <div><time>{{ comment.time }}</time></div>
+                            </div>
+                        </li>
+                    </div>
+
+                    <div v-if="comment.user_id != 5">
+                        <li class="other">
+                            <div class="avatar"><img :src="[[comment.avatar]]" draggable="false"/></div>
+                            <div class="msg">
+                                <p class="name">{{ comment.username }}</p>
+                                <p v-html="comment.comment"></p>
+                                <img v-if="comment.image != '' " :src="comment.image" draggable="false"/>
+                                <a v-if="comment.file != '' "  class="edit" href="comment.file" download>
+                                    <i class="fa fa-paperclip" aria-hidden="true"></i>comment.filename</a>
+                                <div><time>{{ comment.time }}</time></div>
+                            </div>
+                        </li>
+                    </div>
+                </div>
+            </ol>
+            <div slot="footer" class="dialog-footer">
+                <!--<el-input placeholder="Please input" v-model="input"></el-input>-->
+                <!--<el-button @click="dialogVisible = false">Cancel</el-button>-->
+                <!--<el-button type="primary" @click="dialogVisible = false">Confirm</el-button>-->
+
+                  <el-input placeholder="Please input" v-model="input">
+                    <!--<template slot="append">-->
+                        <!--<el-button @click="postComment()">Post</el-button>-->
+                    <!--</template>-->
+                      <el-button slot="prepend">Attach</el-button>
+                      <el-button @click="postComment()" slot="append">Post</el-button>
+                  </el-input>
+            </div>
+        </el-dialog>
+
     </div>
 
 
@@ -213,11 +275,16 @@
         props: [],
         data (){
             return {
+                input: '',
+                selectedTask: {
+                    'comments': []
+                },
                 todo: [],
                 inProgress: [],
                 inReview: [],
                 done: [],
                 taskDialogVisible: false,
+                commentsDialog: false,
                 activity_status_id: '',
                 targetElementName: '',
                 draggedElement: '',
@@ -374,6 +441,43 @@
                         return false;
                     }
                 });
+            },
+            getSelectedTask(task)
+            {
+                let vm = this;
+
+                vm.commentsDialog = true;
+
+                vm.selectedTask = task;
+            },
+            postComment()
+            {
+                let vm = this;
+
+                axios.post('/activity/comment', {
+                    activity_id: vm.selectedTask.id,
+                    comment: vm.input
+                })
+                    .then(function (response) {
+                        vm.commentsDialog = false;
+
+                        if (response.data.success) {
+                            vm.$message({
+                                type: 'success',
+                                message: response.data.message
+                            });
+
+                        }
+                        else {
+                            vm.$message({
+                                type: 'error',
+                                message: response.data.message
+                            });
+                        }
+                    }).catch(function (error) {
+                    console.log(error);
+                });
+                console.log("Posting");
             }
         }
     }
@@ -458,5 +562,280 @@
         color: white;
         border-radius: 5px;
         font-size: 12px;
+    }
+
+    .chat {
+        list-style: none;
+        background: none;
+        margin: 0;
+        padding: 0 0 50px 0;
+        margin-top: 60px;
+        margin-bottom: 50px;
+        min-height: 500px;
+        overflow: auto;
+    }
+    .chat li {
+        padding: 0.5rem;
+        overflow: hidden;
+        display: flex;
+    }
+    .chat .avatar {
+        width: 40px;
+        height: 40px;
+        position: relative;
+        display: block;
+        z-index: 2;
+        border-radius: 100%;
+        -webkit-border-radius: 100%;
+        -moz-border-radius: 100%;
+        -ms-border-radius: 100%;
+        background-color: rgba(255,255,255,0.9);
+    }
+    .chat .avatar img {
+        width: 40px;
+        height: 40px;
+        border-radius: 100%;
+        -webkit-border-radius: 100%;
+        -moz-border-radius: 100%;
+        -ms-border-radius: 100%;
+        background-color: rgba(255,255,255,0.9);
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+    }
+
+    .other .msg {
+        order: 1;
+        margin-left: 15px;
+        border-top-left-radius: 0px;
+        box-shadow: -1px 2px 0px #d7e8f9;
+    }
+    .other:before {
+        content: "";
+        position: relative;
+        top: 0px;
+        right: 0px;
+        left: 53px;
+        width: 0px;
+        height: 0px;
+        border: 5px solid #f6f8fa;
+        border-left-color: transparent;
+        border-bottom-color: transparent;
+    }
+
+    .self {
+        justify-content: flex-end;
+        align-items: flex-end;
+    }
+    .self .msg {
+        order: 1;
+        margin-right: 15px;
+        background-color: #d7e8f9;
+        border-bottom-right-radius: 0px;
+        box-shadow: 1px 2px 0px #d7e8f9;
+    }
+    .self .avatar {
+        order: 2;
+    }
+    .self .avatar:after {
+        content: "";
+        position: relative;
+        display: inline-block;
+        bottom: 19px;
+        right: 15px;
+        width: 0px;
+        height: 0px;
+        border: 5px solid #fff;
+        border-left-color: #d7e8f9;
+        border-right-color: transparent;
+        border-top-color: transparent;
+        border-bottom-color: #d7e8f9;
+        box-shadow: 0px 2px 0px #d7e8f9;
+    }
+
+    .msg {
+        background: #f6f8fa;
+        min-width: 50px;
+        padding: 10px;
+        border-radius: 2px;
+        box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.07);
+    }
+    .msg p {
+        font-size: 16px;
+        letter-spacing: 1px;
+        margin: 0 0 0.2rem 0;
+        color: #777;
+    }
+
+    .msg .name{
+        font-size: 0.7em;
+        color: #0000fe;
+    }
+
+    .msg img {
+        position: relative;
+        display: block;
+        width: 300px;
+        border-radius: 5px;
+        box-shadow: 0px 0px 3px #eee;
+        transition: all .4s cubic-bezier(0.565, -0.260, 0.255, 1.410);
+        cursor: default;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+    }
+    @media screen and (max-width: 800px) {
+        .msg img {
+            width: 300px;
+        }
+    }
+    @media screen and (max-width: 550px) {
+        .msg img {
+            width: 200px;
+        }
+    }
+
+    .msg img:hover {
+        opacity: 0.4;
+    }
+
+    .msg time {
+        font-size: 14px;
+        color: #777;;
+        margin-top: 5px;
+        float: right;
+        cursor: default;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+    }
+
+    .msg time:before{
+        content:"\f017";
+        color: #777;
+        font-family: FontAwesome;
+        display: inline-block;
+        margin-right: 4px;
+    }
+
+    .msg .edit{
+        font-size: 0.7rem;
+        color: #777;;
+        margin-top: 5px;
+        float: left;
+    }
+
+    .chat-comments-control input[type="text"].comment-box {
+        bottom: 0;
+        width: 90%;
+        padding: 5px;
+        font-size: 0.9rem;
+        color: #777;
+        height: 50px;
+        float: left;
+        background-color: none !important;
+        border-style: none !important;
+        border-color: none !important;
+        box-shadow: none !important;
+    }
+
+    input[type="submit"] .send{
+        background-color: #42ff55;
+    }
+
+    .chat-comments-control{
+        border-top: solid 1px #d7e8f9;
+        width: 90%;
+        height: 50px;
+        border-radius: 2px;
+        margin: auto;
+        margin-top: 5px;
+    }
+
+    .attachbox {
+        float: left;
+        width: 70px;
+        height: 100%;
+        margin-right: 10px;
+    }
+
+    .attachbox .clip {
+        color: #d7e8f9;
+        font-size: 25px;
+        margin-top: 10px;
+        float: right;
+    }
+
+    .attachbox .image {
+        color: #d7e8f9;
+        font-size: 25px;
+        margin-top: 10px;
+        float: left;
+    }
+
+    .sendbox{
+        float: right;
+        width: 20px;
+        height: 100%;
+        margin-right: 10px;
+    }
+
+    .sendbox .send{
+        color: #d7e8f9;
+        font-size: 25px;
+        background-color: white;
+        float: left;
+    }
+
+    .clip:hover {
+        font-size: 35px;
+    }
+
+    .image:hover{
+        font-size: 35px;
+    }
+
+    .holder {
+        width: 80%;
+        background: white;
+        position: fixed;
+        bottom: 0;
+        margin-left: -1%;
+        margin-top: 10px;
+        height: 80px;
+    }
+
+    .load-more{
+        background-color: #66b0fb;
+        margin-left: 200px;
+        margin-right: 200px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .load-more:hover{
+        background-color: #4c91d7;
+    }
+
+    .component-users{
+        background: #006B5B;
+        color: #FFFFFF;
+        margin-right: 5px;
+        font-weight: 300;
+        padding: 2px 10px;
+        border-radius: 3px;
+        line-height: 20px;
+        font-size: 12px;
+        display: inline-flex;
+        margin-top: 10px;
+    }
+
+    .component-remove{
+        margin-left: 5px;
+        border-left: solid white 1px;
+        padding-left: 5px;
+        color: #ffffff;
     }
 </style>

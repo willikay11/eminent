@@ -283,6 +283,10 @@ Route::group(['middleware' => 'auth'], function (){
     Route::post('/update/activities', [
         'uses' => 'ActivitiesController@updateActivityStatus'
     ]);
+
+    Route::post('/activity/comment', [
+        'uses' => 'ActivitiesController@createComment'
+    ]);
 });
 
 

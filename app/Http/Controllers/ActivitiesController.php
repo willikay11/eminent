@@ -11,6 +11,7 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use eminent\Activities\ActivityRepository;
+use eminent\Comments\CommentsRepository;
 use eminent\Models\Activity;
 use eminent\Models\PriorityType;
 use eminent\Users\UsersRepository;
@@ -28,12 +29,19 @@ class ActivitiesController extends Controller
      * @var ActivityRepository
      */
     private $activityRepository;
+    /**
+     * @var CommentsRepository
+     */
+    private $commentsRepository;
 
-    public function __construct(UsersRepository $usersRepository, ActivityRepository $activityRepository)
+    public function __construct(UsersRepository $usersRepository,
+                                ActivityRepository $activityRepository,
+                                CommentsRepository $commentsRepository)
     {
 
         $this->usersRepository = $usersRepository;
         $this->activityRepository = $activityRepository;
+        $this->commentsRepository = $commentsRepository;
     }
 
     public function index()
@@ -127,11 +135,51 @@ class ActivitiesController extends Controller
                 'priority_type' => $activity->priorityType->name,
                 'activity_status_id' => $activity->activity_status_id,
                 'activity_status' => $activity->activityStatus->name,
-                'due_date' => $activity->due_date
+                'due_date' => $activity->due_date,
+                'comments' => $this->getActivityComments($activity->id)
             ];
         })->groupBy('activity_status');
 
         return self::toResponse(null, $activities);
+    }
+
+    public function getActivityComments($activityId)
+    {
+        $comments = $this->commentsRepository->getCommentByActivityId($activityId);
+
+        return $comments->map(function ($comment)
+        {
+            return[
+                'comment' => $comment->comment,
+                'user_id' => $comment->user_id,
+                'username' => $comment->user->present()->fullName,
+                'time' => Carbon::parse($comment->created_at)->format('d-m-Y'),
+                'avatar' => '../../images/avatar_circle_blue.png',
+                'image' => '',
+                'file' => ''
+            ];
+        });
+    }
+    public function createComment(Request $request)
+    {
+        $input = $request->all();
+
+        $input['user_id'] = Auth::id();
+
+        $comment = $this->commentsRepository->store($input);
+
+        if($comment)
+        {
+            return self::toResponse(null, [
+                'success' => true,
+                'message' => 'Comment posted'
+            ]);
+        }
+
+        return self::toResponse(null, [
+            'success' => false,
+            'message' => 'Comment not posted'
+        ]);
     }
 
     public function toResponse($request = null, $data)
