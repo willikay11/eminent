@@ -162,6 +162,8 @@ class ActivitiesController extends Controller
     }
     public function createComment(Request $request)
     {
+        dd($request->all());
+
         $input = $request->all();
 
         $input['user_id'] = Auth::id();

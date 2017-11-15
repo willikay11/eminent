@@ -209,10 +209,32 @@
             </div>
         </el-dialog>
 
+        <el-popover
+                ref="popover1"
+                placement="top-start"
+                title="Attach a file"
+                width="500"
+                trigger="click">
+            <ul style="list-style:none">
+                <!--<a href="#"><li>Attach Image</li></a>-->
+                <!--<a href="#"><li>Attach File</li></a>-->
+                <el-upload
+                        class="upload-demo"
+                        ref="upload"
+                        action="/activity/comment"
+                        :data="data"
+                        :auto-upload="false">
+                    <el-button slot="trigger" size="small" type="primary">Select Image</el-button>
+                    <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">upload to server</el-button>
+                    <div class="el-upload__tip" slot="tip">jpg/png files with a size less than 500kb</div>
+                </el-upload>
+            </ul>
+        </el-popover>
+
         <el-dialog
                 title="Tips"
                 :visible.sync="commentsDialog"
-                size="large">
+                size="small">
             <span>{{ selectedTask.name }}</span>
 
             <ol class="chat" v-if="selectedTask.comments.length != 0" >
@@ -255,8 +277,8 @@
                     <!--<template slot="append">-->
                         <!--<el-button @click="postComment()">Post</el-button>-->
                     <!--</template>-->
-                      <el-button slot="prepend">Attach</el-button>
-                      <el-button @click="postComment()" slot="append">Post</el-button>
+                      <el-button slot="prepend" v-popover:popover1>Attach</el-button>
+                      <el-button @click="submitUpload()" slot="append">Post</el-button>
                   </el-input>
             </div>
         </el-dialog>
@@ -275,6 +297,12 @@
         props: [],
         data (){
             return {
+                data: {
+                    items: [
+                        { message: 'Foo' },
+                        { message: 'Bar' }
+                    ]
+                },
                 input: '',
                 selectedTask: {
                     'comments': []
@@ -334,6 +362,9 @@
             vm.getActivities();
         },
         methods: {
+            submitUpload() {
+                this.$refs.upload.submit();
+            },
             showMove(evt, originalEvent){
                 let vm  = this;
 
@@ -662,7 +693,7 @@
         box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.07);
     }
     .msg p {
-        font-size: 16px;
+        font-size: 14px;
         letter-spacing: 1px;
         margin: 0 0 0.2rem 0;
         color: #777;
@@ -702,7 +733,7 @@
     }
 
     .msg time {
-        font-size: 14px;
+        font-size: 13px;
         color: #777;;
         margin-top: 5px;
         float: right;
@@ -837,5 +868,13 @@
         border-left: solid white 1px;
         padding-left: 5px;
         color: #ffffff;
+    }
+
+    .el-upload__input {
+        display: none !important;
+    }
+
+    .el-upload-list__item-name {
+        background-color: transparent !important;
     }
 </style>
