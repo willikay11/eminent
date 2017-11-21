@@ -84641,6 +84641,8 @@ Vue.component('interactionsTable', __webpack_require__(186));
 
 Vue.component('activities', __webpack_require__(191));
 
+Vue.component('userRoles', __webpack_require__(204));
+
 /***/ }),
 /* 114 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -89078,6 +89080,9 @@ exports.default = {
             //
             vm.ruleForm.designation = user.designation_id;
         },
+        UserRole: function UserRole(user) {
+            window.location.href = '/user/' + user.id + '/role';
+        },
         filterTag: function filterTag(value, row) {
             return row.tag === value;
         }
@@ -89169,7 +89174,7 @@ var render = function() {
               }),
               _vm._v(" "),
               _c("el-table-column", {
-                attrs: { label: "Actions", width: "120" },
+                attrs: { label: "Actions" },
                 scopedSlots: _vm._u([
                   {
                     key: "default",
@@ -89186,6 +89191,19 @@ var render = function() {
                             }
                           },
                           [_vm._v("Edit")]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "el-button",
+                          {
+                            attrs: { size: "small" },
+                            on: {
+                              click: function($event) {
+                                _vm.UserRole(scope.row)
+                              }
+                            }
+                          },
+                          [_vm._v("Roles")]
                         )
                       ]
                     }
@@ -89976,8 +89994,15 @@ exports.default = {
         getUserContacts: function getUserContacts() {
             var vm = this;
             axios.get('/api/contacts/user/' + vm.userId).then(function (response) {
-                vm.tableData = [].concat(response.data.data);
-                vm.total = response.data.last_page;
+                if (response.data.success) {
+                    vm.tableData = [].concat(response.data.data);
+                    vm.total = response.data.last_page;
+                } else {
+                    vm.$message({
+                        type: 'error',
+                        message: response.data.message
+                    });
+                }
             }).catch(function (error) {
                 console.log(error);
             });
@@ -96093,6 +96118,283 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 197 */,
+/* 198 */,
+/* 199 */,
+/* 200 */,
+/* 201 */,
+/* 202 */,
+/* 203 */,
+/* 204 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(3)
+/* script */
+var __vue_script__ = __webpack_require__(205)
+/* template */
+var __vue_template__ = __webpack_require__(206)
+/* template functional */
+  var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/users/userRoles.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-327150b8", Component.options)
+  } else {
+    hotAPI.reload("data-v-327150b8", Component.options)
+' + '  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 205 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+exports.default = {
+    props: ['userId'],
+    data: function data() {
+        return {
+            tableData: [],
+            options: [{
+                value: '1',
+                label: 'Active'
+            }, {
+                value: '0',
+                label: 'Inactive'
+            }],
+            username: ''
+        };
+    },
+
+    created: function created() {
+        var vm = this;
+
+        vm.getUserRoles();
+    },
+    methods: {
+        getUserRoles: function getUserRoles() {
+            var vm = this;
+
+            axios.get('/api/get/user/roles/' + vm.userId).then(function (response) {
+                vm.username = response.data.username;
+                vm.tableData = [].concat(response.data.data);
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        viewRole: function viewRole(role) {
+            var vm = this;
+
+            window.location.href = '/roles/details/' + role.id;
+        },
+        revokePermissionFromUser: function revokePermissionFromUser(role) {
+            var vm = this;
+
+            axios.get('/role/' + role.id + '/user/' + vm.userId + '/revoke').then(function (response) {
+                if (response.data.success) {
+                    vm.getUserRoles();
+
+                    vm.$message({
+                        type: 'success',
+                        message: response.data.message
+                    });
+                } else {
+                    vm.$message({
+                        type: 'error',
+                        message: response.data.message
+                    });
+                }
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        addUserRole: function addUserRole() {
+            var vm = this;
+
+            window.location.href = '/user/' + vm.userId + '/roles';
+        }
+    }
+};
+
+/***/ }),
+/* 206 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "panel panel-default" }, [
+    _c("div", { staticClass: "col-lg-12 panel-header" }, [
+      _c("div", { staticClass: "col-lg-6" }, [
+        _c("h4", [_vm._v(_vm._s(_vm.username))])
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "col-lg-6", staticStyle: { "text-align": "right" } },
+        [
+          _c(
+            "button",
+            {
+              staticClass: "btn ebg-button",
+              on: {
+                click: function($event) {
+                  _vm.addUserRole()
+                }
+              }
+            },
+            [_vm._v("Add Role")]
+          )
+        ]
+      )
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "panel-body" },
+      [
+        _c(
+          "el-table",
+          {
+            staticStyle: { width: "100%" },
+            attrs: { data: _vm.tableData, stripe: "" }
+          },
+          [
+            _c("el-table-column", { attrs: { prop: "name", label: "Name" } }),
+            _vm._v(" "),
+            _c("el-table-column", {
+              attrs: { prop: "description", label: "Description" }
+            }),
+            _vm._v(" "),
+            _c("el-table-column", {
+              attrs: { label: "Actions" },
+              scopedSlots: _vm._u([
+                {
+                  key: "default",
+                  fn: function(scope) {
+                    return [
+                      _c(
+                        "el-button",
+                        {
+                          attrs: { size: "small" },
+                          on: {
+                            click: function($event) {
+                              _vm.viewRole(scope.row)
+                            }
+                          }
+                        },
+                        [_vm._v("View")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "el-button",
+                        {
+                          attrs: { size: "small" },
+                          on: {
+                            click: function($event) {
+                              _vm.revokePermissionFromUser(scope.row)
+                            }
+                          }
+                        },
+                        [_vm._v("Revoke")]
+                      )
+                    ]
+                  }
+                }
+              ])
+            })
+          ],
+          1
+        )
+      ],
+      1
+    ),
+    _vm._v(" "),
+    _c("hr", { staticClass: "panel-hr" })
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-327150b8", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

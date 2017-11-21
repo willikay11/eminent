@@ -39,10 +39,10 @@
                     </template>
                 </el-table-column>
                 <el-table-column
-                        label="Actions"
-                        width="120">
+                        label="Actions">
                     <template slot-scope="scope">
                         <el-button @click="EditUser(scope.row)" size="small">Edit</el-button>
+                        <el-button @click="UserRole(scope.row)" size="small">Roles</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -390,6 +390,10 @@
 //                vm.ruleForm.designationName = designation.name;
 //
                 vm.ruleForm.designation = user.designation_id;
+            },
+            UserRole(user)
+            {
+                window.location.href = '/user/'+user.id+'/role';
             },
             filterTag(value, row) {
                 return row.tag === value;

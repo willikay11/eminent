@@ -13,8 +13,10 @@ use eminent\Models\Permission;
 use eminent\Models\Role;
 use eminent\Models\RolePermission;
 use eminent\Models\User;
+use eminent\Models\UserHasRole;
 use eminent\Roles\RoleRules;
 use eminent\Roles\RolesRepository;
+use eminent\UserHasRoles\UserHasRolesRepository;
 use eminent\Users\UsersRepository;
 use Illuminate\Http\Request;
 use Laracasts\Flash\Flash;
@@ -28,11 +30,17 @@ class RoleController extends Controller
     protected $rolesRepository;
 
     protected $usersRepository;
+    /**
+     * @var UserHasRolesRepository
+     */
+    private $userHasRolesRepository;
 
-    public function __construct(RolesRepository $rolesRepository, UsersRepository $usersRepository)
+    public function __construct(RolesRepository $rolesRepository,
+                                UsersRepository $usersRepository, UserHasRolesRepository $userHasRolesRepository)
     {
         $this->rolesRepository = $rolesRepository;
         $this->usersRepository = $usersRepository;
+        $this->userHasRolesRepository = $userHasRolesRepository;
     }
 
     public function getAllRoles()
@@ -184,6 +192,90 @@ class RoleController extends Controller
     public function permissionRevoke($role, $permission)
     {
         $this->rolesRepository->revokePermission($role, $permission);
+    }
+
+    public function getUserRoles($userId)
+    {
+        $user = $this->usersRepository->getUserById($userId);
+
+        $userRoles = UserHasRole::where('user_id', $userId)->get();
+
+        if(count($userRoles))
+        {
+
+            $roles = $userRoles->map(function ($userRole)
+            {
+                $role = $userRole->role;
+
+                return[
+                    'id' => $role->id,
+                    'name' => $role->name,
+                    'description' => $role->description
+                ];
+            });
+
+            return self::toResponse(null, [
+                'success' => true,
+                'username' => $user->present()->fullName,
+                'data' => $roles
+            ]);
+        }
+
+        return self::toResponse(null, [
+            'success' => false,
+            'username' => $user->present()->fullName,
+            'message' => 'User has no roles',
+            'data' => []
+        ]);
+    }
+
+    public function userRoles($userId)
+    {
+        $user = $this->usersRepository->getUserById($userId);
+
+        $roles = $this->rolesRepository->getAllRoles()->where('active', 1);
+
+        $userRoles = $this->userHasRolesRepository->getUserRoleByUserId($userId)->pluck('role_id');;
+
+        return view('users.addRole', [
+            'user' => $user,
+            'roles' => $roles,
+            'userRoles' => $userRoles
+        ]);
+    }
+
+    public function updateUserRoles($userId, Request $request)
+    {
+        $roles = $request->except(['_token']);
+
+        $userRoles = $this->userHasRolesRepository->getUserRoleByUserId($userId);
+
+        foreach($userRoles as $userRole)
+        {
+            $userRole->delete();
+        }
+
+        $this->userHasRolesRepository->updateUserRoles($userId, $roles);
+
+        return redirect('/user/'.$userId.'/roles');
+    }
+
+    public function revokeRoleFromUser($roleId, $userId)
+    {
+        $userHasRole = $this->userHasRolesRepository->deleteUserRole($userId, $roleId);
+
+        if ($userHasRole)
+        {
+            return self::toResponse(null, [
+                'success' => true,
+                'message' => 'User Role has been revoked'
+            ]);
+        }
+
+        return self::toResponse(null, [
+            'success' => false,
+            'message' => 'Oops! An error occurred'
+        ]);
     }
 
     public function toResponse($request = null, $data)

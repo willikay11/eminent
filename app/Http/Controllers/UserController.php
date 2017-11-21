@@ -273,6 +273,13 @@ class UserController extends Controller
         }
     }
 
+    public function userRoles($id)
+    {
+        return view('users.roles', [
+            'userId' => $id
+        ]);
+    }
+
     public function toResponse($request = null, $data)
     {
         return response($data);

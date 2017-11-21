@@ -15,6 +15,11 @@ use Illuminate\Database\Eloquent\Collection;
 class RolesRepository
 {
 
+    public function getAllRoles()
+    {
+        return Role::all();
+    }
+
     public function getRoleById($id)
     {
         return Role::find($id);

@@ -537,8 +537,19 @@
                 let vm = this;
                 axios.get('/api/contacts/user/'+vm.userId)
                     .then(function (response) {
-                        vm.tableData = [].concat(response.data.data);
-                        vm.total = response.data.last_page;
+                        if(response.data.success)
+                        {
+                            vm.tableData = [].concat(response.data.data);
+                            vm.total = response.data.last_page;
+                        }
+                        else
+                        {
+                            vm.$message({
+                                type: 'error',
+                                message: response.data.message,
+                            });
+                        }
+
                     }).catch(function (error) {
                     console.log(error);
                 })

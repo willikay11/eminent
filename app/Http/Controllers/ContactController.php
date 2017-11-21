@@ -11,6 +11,7 @@ namespace App\Http\Controllers;
 
 use App\Events\Contacts\ContactsAssigned;
 use eminent\API\SortFilterPaginate;
+use eminent\Authorization\Authorizer;
 use eminent\Clients\ClientsRepository;
 use eminent\Contacts\ContactRules;
 use eminent\Contacts\ContactsRepository;
@@ -36,6 +37,8 @@ class ContactController extends Controller
     use ContactRules;
 
     use SortFilterPaginate;
+
+    use Authorizer;
 
     protected $contactsRepository;
     protected $clientsRepository;
@@ -184,6 +187,13 @@ class ContactController extends Controller
 
     public function getUserClients($userId)
     {
+        $authorized = $this->hasPermission('viewMyContacts', true);
+
+        if (is_array($authorized))
+        {
+            return self::toResponse(null, $authorized);
+        }
+
         $filterFunc = function ($q) use ($userId)
         {
             return $q->whereHas('clients', function ($q) use ($userId)

@@ -83,6 +83,22 @@ Route::group(['middleware' => 'auth'], function (){
         'uses' => 'RoleController@permissionRevoke'
     ]);
 
+    Route::get('/api/get/user/roles/{userId}', [
+        'uses' => 'RoleController@getUserRoles'
+    ]);
+
+    Route::get('/user/{userId}/roles', [
+        'uses' => 'RoleController@userRoles'
+    ]);
+
+    Route::post('/user/{userId}/roles' , [
+        'as' => 'user.roles',
+        'uses' => 'RoleController@updateUserRoles'
+    ]);
+
+    Route::get('/role/{roleId}/user/{userId}/revoke', [
+        'uses' => 'RoleController@revokeRoleFromUser'
+    ]);
     /*
      * Designation Routes
      */
@@ -131,6 +147,10 @@ Route::group(['middleware' => 'auth'], function (){
     Route::post('/users/create_password/{id}', [
         'as' => 'users.create_password',
         'uses' => 'UserController@savePassword'
+    ]);
+
+    Route::get('/user/{id}/role/', [
+        'uses' => 'UserController@userRoles'
     ]);
     /*
      * Profession Routes

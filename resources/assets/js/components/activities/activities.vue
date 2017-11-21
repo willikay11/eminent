@@ -289,7 +289,7 @@
 
                     <div v-if="comment.user_id != 5">
                         <li class="other">
-                            <div class="avatar"><img :src="[[comment.avatar]]" draggable="false"/></div>
+                            <div class="avatar"><img :src="comment.avatar" draggable="false"/></div>
                             <div class="msg">
                                 <p class="name">{{ comment.username }}</p>
                                 <p v-html="comment.comment"></p>
@@ -309,6 +309,7 @@
                     </div>
                 </div>
             </ol>
+
             <div slot="footer" class="dialog-footer">
                 <!--<el-input placeholder="Please input" v-model="input"></el-input>-->
                 <!--<el-button @click="dialogVisible = false">Cancel</el-button>-->
@@ -867,9 +868,9 @@
         color: #777;
         height: 50px;
         float: left;
-        background-color: none !important;
+        background-color: transparent !important;
         border-style: none !important;
-        border-color: none !important;
+        border-color: transparent !important;
         box-shadow: none !important;
     }
 
