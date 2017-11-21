@@ -307,6 +307,11 @@ Route::group(['middleware' => 'auth'], function (){
     Route::post('/activity/comment', [
         'uses' => 'ActivitiesController@createComment'
     ]);
+
+    Route::get('/emails', function ()
+    {
+        return view('emails.layouts-2');
+    });
 });
 
 
