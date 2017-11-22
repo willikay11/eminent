@@ -34,7 +34,8 @@ class Activity extends Model
         'user_id',
         'priority_type_id',
         'activity_status_id',
-        'due_date'
+        'due_date',
+        'created_by'
     ];
 
     /**
@@ -52,5 +53,20 @@ class Activity extends Model
     public function priorityType()
     {
         return $this->belongsTo(PriorityType::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function assigner()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function activityWatchers()
+    {
+        return $this->hasMany(ActivityWatcher::class);
     }
 }

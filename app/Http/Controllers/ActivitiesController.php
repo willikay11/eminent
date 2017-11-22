@@ -9,11 +9,15 @@
 namespace App\Http\Controllers;
 
 
+use App\Events\Activities\TaskAssigned;
+use App\Events\Activities\TaskStatusUpdated;
 use Carbon\Carbon;
 use eminent\Activities\ActivityRepository;
 use eminent\ActivityFile\ActivityFileRepository;
+use eminent\ActivityWatcher\ActivityWatcherRepository;
 use eminent\Comments\CommentsRepository;
 use eminent\Models\Activity;
+use eminent\Models\ActivityWatcher;
 use eminent\Models\PriorityType;
 use eminent\Users\UsersRepository;
 use Illuminate\Http\Request;
@@ -40,17 +44,24 @@ class ActivitiesController extends Controller
      * @var ActivityFileRepository
      */
     private $activityFileRepository;
+    /**
+     * @var ActivityWatcherRepository
+     */
+    private $activityWatcherRepository;
+
 
     public function __construct(UsersRepository $usersRepository,
                                 ActivityRepository $activityRepository,
                                 CommentsRepository $commentsRepository,
-                                ActivityFileRepository $activityFileRepository)
+                                ActivityFileRepository $activityFileRepository,
+                                ActivityWatcherRepository $activityWatcherRepository)
     {
 
         $this->usersRepository = $usersRepository;
         $this->activityRepository = $activityRepository;
         $this->commentsRepository = $commentsRepository;
         $this->activityFileRepository = $activityFileRepository;
+        $this->activityWatcherRepository = $activityWatcherRepository;
     }
 
     public function index()
@@ -96,12 +107,41 @@ class ActivitiesController extends Controller
             'priority_type_id' => $request->get('priority_type_id'),
             'due_date' => Carbon::parse($request->get('due_date'))->toDateString(),
             'activity_status_id' => $request->get('activity_status_id'),
+            'created_by' => Auth::id()
         ];
 
         $activity = $this->activityRepository->store($input);
 
         if ($activity)
         {
+            if ($request->get('user_id') != Auth::id())
+            {
+                $input = [
+                    'activity_id' => $activity->id,
+                    'user_id' => Auth::id()
+                ];
+
+                $this->activityWatcherRepository->create($input);
+
+                $input = [
+                    'activity_id' => $activity->id,
+                    'user_id' => $request->get('user_id')
+                ];
+
+                $this->activityWatcherRepository->create($input);
+            }
+            else
+            {
+                $input = [
+                    'activity_id' => $activity->id,
+                    'user_id' => Auth::id()
+                ];
+
+                $this->activityWatcherRepository->create($input);
+            }
+            
+            event(new TaskAssigned($activity));
+
             return self::toResponse(null, [
                 'success' => true,
                 'message' => 'Task added successfully'
@@ -121,6 +161,8 @@ class ActivitiesController extends Controller
 
         if($activity)
         {
+            event(new TaskStatusUpdated($activity));
+
             return self::toResponse(null, [
                 'success' => true,
                 'message' => 'Activity Updated successfully'
@@ -145,7 +187,9 @@ class ActivitiesController extends Controller
                 'activity_status_id' => $activity->activity_status_id,
                 'activity_status' => $activity->activityStatus->name,
                 'due_date' => $activity->due_date,
-                'comments' => $this->getActivityComments($activity->id)
+                'comments' => $this->getActivityComments($activity->id),
+                'watchers' => $this->getActivityWatchers($activity->id),
+                'isWatcher' => ($this->activityWatcherRepository->getActivityWatcherByUserIdAndActivityId(Auth::id(), $activity->id) != null)?true:false
             ];
         })->groupBy('activity_status');
 
@@ -180,6 +224,19 @@ class ActivitiesController extends Controller
             ];
         });
     }
+
+    public function getActivityWatchers($activityId)
+    {
+        $activityWatchers = $this->activityWatcherRepository->getActivityWatchersByActivityId($activityId);
+
+        return $activityWatchers->map(function ($activityWatcher)
+        {
+            return [
+                'name' => $activityWatcher->user->contact->present()->fullName
+            ];
+        });
+    }
+
     public function createComment(Request $request)
     {
         $input = $request->all();
@@ -232,6 +289,52 @@ class ActivitiesController extends Controller
         return self::toResponse(null, [
             'success' => false,
             'message' => 'Comment not posted'
+        ]);
+    }
+
+    public function watchActivity(Request $request)
+    {
+        $message = null;
+        $isWatcher = null;
+
+        if ($request->get('watch'))
+        {
+            $input = [
+                'activity_id' => $request->get('activity_id'),
+                'user_id' => Auth::id()
+            ];
+
+            $activityWatcher = $this->activityWatcherRepository->create($input);
+
+            if($activityWatcher)
+            {
+                $message = 'Watching task';
+                $isWatcher = true;
+            }
+        }else
+        {
+            $activityWatcher = $this->activityWatcherRepository->removeWatcher(Auth::id(), $request->get('activity_id'));
+
+            if($activityWatcher)
+            {
+                $message = 'Stopped watching task';
+                $isWatcher = false;
+            }
+        }
+
+        if (!is_null($message))
+        {
+            return self::toResponse(null,[
+                'success' => true,
+                'message' => $message,
+                'isWatcher' => $isWatcher,
+                'watchers' => $this->getActivityWatchers($request->get('activity_id'))
+            ]);
+        }
+
+        return self::toResponse(null,[
+            'success' => false,
+            'message' => 'Oops! An error occurred'
         ]);
     }
 

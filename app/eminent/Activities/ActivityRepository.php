@@ -27,6 +27,8 @@ class ActivityRepository
     {
         $activity = self::getActivityById($activityId);
 
-        return $activity->update($input);
+        $activity->update($input);
+
+        return $activity;
     }
 }

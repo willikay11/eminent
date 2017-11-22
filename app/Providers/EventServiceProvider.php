@@ -28,6 +28,12 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Contacts\ContactsAssigned' => [
             'App\Listeners\Contacts\WhenContactsAssigned',
         ],
+        'App\Events\Activities\TaskAssigned' => [
+            'App\Listeners\Activities\WhenTaskAssigned',
+        ],
+        'App\Events\Activities\TaskStatusUpdated' => [
+            'App\Listeners\Activities\WhenTaskStatusUpdated',
+        ],
     ];
 
     /**

@@ -308,10 +308,9 @@ Route::group(['middleware' => 'auth'], function (){
         'uses' => 'ActivitiesController@createComment'
     ]);
 
-    Route::get('/emails', function ()
-    {
-        return view('emails.layouts-2');
-    });
+    Route::post('/activity/watch', [
+        'uses' => 'ActivitiesController@watchActivity'
+    ]);
 });
 
 

@@ -15,12 +15,20 @@
                                 :move="showMove"
                                 @end="onEnd">
                             <div class="dragElements" v-for="element in todo" :key="element.id">
-                                <div><span v-if="element.priority_type == 'Low'"
-                                           class="low-priority-span">Low Priority</span></div>
-                                <div><span v-if="element.priority_type == 'Medium'" class="med-priority-span">Med Priority</span>
+                                <div>
+                                    <el-row :span="24">
+                                        <el-col :span="12"><span v-if="element.priority_type == 'Low'"
+                                                   class="low-priority-span">Low Priority</span></el-col>
+                                        <el-col :span="12"><span v-if="element.priority_type == 'Medium'" class="med-priority-span">Med Priority</span>
+                                        </el-col>
+                                        <el-col :span="12"><span v-if="element.priority_type == 'High'" class="high-priority-span">High Priority</span>
+                                        </el-col>
+                                        <el-col :span="12" style="text-align: right">
+                                            <el-button @click="showTaskWatchDialog(element)"><i class="fa fa-eye" aria-hidden="true"></i></el-button>
+                                        </el-col>
+                                    </el-row>
                                 </div>
-                                <div><span v-if="element.priority_type == 'High'" class="high-priority-span">High Priority</span>
-                                </div>
+
                                 <div class="element-container">{{ element.name }}</div>
                                 <el-row :span="24" :gutter="20">
                                     <el-col :span="12">
@@ -31,7 +39,7 @@
                             </div>
                         </draggable>
                     </div>
-                    <div class="panel-footer">
+                    <div class="panel-footer" style="text-align: center">
                         <el-button type="primary" @click="taskDialogVisible = true" size="mini">Add Task</el-button>
                     </div>
                 </div>
@@ -51,12 +59,20 @@
                                 :move="showMove"
                                 @end="onEnd">
                             <div class="dragElements" v-for="element in inProgress">
-                                <div><span v-if="element.priority_type == 'Low'"
-                                           class="low-priority-span">Low Priority</span></div>
-                                <div><span v-if="element.priority_type == 'Medium'" class="med-priority-span">Med Priority</span>
+                                <div>
+                                    <el-row :span="24">
+                                        <el-col :span="12"><span v-if="element.priority_type == 'Low'"
+                                                                 class="low-priority-span">Low Priority</span></el-col>
+                                        <el-col :span="12"><span v-if="element.priority_type == 'Medium'" class="med-priority-span">Med Priority</span>
+                                        </el-col>
+                                        <el-col :span="12"><span v-if="element.priority_type == 'High'" class="high-priority-span">High Priority</span>
+                                        </el-col>
+                                        <el-col :span="12" style="text-align: right">
+                                            <el-button @click="showTaskWatchDialog(element)"><i class="fa fa-eye" aria-hidden="true"></i></el-button>
+                                        </el-col>
+                                    </el-row>
                                 </div>
-                                <div><span v-if="element.priority_type == 'High'" class="high-priority-span">High Priority</span>
-                                </div>
+
                                 <div class="element-container">{{ element.name }}</div>
                                 <el-row :span="24" :gutter="20">
                                     <el-col :span="12">
@@ -84,12 +100,20 @@
                                 :move="showMove"
                                 @end="onEnd">
                             <div class="dragElements" v-for="element in inReview">
-                                <div><span v-if="element.priority_type == 'Low'"
-                                           class="low-priority-span">Low Priority</span></div>
-                                <div><span v-if="element.priority_type == 'Medium'" class="med-priority-span">Med Priority</span>
+                                <div>
+                                    <el-row :span="24">
+                                        <el-col :span="12"><span v-if="element.priority_type == 'Low'"
+                                                                 class="low-priority-span">Low Priority</span></el-col>
+                                        <el-col :span="12"><span v-if="element.priority_type == 'Medium'" class="med-priority-span">Med Priority</span>
+                                        </el-col>
+                                        <el-col :span="12"><span v-if="element.priority_type == 'High'" class="high-priority-span">High Priority</span>
+                                        </el-col>
+                                        <el-col :span="12" style="text-align: right">
+                                            <el-button @click="showTaskWatchDialog(element)"><i class="fa fa-eye" aria-hidden="true"></i></el-button>
+                                        </el-col>
+                                    </el-row>
                                 </div>
-                                <div><span v-if="element.priority_type == 'High'" class="high-priority-span">High Priority</span>
-                                </div>
+
                                 <div class="element-container">{{ element.name }}</div>
                                 <el-row :span="24" :gutter="20">
                                     <el-col :span="12">
@@ -117,11 +141,15 @@
                                 :move="showMove"
                                 @end="onEnd">
                             <div class="dragElements" v-for="element in done">
-                                <div><span v-if="element.priority_type == 'Low'"
-                                           class="low-priority-span">Low Priority</span></div>
-                                <div><span v-if="element.priority_type == 'Medium'" class="med-priority-span">Med Priority</span>
-                                </div>
-                                <div><span v-if="element.priority_type == 'High'" class="high-priority-span">High Priority</span>
+                                <div>
+                                    <el-row :span="24">
+                                        <el-col :span="12"><span v-if="element.priority_type == 'Low'"
+                                                                 class="low-priority-span">Low Priority</span></el-col>
+                                        <el-col :span="12"><span v-if="element.priority_type == 'Medium'" class="med-priority-span">Med Priority</span>
+                                        </el-col>
+                                        <el-col :span="12"><span v-if="element.priority_type == 'High'" class="high-priority-span">High Priority</span>
+                                        </el-col>
+                                    </el-row>
                                 </div>
                                 <div class="element-container">{{ element.name }}</div>
                                 <el-row :span="24" :gutter="20">
@@ -136,6 +164,27 @@
                 </div>
             </el-col>
         </el-row>
+
+        <el-popover
+                ref="popover1"
+                placement="top-start"
+                title="Attach a file"
+                width="500"
+                trigger="click">
+            <ul style="list-style:none">
+                <el-upload
+                        class="upload-demo"
+                        ref="upload"
+                        action="/activity/comment"
+                        :data="data"
+                        :on-change="checkIfFileIsSelected"
+                        :on-remove="removeFileSelected"
+                        :auto-upload="false">
+                    <el-button slot="trigger" size="small" type="primary">Select</el-button>
+                    <div class="el-upload__tip" slot="tip">files with a size less than 500kb</div>
+                </el-upload>
+            </ul>
+        </el-popover>
 
         <el-dialog
                 title="Add/Edit Task"
@@ -236,27 +285,6 @@
             </div>
         </el-dialog>
 
-        <el-popover
-                ref="popover1"
-                placement="top-start"
-                title="Attach a file"
-                width="500"
-                trigger="click">
-            <ul style="list-style:none">
-                <el-upload
-                        class="upload-demo"
-                        ref="upload"
-                        action="/activity/comment"
-                        :data="data"
-                        :on-change="checkIfFileIsSelected"
-                        :on-remove="removeFileSelected"
-                        :auto-upload="false">
-                    <el-button slot="trigger" size="small" type="primary">Select</el-button>
-                    <div class="el-upload__tip" slot="tip">files with a size less than 500kb</div>
-                </el-upload>
-            </ul>
-        </el-popover>
-
         <el-dialog
                 title="Comments"
                 class="comment-container"
@@ -311,18 +339,39 @@
             </ol>
 
             <div slot="footer" class="dialog-footer">
-                <!--<el-input placeholder="Please input" v-model="input"></el-input>-->
-                <!--<el-button @click="dialogVisible = false">Cancel</el-button>-->
-                <!--<el-button type="primary" @click="dialogVisible = false">Confirm</el-button>-->
 
                 <el-input placeholder="Please input" v-model="input">
-                    <!--<template slot="append">-->
-                    <!--<el-button @click="postComment()">Post</el-button>-->
-                    <!--</template>-->
                     <el-button slot="prepend" v-popover:popover1>Attach</el-button>
                     <el-button @click="postComment" slot="append">Post</el-button>
                 </el-input>
             </div>
+        </el-dialog>
+
+        <el-dialog
+                title="Watch Task"
+                :visible.sync="watchTaskDialogVisible"
+                size="small">
+            <el-row :span="24">
+                <div v-if="selectedTask.isWatcher">
+                    <h5>You are watching this task</h5>
+                    <p>Stop watching this task to stop updates</p>
+                    <el-button @click="toggleWatcher()">Stop watching</el-button>
+                </div>
+
+                <div v-if="!selectedTask.isWatcher">
+                    <h5>You are not watching this task</h5>
+                    <p>Start watching this task to receive updates</p>
+                    <el-button @click="toggleWatcher()">Start watching</el-button>
+                </div>
+
+                <hr>
+
+                <p>Others watching</p>
+
+                <ul v-for="watcher in selectedTask.watchers" style="list-style: none">
+                    <li>{{ watcher.name }}</li>
+                </ul>
+            </el-row>
         </el-dialog>
 
     </div>
@@ -353,6 +402,7 @@
                 inReview: [],
                 done: [],
                 taskDialogVisible: false,
+                watchTaskDialogVisible: false,
                 commentsDialog: false,
                 activity_status_id: '',
                 targetElementName: '',
@@ -463,6 +513,7 @@
                     });
                 }
             },
+
             getInformation()
             {
                 let vm = this;
@@ -474,6 +525,7 @@
                     console.log(error);
                 })
             },
+
             getActivities()
             {
                 let vm = this;
@@ -487,6 +539,7 @@
                     console.log(error);
                 })
             },
+
             addTask(formName)
             {
                 this.$refs[formName].validate((valid) => {
@@ -545,6 +598,7 @@
 
                 vm.scrollToEnd();
             },
+
             postComment()
             {
                 let vm = this;
@@ -588,6 +642,47 @@
                     });
                 }
             },
+
+            showTaskWatchDialog(task)
+            {
+                let vm = this;
+
+                vm.watchTaskDialogVisible = true;
+
+                vm.selectedTask = task;
+            },
+
+            toggleWatcher()
+            {
+                let vm = this;
+
+                axios.post('/activity/watch', {
+                    activity_id: vm.selectedTask.id,
+                    watch: !vm.selectedTask.isWatcher
+                })
+                    .then(function (response) {
+
+                        if (response.data.success) {
+                            vm.$message({
+                                type: 'success',
+                                message: response.data.message
+                            });
+
+                            vm.selectedTask.isWatcher = response.data.isWatcher;
+
+                            vm.selectedTask.watchers = response.data.watchers;
+                        }
+                        else {
+                            vm.$message({
+                                type: 'error',
+                                message: response.data.message
+                            });
+                        }
+                    }).catch(function (error) {
+                    console.log(error);
+                });
+            },
+
             scrollToEnd: function () {
                 let vm = this;
 
