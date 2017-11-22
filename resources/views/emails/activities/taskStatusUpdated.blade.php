@@ -2,7 +2,7 @@
 
 @section('email_content')
     <div class="email_body">
-        <p>Dear {!! $assigner !!},</p>
+        {{--<p>Dear {!! $assigner !!},</p>--}}
         <p>The following task has been moved to <strong>{!! $status !!}</strong> by <strong>{!! $assigned !!}</strong></p>
         <table>
             <tbody>

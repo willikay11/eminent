@@ -2,13 +2,12 @@
 
 namespace App\Listeners\Activities;
 
-use App\Events\Activities\TaskStatusUpdated;
-use Carbon\Carbon;
+use App\Events\Activities\TaskCommentPosted;
 use eminent\Mailers\ActivityMailers;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class WhenTaskStatusUpdated
+class WhenTaskCommentPosted
 {
     /**
      * Create the event listener.
@@ -23,26 +22,23 @@ class WhenTaskStatusUpdated
     /**
      * Handle the event.
      *
-     * @param  TaskStatusUpdated  $event
+     * @param  TaskCommentPosted  $event
      * @return void
      */
-    public function handle(TaskStatusUpdated $event)
+    public function handle(TaskCommentPosted $event)
     {
-        $activity = $event->activity;
+        $comment = $event->comment;
+
+        $activity = $comment->activity;
 
         $data = [
-            'assigner' => $activity->assigner->contact->firstname,
             'to' => $activity->assigner->email,
             'cc' => $this->getActivityTaskWatchers($activity),
-            'name' => $activity->name,
-            'assigned' => $activity->user->contact->present()->fullName,
-            'description' => $activity->description,
-            'priority' => $activity->priorityType->name,
-            'status' => $activity->activityStatus->name,
-            'dueDate' => Carbon::parse($activity->due_date)->format('l jS F Y'),
+            'taskname' => $activity->name,
+            'user' => $comment->user->contact->present()->fullName,
         ];
 
-        ActivityMailers::taskProgressUpdated($data);
+        ActivityMailers::taskCommentPosted($data);
     }
 
     public function getActivityTaskWatchers($activity)

@@ -52,4 +52,9 @@ class Comment extends Model
     {
         return $this->hasMany(ActivityFile::class);
     }
+
+    public function activity()
+    {
+        return $this->belongsTo(Activity::class);
+    }
 }

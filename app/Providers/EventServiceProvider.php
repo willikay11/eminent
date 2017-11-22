@@ -34,6 +34,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Activities\TaskStatusUpdated' => [
             'App\Listeners\Activities\WhenTaskStatusUpdated',
         ],
+        'App\Events\Activities\TaskCommentPosted' => [
+            'App\Listeners\Activities\WhenTaskCommentPosted',
+        ],
     ];
 
     /**

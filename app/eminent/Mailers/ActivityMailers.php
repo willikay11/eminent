@@ -28,7 +28,17 @@ class ActivityMailers
 
         Mail::send('emails.activities.taskStatusUpdated', $data, function ($message) use ($data)
         {
-            $message->to($data['to'])->subject($data['subject']);
+            $message->to($data['to'])->subject($data['subject'])->cc($data['cc']);
+        });
+    }
+
+    public static function taskCommentPosted($data)
+    {
+        $data['subject'] = 'Eminent CRM : Task Comment Posted Notification';
+
+        Mail::send('emails.activities.taskCommentPosted', $data, function ($message) use ($data)
+        {
+            $message->to($data['to'])->subject($data['subject'])->cc($data['cc']);
         });
     }
 }

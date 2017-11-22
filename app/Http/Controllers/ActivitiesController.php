@@ -10,6 +10,7 @@ namespace App\Http\Controllers;
 
 
 use App\Events\Activities\TaskAssigned;
+use App\Events\Activities\TaskCommentPosted;
 use App\Events\Activities\TaskStatusUpdated;
 use Carbon\Carbon;
 use eminent\Activities\ActivityRepository;
@@ -139,7 +140,7 @@ class ActivitiesController extends Controller
 
                 $this->activityWatcherRepository->create($input);
             }
-            
+
             event(new TaskAssigned($activity));
 
             return self::toResponse(null, [
@@ -279,6 +280,8 @@ class ActivitiesController extends Controller
                 'files' => $this->getCommentFile($comment->files)
             ];
 
+            event(new TaskCommentPosted($comment));
+            
             return self::toResponse(null, [
                 'success' => true,
                 'message' => 'Comment posted',
