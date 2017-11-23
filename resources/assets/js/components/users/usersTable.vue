@@ -385,7 +385,7 @@
                                     });
 
                                     vm.ruleForm.role = '';
-                                    
+
                                     vm.$refs[formName].resetFields();
                                 }
                                 else
