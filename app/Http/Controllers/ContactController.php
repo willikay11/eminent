@@ -141,6 +141,16 @@ class ContactController extends Controller
             ];
         });
 
+        $statuses = Status::all();
+
+        $statuses = $statuses->map(function ($status)
+        {
+            return [
+                'value' => $status->id,
+                'label' => $status->name
+            ];
+        });
+
         $selectedUser = $this->usersRepository->getUserById($userId);
 
         $selectedUser = [
@@ -158,7 +168,8 @@ class ContactController extends Controller
             'professions' => $professions,
             'religions' => $religions,
             'users' => $users->toArray(),
-            'selectedUser' => $selectedUser
+            'selectedUser' => $selectedUser,
+            'statuses' => $statuses,
         ];
 
         return self::toResponse(null, $data);
@@ -234,6 +245,88 @@ class ContactController extends Controller
         ]);
     }
 
+    public function searchUserClients(Request $request)
+    {
+        $startDate = $request->get('startDate');
+
+        $endDate = $request->get('endDate');
+
+        $source = $request->get('source');
+
+        $status = $request->get('status');
+
+        $userId = $request->get('userId');
+
+        $filter = array();
+
+        if (!is_null($startDate) || $startDate != '')
+        {
+            $filter = [
+                    'column' => 'created_at',
+                    'sign' => '>=',
+                    'value' => $startDate
+            ];
+        }
+
+        if (!is_null($endDate) || $endDate != '')
+        {
+            $filter = [
+                'column' => 'created_at',
+                'sign' => '<=',
+                'value' => $endDate
+            ];
+        }
+
+        $filterFunc = function ($q) use ($userId, $source, $status)
+        {
+            return $q->whereHas('clients', function ($q) use ($userId, $source, $status)
+            {
+                if (!is_null($source) && $source != '')
+                {
+                    $q->where('source_id', $source);
+                }
+
+                if(!is_null($status) && $status != '')
+                {
+                    $q->where('status_id', $status);
+                }
+
+                $q->whereHas('userClient', function ($q) use ($userId)
+                {
+                    $q->where('user_id', $userId);
+                });
+            });
+        };
+
+
+        $contacts = $this->sortFilterPaginate(new Contact(), [], function ($contact)
+        {
+            return[
+                'id' => $contact->present()->getUserClientId(Auth::id()),
+                'contactId' => $contact->id,
+                'name' => $contact->present()->fullName,
+                'firstName' => $contact->firstname,
+                'lastName' => $contact->lastname,
+                'title_id' => $contact->title_id,
+                'gender_id' => $contact->gender_id,
+                'profession_id' => $contact->profession_id,
+                'religion_id' => $contact->religion_id,
+                'country_id' => $contact->country_id,
+                'source_id' => $contact->clients->source_id,
+                'email' => $contact->email,
+                'phone' => (int)$contact->phone,
+                'status' => $contact->present()->clientStatus,
+                'source' => $contact->present()->contactSource,
+                'type' => $contact->type,
+            ];
+        },$filterFunc, null);
+
+        return $this->toResponse(null, [
+            'success' => true,
+            'contacts' => $contacts,
+            'messgae' => 'Contacts loaded'
+        ]);
+    }
     public function getDetails($id)
     {
         $userClient = $this->userClientsRepository->getUserClientById($id);

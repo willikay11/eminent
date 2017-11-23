@@ -1,75 +1,86 @@
 <template>
     <div class="panel panel-default">
-        <div class="col-lg-12 panel-header">
-            <div class="col-lg-6">
+        <el-row class="panel-header">
+            <el-col :span="12" style="padding-left: 40px">
                 <h4>Contacts</h4>
-            </div>
-            <div class="col-lg-6" style="text-align: right">
+            </el-col>
+            <el-col :span="12" style="text-align: right; padding-right: 40px">
                 <button class="btn ebg-button" v-on:click="showReassignContactsDialog()" style="margin-right: 20px">
                     Reassign Contact
                 </button>
                 <button class="btn ebg-button" v-on:click="showAddDialog()">Add Contact</button>
-            </div>
-            <div class="col-lg-12">
-                <hr>
-            </div>
-        </div>
+            </el-col>
+        </el-row>
+
+        <el-row>
+            <hr>
+        </el-row>
 
         <div class="panel-body">
 
-            <el-form :model="searchForm" :rules="searchRules" ref="searchForm" label-position="top"
-                     style="padding-left: 30px">
-                <el-col :span="2">
-                    <el-form-item prop="filter" label="Filter By:">
-                    </el-form-item>
-                </el-col>
-                <el-col :span="5">
-                    <el-form-item prop="startDate" label="From date:">
-                        <el-date-picker
-                                v-model="searchForm.startDate"
-                                type="date"
-                                placeholder="Start Date">
-                        </el-date-picker>
-                    </el-form-item>
-                </el-col>
+            <el-row :gutter="20">
+                <el-form :model="searchForm" :rules="searchRules" ref="searchForm" label-position="top"
+                         style="padding-left: 30px">
 
-                <el-col :span="5">
-                    <el-form-item prop="endDate" label="To date:">
-                        <el-date-picker
-                                v-model="searchForm.endDate"
-                                type="date"
-                                placeholder="End Date">
-                        </el-date-picker>
-                    </el-form-item>
-                </el-col>
+                    <el-col :span="2">
+                        <el-form-item prop="filter" label="Filter By:">
+                        </el-form-item>
+                    </el-col>
 
-                <el-col :span="5">
-                    <el-form-item prop="source" label="Source:">
-                        <el-select v-model="searchForm.source" placeholder="Select source">
-                            <el-option
-                                    v-for="item in sources"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
+                    <el-col :span="5">
+                        <el-form-item prop="startDate" label="From date:">
+                            <el-date-picker
+                                    v-model="searchForm.startDate"
+                                    type="date"
+                                    placeholder="Start Date">
+                            </el-date-picker>
+                        </el-form-item>
+                    </el-col>
 
-                <el-col :span="5">
-                    <el-form-item prop="source" label="Status:">
-                        <el-select v-model="searchForm.status" placeholder="Select status">
-                            <el-option
-                                    v-for="item in sources"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
+                    <el-col :span="5">
+                        <el-form-item prop="endDate" label="To date:">
+                            <el-date-picker
+                                    v-model="searchForm.endDate"
+                                    type="date"
+                                    placeholder="End Date">
+                            </el-date-picker>
+                        </el-form-item>
+                    </el-col>
 
-            </el-form>
+                    <el-col :span="5">
+                        <el-form-item prop="source" label="Source:">
+                            <el-select v-model="searchForm.source" placeholder="Select source">
+                                <el-option
+                                        v-for="item in sources"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+
+                    <el-col :span="5">
+                        <el-form-item prop="source" label="Status:">
+                            <el-select v-model="searchForm.status" placeholder="Select status">
+                                <el-option
+                                        v-for="item in statuses"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+
+                    <el-col :span="2">
+                        <el-form-item prop="search" style="margin-top: 30px">
+                            <el-button type="primary" @click="searchContacts()">Search</el-button>
+                        </el-form-item>
+                    </el-col>
+
+                </el-form>
+            </el-row>
 
             <div class="col-lg-12">
                 <hr>
@@ -393,6 +404,7 @@
                 professions: [],
                 users: [],
                 sources: [],
+                statuses: [],
                 services: [],
                 selectedUser: [],
                 options: [{
@@ -422,16 +434,16 @@
                 },
                 searchRules: {
                     startDate: [
-                        {required: true, message: 'Please input start date', trigger: 'blur', type: 'date'},
+                        {required: false, message: 'Please input start date', trigger: 'blur', type: 'date'},
                     ],
                     endDate: [
-                        {required: true, message: 'Please input end date', trigger: 'blur', type: 'date'},
+                        {required: false, message: 'Please input end date', trigger: 'blur', type: 'date'},
                     ],
                     source: [
-                        {required: true, message: 'Please select source', trigger: 'change'},
+                        {required: false, message: 'Please select source', trigger: 'change'},
                     ],
                     status: [
-                        {required: true, message: 'Please select status', trigger: 'change'},
+                        {required: false, message: 'Please select status', trigger: 'change'},
                     ],
                 },
                 ruleForm: {
@@ -528,6 +540,7 @@
                         vm.professions = response.data.professions;
                         vm.users = response.data.users;
                         vm.selectedUser = response.data.selectedUser
+                        vm.statuses = response.data.statuses
                     }).catch(function (error) {
                     console.log(error);
                 })
@@ -622,13 +635,12 @@
                     }
                 });
             },
+
             edit(contact)
             {
                 let vm = this;
 
                 vm.dialogVisible = true;
-
-                console.log(contact);
 
                 vm.contactId = contact.contactId;
 
@@ -653,25 +665,70 @@
                 vm.ruleForm.title = contact.title_id;
             },
 
+            searchContacts()
+            {
+                    let vm = this;
+
+                    vm.$message({
+                        type: 'info',
+                        message: 'Searching...'
+                    });
+
+                    axios.post('/contacts/search', {
+                        startDate: vm.searchForm.startDate+"",
+                        endDate: vm.searchForm.endDate+"",
+                        source: vm.searchForm.source,
+                        status: vm.searchForm.status,
+                        userId: vm.userId,
+                    })
+                        .then(function (response) {
+
+                            if (response.data.success) {
+                                vm.$message({
+                                    type: 'success',
+                                    message: response.data.message
+                                });
+
+                                vm.tableData = response.data.contacts.data;
+                                vm.total = response.data.contacts.last_page;
+
+                                vm.$refs[formName].resetFields();
+                            }
+                            else {
+                                vm.$message({
+                                    type: 'error',
+                                    message: response.data.message
+                                });
+                            }
+                        }).catch(function (error) {
+                        console.log(error);
+                    });
+            },
+
             filterTag(value, row) {
                 return row.tag === value;
             },
+
             details(user)
             {
                 window.location.href = '/contact/details/' + user.id;
             },
+
             customLabel (option) {
                 return `${option.label}`
             },
+
             userLabel (option) {
                 return `${option.name}`
             },
+
             showReassignContactsDialog()
             {
                 let vm = this;
 
                 vm.reassignContactsDialogVisible = true;
             },
+
             reassignContacts(formName)
             {
                 console.log('here');
