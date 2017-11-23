@@ -18,6 +18,11 @@ class UserHasRolesRepository
         return UserHasRole::find($id);
     }
 
+    public function create(array $input)
+    {
+        return UserHasRole::create($input);
+    }
+
     public function getUserRoleByUserId($userId)
     {
         return UserHasRole::where('user_id', $userId)->get();
@@ -36,6 +41,19 @@ class UserHasRolesRepository
                 'user_id' => $userId,
                 'role_id' => $role
             ]);
+        }
+    }
+
+    public function deleteAllUserRoles($userId)
+    {
+        $userHasRoles = $this->getUserRoleByUserId($userId);
+
+        if(!is_null($userHasRoles))
+        {
+            $userHasRoles->each(function ($userHasRole)
+            {
+                $userHasRole->delete();
+            });
         }
     }
 }

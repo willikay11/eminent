@@ -539,8 +539,8 @@
                     .then(function (response) {
                         if(response.data.success)
                         {
-                            vm.tableData = [].concat(response.data.data);
-                            vm.total = response.data.last_page;
+                            vm.tableData = response.data.contacts.data;
+                            vm.total = response.data.contacts.last_page;
                         }
                         else
                         {
@@ -652,6 +652,7 @@
 
                 vm.ruleForm.title = contact.title_id;
             },
+
             filterTag(value, row) {
                 return row.tag === value;
             },

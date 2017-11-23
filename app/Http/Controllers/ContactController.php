@@ -227,7 +227,11 @@ class ContactController extends Controller
             ];
         },$filterFunc, null);
 
-        return $this->toResponse(null, $contacts);
+        return $this->toResponse(null, [
+            'success' => true,
+            'contacts' => $contacts,
+            'messgae' => 'Contacts loaded'
+        ]);
     }
 
     public function getDetails($id)

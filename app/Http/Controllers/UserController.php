@@ -19,6 +19,7 @@ use eminent\Models\Gender;
 use eminent\Models\Role;
 use eminent\Models\Title;
 use eminent\Models\User;
+use eminent\UserHasRoles\UserHasRolesRepository;
 use eminent\Users\UserRules;
 use eminent\Users\UsersRepository;
 use Illuminate\Http\Request;
@@ -32,11 +33,18 @@ class UserController extends Controller
 
     protected $usersRepository;
     protected $contactsRepository;
+    /**
+     * @var UserHasRolesRepository
+     */
+    private $userHasRolesRepository;
 
-    public function __construct(UsersRepository $usersRepository, ContactsRepository $contactsRepository)
+    public function __construct(UsersRepository $usersRepository,
+                                ContactsRepository $contactsRepository,
+                                UserHasRolesRepository $userHasRolesRepository)
     {
         $this->usersRepository = $usersRepository;
         $this->contactsRepository = $contactsRepository;
+        $this->userHasRolesRepository = $userHasRolesRepository;
     }
 
     public function getUsers()
@@ -45,16 +53,37 @@ class UserController extends Controller
         {
             return[
                 'id' => $user->id,
+                'contact_id' => $user->contact->id,
                 'name' => $user->present()->fullName,
                 'email' => $user->email,
-                'role' => $user->role->name,
-                'phone' => $user->contact->phone,
+                'phone' => (int)$user->contact->phone,
                 'active' => $user->present()->activeStatus,
-                'designation_id' => $user->designation_id
+                'designation_id' => $user->designation_id,
+                'title_id' => $user->contact->title_id,
+                'firstname' => $user->contact->firstname,
+                'lastname' => $user->contact->lastname,
+                'gender_id' => $user->contact->gender_id,
+                'country_id' => $user->contact->country_id,
+                'department_id' => $user->department_id,
+                'employment_date' => $user->employment_date,
+                'roles' => $this->getUserRoles($user)
             ];
         },null, null);
 
         return self::toResponse(null, $professions);
+    }
+
+    public function getUserRoles($user)
+    {
+        $userHasRoles = $user->userHasRoles;
+
+        return $userHasRoles->map(function ($userHasRole)
+        {
+            return [
+                'value' => $userHasRole->role->id,
+                'label' => $userHasRole->role->name
+            ];
+        });
     }
 
     public function getInformation()
@@ -74,7 +103,7 @@ class UserController extends Controller
         $titles = $titles->map(function ($title)
         {
             return [
-                'value' => (string)$title->id,
+                'value' => $title->id,
                 'label' => $title->name
             ];
         });
@@ -84,7 +113,7 @@ class UserController extends Controller
         $countries = $countries->map(function ($country)
         {
             return [
-                'value' => (string)$country->id,
+                'value' => $country->id,
                 'label' => $country->name
             ];
         });
@@ -94,7 +123,7 @@ class UserController extends Controller
         $designations = $designations->map(function ($designation)
         {
             return [
-                'value' => (string)$designation->id,
+                'value' => $designation->id,
                 'label' => $designation->name
             ];
         });
@@ -104,7 +133,7 @@ class UserController extends Controller
         $roles = $roles->map(function ($role)
         {
             return [
-                'value' => (string)$role->id,
+                'value' => $role->id,
                 'label' => $role->name
             ];
         });
@@ -114,7 +143,7 @@ class UserController extends Controller
         $genders = $genders->map(function ($gender)
         {
             return [
-                'value' => (string)$gender->id,
+                'value' => $gender->id,
                 'label' => $gender->name
             ];
         });
@@ -139,6 +168,18 @@ class UserController extends Controller
 
     public function storeUser(Request $request)
     {
+        list($user, $domain) = explode('@', $request->get('email'));
+
+        if ((strtolower($domain) != 'eminent.co.ke') && (strtolower($domain != 'sterlingq.com')))
+        {
+            $response = [
+                'success' => false,
+                'message' => "The email must be either eminent.co.ke or sterlingq.com "
+            ];
+
+            return self::toResponse(null, $response);
+        }
+
         $contact = $this->contactsRepository->getContactByEmail($request->get('email'));
 
         if($contact)
@@ -165,11 +206,24 @@ class UserController extends Controller
                 'message' => "Validation failed"
             ];
 
-            return $response;
+            return self::toResponse(null, $response);
         }
 
         $user = $this->usersRepository->save($request->all(), $request->get('userId'));
 
+        $roles = $request->get('roles');
+
+        $this->userHasRolesRepository->deleteAllUserRoles($user->id);
+
+        foreach ($roles as $role)
+        {
+            $input = [
+                'user_id' => $user->id,
+                'role_id' => $role['value']
+            ];
+
+            $this->userHasRolesRepository->create($input);
+        }
 
         if(is_null($request->get('userId')))
         {
@@ -188,7 +242,7 @@ class UserController extends Controller
             ];
         }
 
-        return $response;
+        return self::toResponse(null, $response);
 
     }
 
