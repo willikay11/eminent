@@ -61,7 +61,7 @@
                 let vm = this;
                 axios.get('/api/contacts/user/'+vm.userId)
                     .then(function (response) {
-                        vm.tableData = [].concat(response.data.data);
+                        vm.tableData = response.data.contacts.data;
                     }).catch(function (error) {
                     console.log(error);
                 })

@@ -10,6 +10,7 @@ namespace App\Http\Controllers;
 
 
 use App\Events\Contacts\ContactsAssigned;
+use Carbon\Carbon;
 use eminent\API\SortFilterPaginate;
 use eminent\Authorization\Authorizer;
 use eminent\Clients\ClientsRepository;
@@ -235,6 +236,7 @@ class ContactController extends Controller
                 'status' => $contact->present()->clientStatus,
                 'source' => $contact->present()->contactSource,
                 'type' => $contact->type,
+                'organization' => $contact->organization,
             ];
         },$filterFunc, null);
 
@@ -259,21 +261,21 @@ class ContactController extends Controller
 
         $filter = array();
 
-        if (!is_null($startDate) || $startDate != '')
+        if (!is_null($startDate) && $startDate != '')
         {
-            $filter = [
+            $filter[] = [
                     'column' => 'created_at',
                     'sign' => '>=',
-                    'value' => $startDate
+                    'value' => Carbon::parse($startDate)
             ];
         }
 
-        if (!is_null($endDate) || $endDate != '')
+        if (!is_null($endDate) && $endDate != '')
         {
-            $filter = [
+            $filter[] = [
                 'column' => 'created_at',
                 'sign' => '<=',
-                'value' => $endDate
+                'value' => Carbon::parse($endDate)
             ];
         }
 
@@ -299,7 +301,7 @@ class ContactController extends Controller
         };
 
 
-        $contacts = $this->sortFilterPaginate(new Contact(), [], function ($contact)
+        $contacts = $this->sortFilterPaginate(new Contact(), $filter, function ($contact)
         {
             return[
                 'id' => $contact->present()->getUserClientId(Auth::id()),

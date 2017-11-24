@@ -132,9 +132,34 @@
                 <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-position="left">
 
                     <div class="form-item-container">
+
+                        <el-row :span="24" :gutter="20" class="contact-type-container">
+                            <el-col :span="3">
+                                <span class="contact-type-span">Contact Type</span>
+                            </el-col>
+                            <el-col :span="3">
+                                <el-radio class="radio" v-model="type" label="1">Individual</el-radio>
+                            </el-col>
+                            <el-col :span="3">
+                                <el-radio class="radio" v-model="type" label="2">Organization</el-radio>
+                            </el-col>
+                        </el-row>
+
+                        <el-row :span="24" :gutter="20" v-if="type == 2" style="margin-bottom: 20px">
+                            <el-col :span="3">
+                                <span class="contact-type-span">Name</span>
+                            </el-col>
+                            <el-col :span="14">
+                                <el-input placeholder="Organization" v-model="ruleForm.organization"></el-input>
+                            </el-col>
+                        </el-row>
+
                         <el-row :span="24" :gutter="20">
-                            <el-col :span="2">
+                            <el-col :span="3" v-if="type == 1">
                                 <span>Name: </span>
+                            </el-col>
+                            <el-col :span="3" v-if="type == 2">
+                                <span>Contact Person: </span>
                             </el-col>
                             <el-col :span="2">
                                 <el-form-item prop="title">
@@ -161,7 +186,7 @@
                         </el-row>
 
                         <el-row :span="24" :gutter="20">
-                            <el-col :span="2">
+                            <el-col :span="3">
                                 <span>Contact Details: </span>
                             </el-col>
                             <el-col :span="7">
@@ -178,7 +203,7 @@
                         </el-row>
 
                         <el-row :span="24" :gutter="20">
-                            <el-col :span="2">
+                            <el-col :span="3">
                                 <span>Other Details: </span>
                             </el-col>
 
@@ -209,7 +234,7 @@
                                 </el-col>
                             </el-row>
 
-                            <el-col :span="2">
+                            <el-col :span="3">
                                 <span></span>
                             </el-col>
 
@@ -244,9 +269,8 @@
                             </el-row>
                         </el-row>
 
-
                         <el-row :span="24" :gutter="20">
-                            <el-col :span="2">
+                            <el-col :span="3">
                                 <span>Country: </span>
                             </el-col>
                             <el-col :span="7">
@@ -263,9 +287,8 @@
                             </el-col>
                         </el-row>
 
-
                         <el-row :span="24" :gutter="20">
-                            <el-col :span="2">
+                            <el-col :span="3">
                                 <span>Services</span>
                             </el-col>
                             <el-col :span="14">
@@ -282,7 +305,7 @@
                         </el-row>
 
                         <el-row :span="24" :gutter="20">
-                            <el-col :span="2">
+                            <el-col :span="3">
                                 <span>Address</span>
                             </el-col>
                             <el-col :span="14">
@@ -407,6 +430,7 @@
                 statuses: [],
                 services: [],
                 selectedUser: [],
+                type: '1',
                 options: [{
                     value: '1',
                     label: 'Active'
@@ -463,7 +487,8 @@
                     profession: '',
                     religion: '',
                     address: '',
-                    service: ''
+                    service: '',
+                    organization: ''
                 },
                 rules: {
                     startDate: [
@@ -593,7 +618,7 @@
                         });
 
                         axios.post('/contacts/save', {
-                            type: 1,
+                            type: vm.type,
                             title_id: vm.ruleForm.title,
                             firstname: vm.ruleForm.firstname,
                             lastname: vm.ruleForm.lastname,
@@ -606,7 +631,8 @@
                             source_id: vm.ruleForm.source,
                             address: vm.ruleForm.address,
                             services: vm.ruleForm.service,
-                            contactId: vm.contactId
+                            contactId: vm.contactId,
+                            organization: vm.ruleForm.organization,
                         })
                             .then(function (response) {
                                 vm.dialogVisible = false;
@@ -663,6 +689,10 @@
                 vm.ruleForm.source = contact.source_id;
 
                 vm.ruleForm.title = contact.title_id;
+
+                vm.type = contact.type+"";
+
+                vm.ruleForm.organization = contact.organization;
             },
 
             searchContacts()
@@ -813,6 +843,16 @@
 
     .el-table::after {
         width: 0px;
+    }
+
+    .contact-type-container
+    {
+        margin-bottom: 18px;
+        background-color: gainsboro;
+        border-top: 2px solid #80808057;
+    }
+    .contact-type-span{
+        margin-top: 10px;
     }
 </style>
 
