@@ -94343,7 +94343,7 @@ exports = module.exports = __webpack_require__(1)(undefined);
 
 
 // module
-exports.push([module.i, "\n.el-table{\n    border-left: none;\n    border-right: none;\n}\n", ""]);
+exports.push([module.i, "\n.el-table{\n    border-left: none;\n    border-right: none;\n}\n.el-date-editor.el-input {\n    width: 100%;\n}\n", ""]);
 
 // exports
 
@@ -94455,8 +94455,6 @@ Object.defineProperty(exports, "__esModule", {
 //
 //
 //
-//
-//
 
 exports.default = {
     props: ['userId'],
@@ -94466,13 +94464,11 @@ exports.default = {
             total: 0,
             searchForm: {
                 startDate: '',
-                endDate: '',
-                status: ''
+                endDate: ''
             },
             searchRules: {
                 startDate: [{ required: true, message: 'Please input start date', trigger: 'blur', type: 'date' }],
-                endDate: [{ required: true, message: 'Please input end date', trigger: 'blur', type: 'date' }],
-                status: [{ required: true, message: 'Please select status', trigger: 'change' }]
+                endDate: [{ required: true, message: 'Please input end date', trigger: 'blur', type: 'date' }]
             }
         };
     },
@@ -94490,8 +94486,69 @@ exports.default = {
         getInteractions: function getInteractions() {
             var vm = this;
             axios.get('/api/interactions/' + vm.userId).then(function (response) {
-                vm.tableData = [].concat(response.data.data);
-                vm.total = response.data.last_page;
+                vm.tableData = response.data.interactions.data;
+                vm.total = response.data.interactions.last_page;
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        searchInteractions: function searchInteractions() {
+            var vm = this;
+
+            vm.$message({
+                type: 'info',
+                message: 'Searching...'
+            });
+
+            axios.post('/interactions/search', {
+                startDate: vm.searchForm.startDate + "",
+                endDate: vm.searchForm.endDate + "",
+                userId: vm.userId
+            }).then(function (response) {
+
+                if (response.data.success) {
+                    vm.$message({
+                        type: 'success',
+                        message: response.data.message
+                    });
+
+                    vm.tableData = response.data.interactions.data;
+                    vm.total = response.data.interactions.last_page;
+                } else {
+                    vm.$message({
+                        type: 'error',
+                        message: response.data.message
+                    });
+                }
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        exportInteractions: function exportInteractions() {
+            var vm = this;
+
+            vm.$message({
+                type: 'info',
+                message: 'Generating Excel...'
+            });
+
+            axios.post('/interactions/export', {
+                startDate: vm.searchForm.startDate + "",
+                endDate: vm.searchForm.endDate + "",
+                userId: vm.userId
+            }).then(function (response) {
+
+                if (response.data.success) {
+                    vm.$message({
+                        type: 'success',
+                        message: response.data.message
+                    });
+                } else {
+                    vm.$message({
+                        type: 'error',
+                        message: response.data.message
+                    });
+                }
             }).catch(function (error) {
                 console.log(error);
             });
@@ -94527,92 +94584,105 @@ var render = function() {
           },
           [
             _c(
-              "el-col",
-              { attrs: { span: 2 } },
-              [
-                _c("el-form-item", {
-                  attrs: { prop: "filter", label: "Filter By:" }
-                })
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "el-col",
-              { attrs: { span: 5 } },
+              "el-row",
+              { attrs: { gutter: 20 } },
               [
                 _c(
-                  "el-form-item",
-                  { attrs: { prop: "startDate", label: "From date:" } },
+                  "el-col",
+                  { attrs: { span: 2 } },
                   [
-                    _c("el-date-picker", {
-                      attrs: { type: "date", placeholder: "Start Date" },
-                      model: {
-                        value: _vm.searchForm.startDate,
-                        callback: function($$v) {
-                          _vm.$set(_vm.searchForm, "startDate", $$v)
-                        },
-                        expression: "searchForm.startDate"
-                      }
+                    _c("el-form-item", {
+                      attrs: { prop: "filter", label: "Filter By:" }
                     })
                   ],
                   1
-                )
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "el-col",
-              { attrs: { span: 5 } },
-              [
+                ),
+                _vm._v(" "),
                 _c(
-                  "el-form-item",
-                  { attrs: { prop: "endDate", label: "To date:" } },
-                  [
-                    _c("el-date-picker", {
-                      attrs: { type: "date", placeholder: "End Date" },
-                      model: {
-                        value: _vm.searchForm.endDate,
-                        callback: function($$v) {
-                          _vm.$set(_vm.searchForm, "endDate", $$v)
-                        },
-                        expression: "searchForm.endDate"
-                      }
-                    })
-                  ],
-                  1
-                )
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "el-col",
-              { attrs: { span: 5 } },
-              [
-                _c(
-                  "el-form-item",
-                  { attrs: { prop: "source", label: "Status:" } },
+                  "el-col",
+                  { attrs: { span: 7 } },
                   [
                     _c(
-                      "el-select",
+                      "el-form-item",
+                      { attrs: { prop: "startDate", label: "From date:" } },
+                      [
+                        _c("el-date-picker", {
+                          attrs: { type: "date", placeholder: "Start Date" },
+                          model: {
+                            value: _vm.searchForm.startDate,
+                            callback: function($$v) {
+                              _vm.$set(_vm.searchForm, "startDate", $$v)
+                            },
+                            expression: "searchForm.startDate"
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c(
+                  "el-col",
+                  { attrs: { span: 7 } },
+                  [
+                    _c(
+                      "el-form-item",
+                      { attrs: { prop: "endDate", label: "To date:" } },
+                      [
+                        _c("el-date-picker", {
+                          attrs: { type: "date", placeholder: "End Date" },
+                          model: {
+                            value: _vm.searchForm.endDate,
+                            callback: function($$v) {
+                              _vm.$set(_vm.searchForm, "endDate", $$v)
+                            },
+                            expression: "searchForm.endDate"
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c(
+                  "el-col",
+                  { staticStyle: { "margin-top": "30px" }, attrs: { span: 3 } },
+                  [
+                    _c(
+                      "el-button",
                       {
-                        attrs: { placeholder: "Select status" },
-                        model: {
-                          value: _vm.searchForm.status,
-                          callback: function($$v) {
-                            _vm.$set(_vm.searchForm, "status", $$v)
-                          },
-                          expression: "searchForm.status"
+                        attrs: { type: "primary" },
+                        on: {
+                          click: function($event) {
+                            _vm.searchInteractions()
+                          }
                         }
                       },
-                      _vm._l(_vm.sources, function(item) {
-                        return _c("el-option", {
-                          key: item.value,
-                          attrs: { label: item.label, value: item.value }
-                        })
-                      })
+                      [_vm._v("Search")]
+                    )
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c(
+                  "el-col",
+                  { staticStyle: { "margin-top": "30px" }, attrs: { span: 3 } },
+                  [
+                    _c(
+                      "el-button",
+                      {
+                        attrs: { type: "primary" },
+                        on: {
+                          click: function($event) {
+                            _vm.exportInteractions()
+                          }
+                        }
+                      },
+                      [_vm._v("Export")]
                     )
                   ],
                   1

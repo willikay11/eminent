@@ -31,6 +31,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Contacts\exportContactsGenerated' => [
             'App\Listeners\Contacts\WhenExportContactsGenerated',
         ],
+        'App\Events\Interactions\exportInteractionsGenerated' => [
+            'App\Listeners\Interactions\WhenExportInteractionsGenerated',
+        ],
         'App\Events\Activities\TaskAssigned' => [
             'App\Listeners\Activities\WhenTaskAssigned',
         ],

@@ -289,6 +289,14 @@ Route::group(['middleware' => 'auth'], function (){
     Route::get('/interactions/user/{userId?}', [
         'uses' => 'InteractionController@userInteractions'
     ]);
+
+    Route::post('/interactions/search', [
+        'uses' => 'InteractionController@searchInteractions'
+    ]);
+
+    Route::post('/interactions/export', [
+        'uses' => 'InteractionController@exportInteractions'
+    ]);
     /*
      * Activities
      */

@@ -18,42 +18,40 @@
 
             <el-form :model="searchForm" :rules="searchRules" ref="searchForm" label-position="top"
                      style="padding-left: 30px">
-                <el-col :span="2">
-                    <el-form-item prop="filter" label="Filter By:">
-                    </el-form-item>
-                </el-col>
-                <el-col :span="5">
-                    <el-form-item prop="startDate" label="From date:">
-                        <el-date-picker
-                                v-model="searchForm.startDate"
-                                type="date"
-                                placeholder="Start Date">
-                        </el-date-picker>
-                    </el-form-item>
-                </el-col>
+                <el-row :gutter="20">
+                    <el-col :span="2">
+                        <el-form-item prop="filter" label="Filter By:">
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="7">
+                        <el-form-item prop="startDate" label="From date:">
+                            <el-date-picker
+                                    v-model="searchForm.startDate"
+                                    type="date"
+                                    placeholder="Start Date">
+                            </el-date-picker>
+                        </el-form-item>
+                    </el-col>
 
-                <el-col :span="5">
-                    <el-form-item prop="endDate" label="To date:">
-                        <el-date-picker
-                                v-model="searchForm.endDate"
-                                type="date"
-                                placeholder="End Date">
-                        </el-date-picker>
-                    </el-form-item>
-                </el-col>
+                    <el-col :span="7">
+                        <el-form-item prop="endDate" label="To date:">
+                            <el-date-picker
+                                    v-model="searchForm.endDate"
+                                    type="date"
+                                    placeholder="End Date">
+                            </el-date-picker>
+                        </el-form-item>
+                    </el-col>
 
-                <el-col :span="5">
-                    <el-form-item prop="source" label="Status:">
-                        <el-select v-model="searchForm.status" placeholder="Select status">
-                            <el-option
-                                    v-for="item in sources"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
+                    <el-col :span="3" style="margin-top: 30px">
+                        <el-button type="primary" @click="searchInteractions()">Search</el-button>
+                    </el-col>
+
+                    <el-col :span="3" style="margin-top: 30px">
+                        <el-button type="primary" @click="exportInteractions()">Export</el-button>
+                    </el-col>
+                </el-row>
+
 
             </el-form>
 
@@ -107,7 +105,6 @@
                 searchForm: {
                     startDate: '',
                     endDate: '',
-                    status: '',
                 },
                 searchRules: {
                     startDate: [
@@ -115,10 +112,7 @@
                     ],
                     endDate: [
                         {required: true, message: 'Please input end date', trigger: 'blur', type: 'date'},
-                    ],
-                    status: [
-                        {required: true, message: 'Please select status', trigger: 'change'},
-                    ],
+                    ]
                 },
             }
         },
@@ -137,11 +131,79 @@
                 let vm = this;
                 axios.get('/api/interactions/'+vm.userId)
                     .then(function (response) {
-                        vm.tableData = [].concat(response.data.data);
-                        vm.total = response.data.last_page;
+                        vm.tableData = response.data.interactions.data;
+                        vm.total = response.data.interactions.last_page;
                     }).catch(function (error) {
                     console.log(error);
                 })
+            },
+            searchInteractions()
+            {
+                let vm = this;
+
+                vm.$message({
+                    type: 'info',
+                    message: 'Searching...'
+                });
+
+                axios.post('/interactions/search', {
+                    startDate: vm.searchForm.startDate+"",
+                    endDate: vm.searchForm.endDate+"",
+                    userId: vm.userId,
+                })
+                    .then(function (response) {
+
+                        if (response.data.success) {
+                            vm.$message({
+                                type: 'success',
+                                message: response.data.message
+                            });
+
+                            vm.tableData = response.data.interactions.data;
+                            vm.total = response.data.interactions.last_page;
+                        }
+                        else {
+                            vm.$message({
+                                type: 'error',
+                                message: response.data.message
+                            });
+                        }
+                    }).catch(function (error) {
+                    console.log(error);
+                });
+            },
+
+            exportInteractions()
+            {
+                let vm = this;
+
+                vm.$message({
+                    type: 'info',
+                    message: 'Generating Excel...'
+                });
+
+                axios.post('/interactions/export', {
+                    startDate: vm.searchForm.startDate+"",
+                    endDate: vm.searchForm.endDate+"",
+                    userId: vm.userId,
+                })
+                    .then(function (response) {
+
+                        if (response.data.success) {
+                            vm.$message({
+                                type: 'success',
+                                message: response.data.message
+                            });
+                        }
+                        else {
+                            vm.$message({
+                                type: 'error',
+                                message: response.data.message
+                            });
+                        }
+                    }).catch(function (error) {
+                    console.log(error);
+                });
             }
         }
     }
@@ -151,5 +213,8 @@
     .el-table{
         border-left: none;
         border-right: none;
+    }
+    .el-date-editor.el-input {
+        width: 100%;
     }
 </style>

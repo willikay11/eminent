@@ -9,10 +9,12 @@
 namespace App\Http\Controllers;
 
 
+use App\Events\Interactions\exportInteractionsGenerated;
 use Carbon\Carbon;
 use eminent\API\SortFilterPaginate;
 use eminent\Clients\ClientsRepository;
 use eminent\Contacts\ContactsRepository;
+use eminent\Excel\Excels;
 use eminent\Interactions\InteractionsRepository;
 use eminent\Models\Interaction;
 use eminent\Models\PriorityType;
@@ -64,7 +66,11 @@ class InteractionController extends Controller
             ];
         },null, null);
 
-        return self::toResponse(null, $interactions);
+        return self::toResponse(null, [
+            'success' => true,
+            'interactions' => $interactions,
+            'message' => 'Interactions loaded'
+        ]);
     }
 
     public function storeSchedule(Request $request)
@@ -121,6 +127,105 @@ class InteractionController extends Controller
 
     }
 
+    public function searchInteractions(Request $request)
+    {
+        $startDate = $request->get('startDate');
+
+        $endDate = $request->get('endDate');
+
+        $userId = $request->get('userId');
+
+        $filter = array();
+
+        $filter[] = [
+            'column' => 'user_id',
+            'sign' => '=',
+            'value' => $userId
+        ];
+
+        if (!is_null($startDate) && $startDate != '')
+        {
+            $filter[] = [
+                'column' => 'interaction_date',
+                'sign' => '>=',
+                'value' => Carbon::parse($startDate)
+            ];
+        }
+
+        if (!is_null($endDate) && $endDate != '')
+        {
+            $filter[] = [
+                'column' => 'interaction_date',
+                'sign' => '<=',
+                'value' => Carbon::parse($endDate)
+            ];
+        }
+
+        $interactions = $this->sortFilterPaginate(new Interaction(), $filter, function ($interaction)
+        {
+            return[
+                'id' => $interaction->id,
+                'client' => $interaction->client->contact->present()->fullName,
+                'interactionType' => $interaction->interactionType->name,
+                'date' => Carbon::parse($interaction->interaction_date)->format('jS F Y'),
+                'remarks' => $interaction->remarks,
+            ];
+        },null, null);
+
+        return self::toResponse(null, [
+            'success' => true,
+            'interactions' => $interactions,
+            'message' => 'Interactions loaded'
+        ]);
+    }
+
+    public function exportInteractions(Request $request)
+    {
+        $startDate = $request->get('startDate');
+
+        $endDate = $request->get('endDate');
+
+        $userId = $request->get('userId');
+
+        $userName = $this->usersRepository->getUserById($userId)->contact->present()->fullName;
+
+        if (!is_null($startDate) && $startDate != '')
+        {
+            $q = Interaction::where('interaction_date', '>=', Carbon::parse($startDate));
+
+            if (!is_null($endDate) && $endDate != '')
+            {
+                $q = $q->where('interaction_date', '<=', Carbon::parse($endDate));
+            }
+        }else
+        {
+            $q = new Interaction();
+        }
+
+        $interactions = $q->get();
+
+        $interactions = $interactions->map(function ($interaction) use ($userName)
+        {
+            return [
+                'client' => $interaction->client->contact->present()->fullName,
+                'interactionType' => $interaction->interactionType->name,
+                'date' => Carbon::parse($interaction->interaction_date)->format('jS F Y'),
+                'remarks' => $interaction->remarks,
+                'user' => $userName
+            ];
+        });
+
+        Excels::generateSingleExcelFromViewAndStore($interactions, 'Interactions_report', 'excel.export_interactions');
+
+        $user = $this->usersRepository->getUserById(Auth::id());
+
+        event(new exportInteractionsGenerated('Interactions_report.xlsx', $user));
+
+        return $this->toResponse(null, [
+            'success' => true,
+            'message' => 'Interactions generated. Please check your email'
+        ]);
+    }
     public function userInteractions($userId = null)
     {
         if(is_null($userId))
