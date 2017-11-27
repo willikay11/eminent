@@ -1,75 +1,90 @@
 <template>
     <div class="panel panel-default">
-        <div class="col-lg-12 panel-header">
-            <div class="col-lg-6">
+        <el-row class="panel-header">
+            <el-col :span="12" style="padding-left: 40px">
                 <h4>Contacts</h4>
-            </div>
-            <div class="col-lg-6" style="text-align: right">
+            </el-col>
+            <el-col :span="12" style="text-align: right; padding-right: 40px">
                 <button class="btn ebg-button" v-on:click="showReassignContactsDialog()" style="margin-right: 20px">
                     Reassign Contact
                 </button>
                 <button class="btn ebg-button" v-on:click="showAddDialog()">Add Contact</button>
-            </div>
-            <div class="col-lg-12">
-                <hr>
-            </div>
-        </div>
+            </el-col>
+        </el-row>
+
+        <el-row>
+            <hr>
+        </el-row>
 
         <div class="panel-body">
 
-            <el-form :model="searchForm" :rules="searchRules" ref="searchForm" label-position="top"
-                     style="padding-left: 30px">
-                <el-col :span="2">
-                    <el-form-item prop="filter" label="Filter By:">
-                    </el-form-item>
-                </el-col>
-                <el-col :span="5">
-                    <el-form-item prop="startDate" label="From date:">
-                        <el-date-picker
-                                v-model="searchForm.startDate"
-                                type="date"
-                                placeholder="Start Date">
-                        </el-date-picker>
-                    </el-form-item>
-                </el-col>
+            <el-row :gutter="20">
+                <el-form :model="searchForm" :rules="searchRules" ref="searchForm" label-position="top"
+                         style="padding-left: 30px">
 
-                <el-col :span="5">
-                    <el-form-item prop="endDate" label="To date:">
-                        <el-date-picker
-                                v-model="searchForm.endDate"
-                                type="date"
-                                placeholder="End Date">
-                        </el-date-picker>
-                    </el-form-item>
-                </el-col>
+                    <el-col :span="2">
+                        <el-form-item prop="filter" label="Filter By:">
+                        </el-form-item>
+                    </el-col>
 
-                <el-col :span="5">
-                    <el-form-item prop="source" label="Source:">
-                        <el-select v-model="searchForm.source" placeholder="Select source">
-                            <el-option
-                                    v-for="item in sources"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
+                    <el-col :span="5">
+                        <el-form-item prop="startDate" label="From date:">
+                            <el-date-picker
+                                    v-model="searchForm.startDate"
+                                    type="date"
+                                    placeholder="Start Date">
+                            </el-date-picker>
+                        </el-form-item>
+                    </el-col>
 
-                <el-col :span="5">
-                    <el-form-item prop="source" label="Status:">
-                        <el-select v-model="searchForm.status" placeholder="Select status">
-                            <el-option
-                                    v-for="item in sources"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
+                    <el-col :span="5">
+                        <el-form-item prop="endDate" label="To date:">
+                            <el-date-picker
+                                    v-model="searchForm.endDate"
+                                    type="date"
+                                    placeholder="End Date">
+                            </el-date-picker>
+                        </el-form-item>
+                    </el-col>
 
-            </el-form>
+                    <el-col :span="5">
+                        <el-form-item prop="source" label="Source:">
+                            <el-select v-model="searchForm.source" placeholder="Select source">
+                                <el-option
+                                        v-for="item in sources"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+
+                    <el-col :span="5">
+                        <el-form-item prop="source" label="Status:">
+                            <el-select v-model="searchForm.status" placeholder="Select status">
+                                <el-option
+                                        v-for="item in statuses"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+
+                    <el-col :span="2">
+                        <el-form-item prop="search" style="margin-top: 30px">
+                            <el-button type="primary" @click="searchContacts()">Search</el-button>
+                        </el-form-item>
+                    </el-col>
+
+                </el-form>
+            </el-row>
+
+            <el-row>
+                <el-button type="primary" @click="exportContacts()">Export</el-button>
+            </el-row>
 
             <div class="col-lg-12">
                 <hr>
@@ -121,9 +136,34 @@
                 <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-position="left">
 
                     <div class="form-item-container">
+
+                        <el-row :span="24" :gutter="20" class="contact-type-container">
+                            <el-col :span="3">
+                                <span class="contact-type-span">Contact Type</span>
+                            </el-col>
+                            <el-col :span="3">
+                                <el-radio class="radio" v-model="type" label="1">Individual</el-radio>
+                            </el-col>
+                            <el-col :span="3">
+                                <el-radio class="radio" v-model="type" label="2">Organization</el-radio>
+                            </el-col>
+                        </el-row>
+
+                        <el-row :span="24" :gutter="20" v-if="type == 2" style="margin-bottom: 20px">
+                            <el-col :span="3">
+                                <span class="contact-type-span">Name</span>
+                            </el-col>
+                            <el-col :span="14">
+                                <el-input placeholder="Organization" v-model="ruleForm.organization"></el-input>
+                            </el-col>
+                        </el-row>
+
                         <el-row :span="24" :gutter="20">
-                            <el-col :span="2">
+                            <el-col :span="3" v-if="type == 1">
                                 <span>Name: </span>
+                            </el-col>
+                            <el-col :span="3" v-if="type == 2">
+                                <span>Contact Person: </span>
                             </el-col>
                             <el-col :span="2">
                                 <el-form-item prop="title">
@@ -150,7 +190,7 @@
                         </el-row>
 
                         <el-row :span="24" :gutter="20">
-                            <el-col :span="2">
+                            <el-col :span="3">
                                 <span>Contact Details: </span>
                             </el-col>
                             <el-col :span="7">
@@ -167,7 +207,7 @@
                         </el-row>
 
                         <el-row :span="24" :gutter="20">
-                            <el-col :span="2">
+                            <el-col :span="3">
                                 <span>Other Details: </span>
                             </el-col>
 
@@ -198,7 +238,7 @@
                                 </el-col>
                             </el-row>
 
-                            <el-col :span="2">
+                            <el-col :span="3">
                                 <span></span>
                             </el-col>
 
@@ -233,9 +273,8 @@
                             </el-row>
                         </el-row>
 
-
                         <el-row :span="24" :gutter="20">
-                            <el-col :span="2">
+                            <el-col :span="3">
                                 <span>Country: </span>
                             </el-col>
                             <el-col :span="7">
@@ -252,9 +291,8 @@
                             </el-col>
                         </el-row>
 
-
                         <el-row :span="24" :gutter="20">
-                            <el-col :span="2">
+                            <el-col :span="3">
                                 <span>Services</span>
                             </el-col>
                             <el-col :span="14">
@@ -271,7 +309,7 @@
                         </el-row>
 
                         <el-row :span="24" :gutter="20">
-                            <el-col :span="2">
+                            <el-col :span="3">
                                 <span>Address</span>
                             </el-col>
                             <el-col :span="14">
@@ -393,8 +431,10 @@
                 professions: [],
                 users: [],
                 sources: [],
+                statuses: [],
                 services: [],
                 selectedUser: [],
+                type: '1',
                 options: [{
                     value: '1',
                     label: 'Active'
@@ -422,16 +462,16 @@
                 },
                 searchRules: {
                     startDate: [
-                        {required: true, message: 'Please input start date', trigger: 'blur', type: 'date'},
+                        {required: false, message: 'Please input start date', trigger: 'blur', type: 'date'},
                     ],
                     endDate: [
-                        {required: true, message: 'Please input end date', trigger: 'blur', type: 'date'},
+                        {required: false, message: 'Please input end date', trigger: 'blur', type: 'date'},
                     ],
                     source: [
-                        {required: true, message: 'Please select source', trigger: 'change'},
+                        {required: false, message: 'Please select source', trigger: 'change'},
                     ],
                     status: [
-                        {required: true, message: 'Please select status', trigger: 'change'},
+                        {required: false, message: 'Please select status', trigger: 'change'},
                     ],
                 },
                 ruleForm: {
@@ -451,7 +491,8 @@
                     profession: '',
                     religion: '',
                     address: '',
-                    service: ''
+                    service: '',
+                    organization: ''
                 },
                 rules: {
                     startDate: [
@@ -528,6 +569,7 @@
                         vm.professions = response.data.professions;
                         vm.users = response.data.users;
                         vm.selectedUser = response.data.selectedUser
+                        vm.statuses = response.data.statuses
                     }).catch(function (error) {
                     console.log(error);
                 })
@@ -539,8 +581,8 @@
                     .then(function (response) {
                         if(response.data.success)
                         {
-                            vm.tableData = [].concat(response.data.data);
-                            vm.total = response.data.last_page;
+                            vm.tableData = response.data.contacts.data;
+                            vm.total = response.data.contacts.last_page;
                         }
                         else
                         {
@@ -580,7 +622,7 @@
                         });
 
                         axios.post('/contacts/save', {
-                            type: 1,
+                            type: vm.type,
                             title_id: vm.ruleForm.title,
                             firstname: vm.ruleForm.firstname,
                             lastname: vm.ruleForm.lastname,
@@ -593,7 +635,8 @@
                             source_id: vm.ruleForm.source,
                             address: vm.ruleForm.address,
                             services: vm.ruleForm.service,
-                            contactId: vm.contactId
+                            contactId: vm.contactId,
+                            organization: vm.ruleForm.organization,
                         })
                             .then(function (response) {
                                 vm.dialogVisible = false;
@@ -622,13 +665,12 @@
                     }
                 });
             },
+
             edit(contact)
             {
                 let vm = this;
 
                 vm.dialogVisible = true;
-
-                console.log(contact);
 
                 vm.contactId = contact.contactId;
 
@@ -651,26 +693,111 @@
                 vm.ruleForm.source = contact.source_id;
 
                 vm.ruleForm.title = contact.title_id;
+
+                vm.type = contact.type+"";
+
+                vm.ruleForm.organization = contact.organization;
             },
+
+            searchContacts()
+            {
+                    let vm = this;
+
+                    vm.$message({
+                        type: 'info',
+                        message: 'Searching...'
+                    });
+
+                    axios.post('/contacts/search', {
+                        startDate: vm.searchForm.startDate+"",
+                        endDate: vm.searchForm.endDate+"",
+                        source: vm.searchForm.source,
+                        status: vm.searchForm.status,
+                        userId: vm.userId,
+                    })
+                        .then(function (response) {
+
+                            if (response.data.success) {
+                                vm.$message({
+                                    type: 'success',
+                                    message: response.data.message
+                                });
+
+                                vm.tableData = response.data.contacts.data;
+                                vm.total = response.data.contacts.last_page;
+
+                                vm.$refs[formName].resetFields();
+                            }
+                            else {
+                                vm.$message({
+                                    type: 'error',
+                                    message: response.data.message
+                                });
+                            }
+                        }).catch(function (error) {
+                        console.log(error);
+                    });
+            },
+
             filterTag(value, row) {
                 return row.tag === value;
             },
+
             details(user)
             {
                 window.location.href = '/contact/details/' + user.id;
             },
+
             customLabel (option) {
                 return `${option.label}`
             },
+
             userLabel (option) {
                 return `${option.name}`
             },
+
             showReassignContactsDialog()
             {
                 let vm = this;
 
                 vm.reassignContactsDialogVisible = true;
             },
+
+            exportContacts()
+            {
+                let vm = this;
+
+                vm.$message({
+                    type: 'info',
+                    message: 'Generating excel...'
+                });
+
+                axios.post('/contacts/export', {
+                    startDate: vm.searchForm.startDate+"",
+                    endDate: vm.searchForm.endDate+"",
+                    source: vm.searchForm.source,
+                    status: vm.searchForm.status,
+                    userId: vm.userId,
+                })
+                    .then(function (response) {
+
+                        if (response.data.success) {
+                            vm.$message({
+                                type: 'success',
+                                message: response.data.message
+                            });
+                        }
+                        else {
+                            vm.$message({
+                                type: 'error',
+                                message: response.data.message
+                            });
+                        }
+                    }).catch(function (error) {
+                    console.log(error);
+                });
+            },
+
             reassignContacts(formName)
             {
                 console.log('here');
@@ -755,6 +882,16 @@
 
     .el-table::after {
         width: 0px;
+    }
+
+    .contact-type-container
+    {
+        margin-bottom: 18px;
+        background-color: gainsboro;
+        border-top: 2px solid #80808057;
+    }
+    .contact-type-span{
+        margin-top: 10px;
     }
 </style>
 

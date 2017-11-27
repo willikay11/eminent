@@ -10,6 +10,8 @@ namespace App\Http\Controllers;
 
 
 use App\Events\Contacts\ContactsAssigned;
+use App\Events\Contacts\exportContactsGenerated;
+use Carbon\Carbon;
 use eminent\API\SortFilterPaginate;
 use eminent\Authorization\Authorizer;
 use eminent\Clients\ClientsRepository;
@@ -30,6 +32,7 @@ use eminent\UserClients\UserClientsRepository;
 use eminent\Users\UsersRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use eminent\Excel\Excels;
 
 class ContactController extends Controller
 {
@@ -141,6 +144,16 @@ class ContactController extends Controller
             ];
         });
 
+        $statuses = Status::all();
+
+        $statuses = $statuses->map(function ($status)
+        {
+            return [
+                'value' => $status->id,
+                'label' => $status->name
+            ];
+        });
+
         $selectedUser = $this->usersRepository->getUserById($userId);
 
         $selectedUser = [
@@ -158,7 +171,8 @@ class ContactController extends Controller
             'professions' => $professions,
             'religions' => $religions,
             'users' => $users->toArray(),
-            'selectedUser' => $selectedUser
+            'selectedUser' => $selectedUser,
+            'statuses' => $statuses,
         ];
 
         return self::toResponse(null, $data);
@@ -224,10 +238,169 @@ class ContactController extends Controller
                 'status' => $contact->present()->clientStatus,
                 'source' => $contact->present()->contactSource,
                 'type' => $contact->type,
+                'organization' => $contact->organization,
             ];
         },$filterFunc, null);
 
-        return $this->toResponse(null, $contacts);
+        return $this->toResponse(null, [
+            'success' => true,
+            'contacts' => $contacts,
+            'messgae' => 'Contacts loaded'
+        ]);
+    }
+
+    public function searchUserClients(Request $request)
+    {
+        $startDate = $request->get('startDate');
+
+        $endDate = $request->get('endDate');
+
+        $source = $request->get('source');
+
+        $status = $request->get('status');
+
+        $userId = $request->get('userId');
+
+        $filter = array();
+
+        if (!is_null($startDate) && $startDate != '')
+        {
+            $filter[] = [
+                    'column' => 'created_at',
+                    'sign' => '>=',
+                    'value' => Carbon::parse($startDate)
+            ];
+        }
+
+        if (!is_null($endDate) && $endDate != '')
+        {
+            $filter[] = [
+                'column' => 'created_at',
+                'sign' => '<=',
+                'value' => Carbon::parse($endDate)
+            ];
+        }
+
+        $filterFunc = function ($q) use ($userId, $source, $status)
+        {
+            return $q->whereHas('clients', function ($q) use ($userId, $source, $status)
+            {
+                if (!is_null($source) && $source != '')
+                {
+                    $q->where('source_id', $source);
+                }
+
+                if(!is_null($status) && $status != '')
+                {
+                    $q->where('status_id', $status);
+                }
+
+                $q->whereHas('userClient', function ($q) use ($userId)
+                {
+                    $q->where('user_id', $userId);
+                });
+            });
+        };
+
+
+        $contacts = $this->sortFilterPaginate(new Contact(), $filter, function ($contact)
+        {
+            return[
+                'id' => $contact->present()->getUserClientId(Auth::id()),
+                'contactId' => $contact->id,
+                'name' => $contact->present()->fullName,
+                'firstName' => $contact->firstname,
+                'lastName' => $contact->lastname,
+                'title_id' => $contact->title_id,
+                'gender_id' => $contact->gender_id,
+                'profession_id' => $contact->profession_id,
+                'religion_id' => $contact->religion_id,
+                'country_id' => $contact->country_id,
+                'source_id' => $contact->clients->source_id,
+                'email' => $contact->email,
+                'phone' => (int)$contact->phone,
+                'status' => $contact->present()->clientStatus,
+                'source' => $contact->present()->contactSource,
+                'type' => $contact->type,
+            ];
+        },$filterFunc, null);
+
+        return $this->toResponse(null, [
+            'success' => true,
+            'contacts' => $contacts,
+            'messgae' => 'Contacts loaded'
+        ]);
+    }
+
+    public function exportContacts(Request $request)
+    {
+        $startDate = $request->get('startDate');
+
+        $endDate = $request->get('endDate');
+
+        $source = $request->get('source');
+
+        $status = $request->get('status');
+
+        $userId = $request->get('userId');
+
+        $userName = $this->usersRepository->getUserById($userId)->contact->present()->fullName;
+
+        if (!is_null($startDate) && $startDate != '')
+        {
+            $q = Contact::where('created_at', '>=', Carbon::parse($startDate));
+
+            if (!is_null($endDate) && $endDate != '')
+            {
+                $q = $q->where('created_at', '<=', Carbon::parse($endDate));
+            }
+        }else
+        {
+            $q = new Contact();
+        }
+        $contacts = $q->whereHas('clients', function ($q) use ($userId, $source, $status)
+            {
+                if (!is_null($source) && $source != '')
+                {
+                    $q->where('source_id', $source);
+                }
+
+                if(!is_null($status) && $status != '')
+                {
+                    $q->where('status_id', $status);
+                }
+
+                $q->whereHas('userClient', function ($q) use ($userId)
+                {
+                    $q->where('user_id', $userId);
+                });
+            })->get();
+
+        $contacts = $contacts->map(function ($contact) use ($userName)
+        {
+            return [
+                'name' => $contact->present()->fullName,
+                'firstName' => $contact->firstname,
+                'lastName' => $contact->lastname,
+                'email' => $contact->email,
+                'phone' => (int)$contact->phone,
+                'status' => $contact->present()->clientStatus,
+                'source' => $contact->present()->contactSource,
+                'type' => $contact->present()->typeName,
+                'user' => $userName
+            ];
+        });
+
+        Excels::generateSingleExcelFromViewAndStore($contacts, 'Contacts_report', 'excel.export_contacts');
+
+        $user = $this->usersRepository->getUserById(Auth::id());
+
+        event(new exportContactsGenerated('Contacts_report.xlsx', $user));
+
+        return $this->toResponse(null, [
+            'success' => true,
+            'message' => 'Contacts generated. Please check your email'
+        ]);
     }
 
     public function getDetails($id)

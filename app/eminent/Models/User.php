@@ -60,7 +60,6 @@ class User extends Authenticatable
         $this->attributes['employment_date'] = Carbon::parse($employmentDate)->toDateString();
     }
 
-
     public function contact()
     {
         return $this->belongsTo(Contact::class);
@@ -74,5 +73,10 @@ class User extends Authenticatable
     public function userClients()
     {
         return $this->hasMany(UserClient::class);
+    }
+
+    public function userHasRoles()
+    {
+        return $this->hasMany(UserHasRole::class);
     }
 }

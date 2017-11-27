@@ -240,6 +240,14 @@ Route::group(['middleware' => 'auth'], function (){
         'uses' => 'ContactController@reassignContacts'
     ]);
 
+    Route::post('/contacts/search', [
+        'uses' => 'ContactController@searchUserClients'
+    ]);
+
+    Route::post('/contacts/export', [
+        'uses' => 'ContactController@exportContacts'
+    ]);
+
     /*
      * Note Routes
      */

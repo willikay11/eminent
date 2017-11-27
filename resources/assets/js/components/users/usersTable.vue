@@ -155,19 +155,32 @@
                         </el-form-item>
                     </el-form-item>
 
-                    <el-form-item label="Role" required>
-                        <el-col :span="3" class="right-margin">
-                            <el-form-item prop="role">
-                                <el-select v-model="ruleForm.role" placeholder="Select Role">
-                                    <el-option
-                                            v-for="item in roles"
-                                            :key="item.value"
-                                            :label="item.label"
-                                            :value="item.value">
-                                    </el-option>
-                                </el-select>
-                            </el-form-item>
+                    <el-form-item prop="roles"
+                                  label="Role">
+                        <el-col :span="6">
+                            <multiselect
+                                    v-model="ruleForm.role"
+                                    :options="roles"
+                                    :multiple="true"
+                                    track-by="value"
+                                    :custom-label="userRole">
+                            </multiselect>
                         </el-col>
+                    </el-form-item>
+
+                    <el-form-item label="Employment Date" required>
+                        <!--<el-col :span="3" class="right-margin">-->
+                            <!--<el-form-item prop="role">-->
+                                <!--<el-select v-model="ruleForm.role" placeholder="Select Role">-->
+                                    <!--<el-option-->
+                                            <!--v-for="item in roles"-->
+                                            <!--:key="item.value"-->
+                                            <!--:label="item.label"-->
+                                            <!--:value="item.value">-->
+                                    <!--</el-option>-->
+                                <!--</el-select>-->
+                            <!--</el-form-item>-->
+                        <!--</el-col>-->
                         <el-col :span="7">
                             <el-form-item prop="employmentDate">
                                 <el-date-picker
@@ -207,7 +220,10 @@
 </template>
 
 <script>
+    import Multiselect from 'vue-multiselect';
+
     export default {
+        components: {Multiselect},
         data() {
             return {
                 tableData: [],
@@ -227,6 +243,7 @@
                 total: 0,
                 dialogVisible: false,
                 userId: null,
+                contactId: null,
                 ruleForm: {
                     designation: '',
                     active: '',
@@ -243,16 +260,16 @@
                 },
                 rules: {
                     designation : [
-                        {required: true, message: 'Please input designation name', trigger: 'blur'},
+                        {required: true, message: 'Please input designation name', trigger: 'change', type: 'number'},
                     ],
                     active : [
-                        {required: true, message: 'Please select active status', trigger: 'change'},
+                        {required: true, message: 'Please select active status', trigger: 'change', type: 'number'},
                     ],
                     title : [
-                        {required: true, message: 'Please select title', trigger: 'change'},
+                        {required: true, message: 'Please select title', trigger: 'change', type: 'number'},
                     ],
                     gender : [
-                        {required: true, message: 'Please select gender', trigger: 'change'},
+                        {required: true, message: 'Please select gender', trigger: 'change', type: 'number'},
                     ],
                     firstname : [
                         {required: true, message: 'Please input First name', trigger: 'blur'},
@@ -270,10 +287,10 @@
                         {required: true, message: 'Please select role', trigger: 'change'},
                     ],
                     department : [
-                        {required: true, message: 'Please select department', trigger: 'change'},
+                        {required: true, message: 'Please select department', trigger: 'change', type: 'number'},
                     ],
                     country : [
-                        {required: true, message: 'Please select country', trigger: 'change'},
+                        {required: true, message: 'Please select country', trigger: 'change', type: 'number'},
                     ],
                     employmentDate : [
                         {required: true, message: 'Please input employment date', trigger: 'blur', type: 'date'},
@@ -340,7 +357,7 @@
                         axios.post('/users/save', {
                             type: 1,
                             title_id: vm.ruleForm.title,
-                            firstname     : vm.ruleForm.firstname,
+                            firstname : vm.ruleForm.firstname,
                             lastname : vm.ruleForm.lastname,
                             email: vm.ruleForm.email,
                             phone: vm.ruleForm.phone,
@@ -348,10 +365,11 @@
                             country_id: vm.ruleForm.country,
                             designation_id: vm.ruleForm.designation,
                             department_id: vm.ruleForm.department,
-                            role_id: vm.ruleForm.role,
+                            roles: vm.ruleForm.role,
                             active: 0,
                             userId: vm.userId,
-                            employment_date: vm.employmentDate
+                            employment_date: vm.ruleForm.employmentDate+"",
+                            contactId: vm.contactId
                         })
                             .then(function (response)
                             {
@@ -365,6 +383,10 @@
                                         type: 'success',
                                         message: response.data.message
                                     });
+
+                                    vm.ruleForm.role = '';
+
+                                    vm.$refs[formName].resetFields();
                                 }
                                 else
                                 {
@@ -387,9 +409,22 @@
 
                 vm.dialogVisible = true;
 
-//                vm.ruleForm.designationName = designation.name;
-//
+                vm.ruleForm.designationName = user.name;
+
                 vm.ruleForm.designation = user.designation_id;
+
+                vm.ruleForm.department = user.department_id;
+                vm.ruleForm.title = user.title_id;
+                vm.ruleForm.country = user.country_id;
+                vm.ruleForm.phone = user.phone;
+                vm.ruleForm.firstname = user.firstname;
+                vm.ruleForm.lastname = user.lastname;
+                vm.ruleForm.gender = user.gender_id;
+                vm.ruleForm.email = user.email;
+                vm.ruleForm.employmentDate = new Date(user.employment_date);
+                vm.contactId = user.contact_id,
+                vm.ruleForm.role = user.roles,
+                vm.userId = user.id
             },
             UserRole(user)
             {
@@ -397,7 +432,10 @@
             },
             filterTag(value, row) {
                 return row.tag === value;
-            }
+            },
+            userRole (option) {
+                return `${option.label}`
+            },
         }
     }
 </script>
@@ -428,3 +466,5 @@
         margin-right: 20px;
     }
 </style>
+
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

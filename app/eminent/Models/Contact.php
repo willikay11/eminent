@@ -41,7 +41,8 @@ class Contact extends Model
         'gender_id',
         'religion_id',
         'type',
-        'profession_id'
+        'profession_id',
+        'organization'
     ];
 
     /*

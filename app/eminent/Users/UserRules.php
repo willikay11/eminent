@@ -29,7 +29,7 @@ trait UserRules
         $rules = [
             'email' => 'required | unique:users| exists:contacts,email',
             'designation_id' => 'required',
-            'role_id' => 'required',
+            'roles' => 'required',
             'department_id' => 'required',
             'employment_date' => 'required|date',
         ];
@@ -45,7 +45,7 @@ trait UserRules
         $rules = [
             'email' => 'required | unique:users,email,'.$request->get('userId') .' | exists:contacts,email',
             'designation_id' => 'required',
-            'role_id' => 'required',
+            'roles' => 'required',
             'department_id' => 'required',
             'employment_date' => 'required|date',
         ];
