@@ -23,11 +23,23 @@ class ContactMailers
         });
     }
 
-    public static function  sendEmailtoUsersonReassign($data)
+    public static function sendEmailtoUsersonReassign($data)
     {
         Mail::send('emails.contacts.reassigned', $data, function($message) use ($data)
         {
             $message->to($data['to'])->subject($data['subject'])->cc($data['cc']);
+        });
+    }
+
+    public static function sendGeneratedExportReport($data)
+    {
+        $data['subject'] = 'Eminent CRM : Contact Generated Report Notification';
+
+        Mail::send('emails.contacts.contacts_generated', $data, function($message) use ($data)
+        {
+            $message->to($data['to'])->subject($data['subject']);
+
+            $message->attach(storage_path('excels/'. $data['path']));
         });
     }
 }

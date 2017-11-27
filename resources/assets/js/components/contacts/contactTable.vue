@@ -82,6 +82,10 @@
                 </el-form>
             </el-row>
 
+            <el-row>
+                <el-button type="primary" @click="exportContacts()">Export</el-button>
+            </el-row>
+
             <div class="col-lg-12">
                 <hr>
             </div>
@@ -757,6 +761,41 @@
                 let vm = this;
 
                 vm.reassignContactsDialogVisible = true;
+            },
+
+            exportContacts()
+            {
+                let vm = this;
+
+                vm.$message({
+                    type: 'info',
+                    message: 'Generating excel...'
+                });
+
+                axios.post('/contacts/export', {
+                    startDate: vm.searchForm.startDate+"",
+                    endDate: vm.searchForm.endDate+"",
+                    source: vm.searchForm.source,
+                    status: vm.searchForm.status,
+                    userId: vm.userId,
+                })
+                    .then(function (response) {
+
+                        if (response.data.success) {
+                            vm.$message({
+                                type: 'success',
+                                message: response.data.message
+                            });
+                        }
+                        else {
+                            vm.$message({
+                                type: 'error',
+                                message: response.data.message
+                            });
+                        }
+                    }).catch(function (error) {
+                    console.log(error);
+                });
             },
 
             reassignContacts(formName)

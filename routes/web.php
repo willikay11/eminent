@@ -244,6 +244,10 @@ Route::group(['middleware' => 'auth'], function (){
         'uses' => 'ContactController@searchUserClients'
     ]);
 
+    Route::post('/contacts/export', [
+        'uses' => 'ContactController@exportContacts'
+    ]);
+
     /*
      * Note Routes
      */

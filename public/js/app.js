@@ -90238,6 +90238,37 @@ exports.default = {
 
             vm.reassignContactsDialogVisible = true;
         },
+        exportContacts: function exportContacts() {
+            var vm = this;
+
+            vm.$message({
+                type: 'info',
+                message: 'Generating excel...'
+            });
+
+            axios.post('/contacts/export', {
+                startDate: vm.searchForm.startDate + "",
+                endDate: vm.searchForm.endDate + "",
+                source: vm.searchForm.source,
+                status: vm.searchForm.status,
+                userId: vm.userId
+            }).then(function (response) {
+
+                if (response.data.success) {
+                    vm.$message({
+                        type: 'success',
+                        message: response.data.message
+                    });
+                } else {
+                    vm.$message({
+                        type: 'error',
+                        message: response.data.message
+                    });
+                }
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
         reassignContacts: function reassignContacts(formName) {
             var _this2 = this;
 
@@ -90285,6 +90316,10 @@ exports.default = {
         }
     }
 }; //
+//
+//
+//
+//
 //
 //
 //
@@ -90941,6 +90976,25 @@ var render = function() {
                   )
                 ],
                 1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "el-row",
+            [
+              _c(
+                "el-button",
+                {
+                  attrs: { type: "primary" },
+                  on: {
+                    click: function($event) {
+                      _vm.exportContacts()
+                    }
+                  }
+                },
+                [_vm._v("Export")]
               )
             ],
             1
