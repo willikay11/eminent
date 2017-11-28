@@ -327,6 +327,10 @@ Route::group(['middleware' => 'auth'], function (){
     Route::post('/activity/watch', [
         'uses' => 'ActivitiesController@watchActivity'
     ]);
+
+    Route::post('/activity/search', [
+        'uses' => 'ActivitiesController@search'
+    ]);
 });
 
 

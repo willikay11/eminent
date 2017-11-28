@@ -67,7 +67,11 @@ class ActivitiesController extends Controller
 
     public function index()
     {
-        return view('activities.index');
+        $user = $this->usersRepository->getUserById(Auth::id());
+
+        return view('activities.index', [
+            'user' => $user
+        ]);
     }
 
     public function getInformation()
@@ -188,6 +192,7 @@ class ActivitiesController extends Controller
                 'activity_status_id' => $activity->activity_status_id,
                 'activity_status' => $activity->activityStatus->name,
                 'due_date' => $activity->due_date,
+                'user_id' => $activity->user_id,
                 'comments' => $this->getActivityComments($activity->id),
                 'watchers' => $this->getActivityWatchers($activity->id),
                 'isWatcher' => ($this->activityWatcherRepository->getActivityWatcherByUserIdAndActivityId(Auth::id(), $activity->id) != null)?true:false
@@ -197,6 +202,61 @@ class ActivitiesController extends Controller
         return self::toResponse(null, $activities);
     }
 
+    public function search(Request $request)
+    {
+        $startDate = $request->get('startDate');
+
+        $endDate = $request->get('endDate');
+
+        $priority = $request->get('priority');
+
+        $userId = $request->get('userId');
+
+        $q = Activity::where('user_id', $userId);
+
+        if (!is_null($startDate) && $startDate != '')
+        {
+            \Log::info("Start");
+            $q->where('due_date', '>=', Carbon::parse($startDate));
+        }
+
+        if (!is_null($endDate) && $endDate != '')
+        {
+            \Log::info("End");
+            $q->where('due_date', '<=', Carbon::parse($endDate));
+        }
+
+        if (!is_null($priority) && $priority != '')
+        {
+            \Log::info("Priority");
+            $q->where('priority_type_id', $priority);
+        }
+
+
+        $activities = $q->get()->map(function ($activity)
+        {
+            return [
+                'id' => $activity->id,
+                'name' => $activity->name,
+                'description' => $activity->description,
+                'priority_type_id' => $activity->priority_type_id,
+                'priority_type' => $activity->priorityType->name,
+                'activity_status_id' => $activity->activity_status_id,
+                'activity_status' => $activity->activityStatus->name,
+                'due_date' => $activity->due_date,
+                'user_id' => $activity->user_id,
+                'comments' => $this->getActivityComments($activity->id),
+                'watchers' => $this->getActivityWatchers($activity->id),
+                'isWatcher' => ($this->activityWatcherRepository->getActivityWatcherByUserIdAndActivityId(Auth::id(), $activity->id) != null)?true:false
+            ];
+        })->groupBy('activity_status');
+
+        return self::toResponse(null, [
+            'success' => true,
+            'activities' => $activities,
+            'message' => 'Search Completed'
+        ]);
+    }
     public function getActivityComments($activityId)
     {
         $comments = $this->commentsRepository->getCommentByActivityId($activityId);

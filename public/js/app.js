@@ -94119,7 +94119,7 @@ exports.default = {
         getInteractions: function getInteractions() {
             var vm = this;
             axios.get('/api/interactions/' + vm.userId).then(function (response) {
-                vm.tableData = [].concat(response.data.data);
+                vm.tableData = response.data.interactions.data;
             }).catch(function (error) {
                 console.log(error);
             });
@@ -94917,7 +94917,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 exports.default = {
     components: { draggable: _vuedraggable2.default },
-    props: [],
+    props: ['userId'],
     data: function data() {
         return {
             file: false,
@@ -94942,6 +94942,7 @@ exports.default = {
             from: '',
             to: '',
             users: [],
+            statuses: [],
             priorityTypes: [],
             options: [{
                 value: '1',
@@ -94956,6 +94957,20 @@ exports.default = {
                 user: '',
                 priority: '',
                 dueDate: ''
+            },
+            searchForm: {
+                startDate: '',
+                endDate: '',
+                user: '',
+                priority: ''
+            },
+            searchRules: {
+                startDate: [{ required: false, message: 'Please input start date', trigger: 'blur', type: 'date' }],
+                endDate: [{ required: false, message: 'Please input end date', trigger: 'blur', type: 'date' }],
+                user: [{ required: false, message: 'Please select user', trigger: 'change' }]
+                //                    priority: [
+                //                        {required: false, message: 'Please select status', trigger: 'change'},
+                //                    ],
             },
             rules: {
                 name: [{ required: true, message: 'Please input activity name', trigger: 'blur' }],
@@ -95008,26 +95023,35 @@ exports.default = {
         onEnd: function onEnd(evt) {
             var vm = this;
 
-            if (vm.from != vm.to) {
-                axios.post('/update/activities', {
-                    activity_id: vm.draggedElement.element.id,
-                    activity_status_id: vm.to
-                }).then(function (response) {
+            console.log(vm.draggedElement.element.user_id, vm.userId);
 
-                    if (response.data.success) {
-                        vm.$message({
-                            type: 'success',
-                            message: response.data.message
-                        });
-                    } else {
-                        vm.$message({
-                            type: 'error',
-                            message: response.data.message
-                        });
-                    }
-                }).catch(function (error) {
-                    console.log(error);
+            if (vm.draggedElement.element.user_id != vm.userId) {
+                vm.$message({
+                    type: 'error',
+                    message: 'You cannot update a task that does not belong to you'
                 });
+            } else {
+                if (vm.from != vm.to) {
+                    axios.post('/update/activities', {
+                        activity_id: vm.draggedElement.element.id,
+                        activity_status_id: vm.to
+                    }).then(function (response) {
+
+                        if (response.data.success) {
+                            vm.$message({
+                                type: 'success',
+                                message: response.data.message
+                            });
+                        } else {
+                            vm.$message({
+                                type: 'error',
+                                message: response.data.message
+                            });
+                        }
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+                }
             }
         },
         getInformation: function getInformation() {
@@ -95167,6 +95191,47 @@ exports.default = {
                     vm.selectedTask.isWatcher = response.data.isWatcher;
 
                     vm.selectedTask.watchers = response.data.watchers;
+                } else {
+                    vm.$message({
+                        type: 'error',
+                        message: response.data.message
+                    });
+                }
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        searchActivities: function searchActivities() {
+            var vm = this;
+
+            vm.$message({
+                type: 'info',
+                message: 'Searching...'
+            });
+
+            var user = vm.userId;
+
+            if (vm.searchForm.user != '') {
+                user = vm.searchForm.user;
+            }
+
+            axios.post('/activity/search', {
+                startDate: vm.searchForm.startDate + "",
+                endDate: vm.searchForm.endDate + "",
+                priority: vm.searchForm.priority,
+                userId: user
+            }).then(function (response) {
+
+                if (response.data.success) {
+                    vm.$message({
+                        type: 'success',
+                        message: response.data.message
+                    });
+
+                    vm.todo = response.data.activities.todo == undefined ? [] : response.data.activities.todo;
+                    vm.inProgress = response.data.activities.progress == undefined ? [] : response.data.activities.progress;
+                    vm.inReview = response.data.activities.review == undefined ? [] : response.data.activities.review;
+                    vm.done = response.data.activities.done == undefined ? [] : response.data.activities.done;
                 } else {
                     vm.$message({
                         type: 'error',
@@ -95568,6 +95633,70 @@ exports.default = {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /***/ }),
 /* 197 */
@@ -95580,6 +95709,187 @@ var render = function() {
   return _c(
     "div",
     [
+      _c(
+        "el-row",
+        { attrs: { span: 24, gutter: 20 } },
+        [
+          _c(
+            "el-form",
+            {
+              ref: "searchForm",
+              staticStyle: { "padding-left": "30px" },
+              attrs: {
+                model: _vm.searchForm,
+                rules: _vm.searchRules,
+                "label-position": "top"
+              }
+            },
+            [
+              _c(
+                "el-col",
+                { attrs: { span: 2 } },
+                [
+                  _c("el-form-item", {
+                    attrs: { prop: "filter", label: "Filter By:" }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "el-col",
+                { attrs: { span: 5 } },
+                [
+                  _c(
+                    "el-form-item",
+                    { attrs: { prop: "startDate", label: "From date:" } },
+                    [
+                      _c("el-date-picker", {
+                        attrs: { type: "date", placeholder: "Start Date" },
+                        model: {
+                          value: _vm.searchForm.startDate,
+                          callback: function($$v) {
+                            _vm.$set(_vm.searchForm, "startDate", $$v)
+                          },
+                          expression: "searchForm.startDate"
+                        }
+                      })
+                    ],
+                    1
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "el-col",
+                { attrs: { span: 5 } },
+                [
+                  _c(
+                    "el-form-item",
+                    { attrs: { prop: "endDate", label: "To date:" } },
+                    [
+                      _c("el-date-picker", {
+                        attrs: { type: "date", placeholder: "End Date" },
+                        model: {
+                          value: _vm.searchForm.endDate,
+                          callback: function($$v) {
+                            _vm.$set(_vm.searchForm, "endDate", $$v)
+                          },
+                          expression: "searchForm.endDate"
+                        }
+                      })
+                    ],
+                    1
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "el-col",
+                { attrs: { span: 5 } },
+                [
+                  _c(
+                    "el-form-item",
+                    { attrs: { prop: "priority", label: "Priority:" } },
+                    [
+                      _c(
+                        "el-select",
+                        {
+                          attrs: { placeholder: "Select Priority" },
+                          model: {
+                            value: _vm.searchForm.priority,
+                            callback: function($$v) {
+                              _vm.$set(_vm.searchForm, "priority", $$v)
+                            },
+                            expression: "searchForm.priority"
+                          }
+                        },
+                        _vm._l(_vm.priorityTypes, function(item) {
+                          return _c("el-option", {
+                            key: item.value,
+                            attrs: { label: item.label, value: item.value }
+                          })
+                        })
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "el-col",
+                { attrs: { span: 5 } },
+                [
+                  _c(
+                    "el-form-item",
+                    { attrs: { prop: "user", label: "User:" } },
+                    [
+                      _c(
+                        "el-select",
+                        {
+                          attrs: { placeholder: "Select User" },
+                          model: {
+                            value: _vm.searchForm.user,
+                            callback: function($$v) {
+                              _vm.$set(_vm.searchForm, "user", $$v)
+                            },
+                            expression: "searchForm.user"
+                          }
+                        },
+                        _vm._l(_vm.users, function(item) {
+                          return _c("el-option", {
+                            key: item.value,
+                            attrs: { label: item.label, value: item.value }
+                          })
+                        })
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "el-col",
+                { attrs: { span: 2 } },
+                [
+                  _c(
+                    "el-form-item",
+                    {
+                      staticStyle: { "margin-top": "30px" },
+                      attrs: { prop: "search" }
+                    },
+                    [
+                      _c(
+                        "el-button",
+                        {
+                          attrs: { type: "primary" },
+                          on: {
+                            click: function($event) {
+                              _vm.searchActivities()
+                            }
+                          }
+                        },
+                        [_vm._v("Search")]
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
       _c(
         "el-row",
         { attrs: { span: 24, gutter: 20 } },

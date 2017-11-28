@@ -1,6 +1,70 @@
 <template>
     <div>
         <el-row :span="24" :gutter="20">
+            <el-form :model="searchForm" :rules="searchRules" ref="searchForm" label-position="top"
+                     style="padding-left: 30px">
+
+                <el-col :span="2">
+                    <el-form-item prop="filter" label="Filter By:">
+                    </el-form-item>
+                </el-col>
+
+                <el-col :span="5">
+                    <el-form-item prop="startDate" label="From date:">
+                        <el-date-picker
+                                v-model="searchForm.startDate"
+                                type="date"
+                                placeholder="Start Date">
+                        </el-date-picker>
+                    </el-form-item>
+                </el-col>
+
+                <el-col :span="5">
+                    <el-form-item prop="endDate" label="To date:">
+                        <el-date-picker
+                                v-model="searchForm.endDate"
+                                type="date"
+                                placeholder="End Date">
+                        </el-date-picker>
+                    </el-form-item>
+                </el-col>
+
+                <el-col :span="5">
+                    <el-form-item prop="priority" label="Priority:">
+                        <el-select v-model="searchForm.priority" placeholder="Select Priority">
+                            <el-option
+                                    v-for="item in priorityTypes"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+
+                <el-col :span="5">
+                    <el-form-item prop="user" label="User:">
+                        <el-select v-model="searchForm.user" placeholder="Select User">
+                            <el-option
+                                    v-for="item in users"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+
+                <el-col :span="2">
+                    <el-form-item prop="search" style="margin-top: 30px">
+                        <el-button type="primary" @click="searchActivities()">Search</el-button>
+                    </el-form-item>
+                </el-col>
+
+            </el-form>
+        </el-row>
+
+        <el-row :span="24" :gutter="20">
             <el-col :span="6">
                 <div class="panel panel-primary to-do-panel">
                     <div class="panel-heading">
@@ -385,7 +449,7 @@
 
     export default{
         components: {draggable},
-        props: [],
+        props: ['userId'],
         data (){
             return {
                 file: false,
@@ -410,6 +474,7 @@
                 from: '',
                 to: '',
                 users: [],
+                statuses: [],
                 priorityTypes: [],
                 options: [{
                     value: '1',
@@ -424,6 +489,26 @@
                     user: '',
                     priority: '',
                     dueDate: '',
+                },
+                searchForm: {
+                    startDate: '',
+                    endDate: '',
+                    user: '',
+                    priority: '',
+                },
+                searchRules: {
+                    startDate: [
+                        {required: false, message: 'Please input start date', trigger: 'blur', type: 'date'},
+                    ],
+                    endDate: [
+                        {required: false, message: 'Please input end date', trigger: 'blur', type: 'date'},
+                    ],
+                    user: [
+                        {required: false, message: 'Please select user', trigger: 'change'},
+                    ],
+//                    priority: [
+//                        {required: false, message: 'Please select status', trigger: 'change'},
+//                    ],
                 },
                 rules: {
                     name: [
@@ -489,28 +574,39 @@
             onEnd(evt){
                 let vm = this;
 
-                if (vm.from != vm.to) {
-                    axios.post('/update/activities', {
-                        activity_id: vm.draggedElement.element.id,
-                        activity_status_id: vm.to
-                    })
-                        .then(function (response) {
+                console.log(vm.draggedElement.element.user_id, vm.userId);
 
-                            if (response.data.success) {
-                                vm.$message({
-                                    type: 'success',
-                                    message: response.data.message
-                                });
-                            }
-                            else {
-                                vm.$message({
-                                    type: 'error',
-                                    message: response.data.message
-                                });
-                            }
-                        }).catch(function (error) {
-                        console.log(error);
+                if (vm.draggedElement.element.user_id != vm.userId)
+                {
+                    vm.$message({
+                        type: 'error',
+                        message: 'You cannot update a task that does not belong to you'
                     });
+                }
+                else{
+                    if (vm.from != vm.to) {
+                        axios.post('/update/activities', {
+                            activity_id: vm.draggedElement.element.id,
+                            activity_status_id: vm.to
+                        })
+                            .then(function (response) {
+
+                                if (response.data.success) {
+                                    vm.$message({
+                                        type: 'success',
+                                        message: response.data.message
+                                    });
+                                }
+                                else {
+                                    vm.$message({
+                                        type: 'error',
+                                        message: response.data.message
+                                    });
+                                }
+                            }).catch(function (error) {
+                            console.log(error);
+                        });
+                    }
                 }
             },
 
@@ -671,6 +767,52 @@
                             vm.selectedTask.isWatcher = response.data.isWatcher;
 
                             vm.selectedTask.watchers = response.data.watchers;
+                        }
+                        else {
+                            vm.$message({
+                                type: 'error',
+                                message: response.data.message
+                            });
+                        }
+                    }).catch(function (error) {
+                    console.log(error);
+                });
+            },
+
+            searchActivities()
+            {
+                let vm = this;
+
+                vm.$message({
+                    type: 'info',
+                    message: 'Searching...'
+                });
+
+                let user = vm.userId;
+
+                if (vm.searchForm.user != '')
+                {
+                    user = vm.searchForm.user;
+                }
+
+                axios.post('/activity/search', {
+                    startDate: vm.searchForm.startDate+"",
+                    endDate: vm.searchForm.endDate+"",
+                    priority: vm.searchForm.priority,
+                    userId: user,
+                })
+                    .then(function (response) {
+
+                        if (response.data.success) {
+                            vm.$message({
+                                type: 'success',
+                                message: response.data.message
+                            });
+
+                            vm.todo = (response.data.activities.todo == undefined) ? [] : response.data.activities.todo;
+                            vm.inProgress = (response.data.activities.progress == undefined) ? [] : response.data.activities.progress;
+                            vm.inReview = (response.data.activities.review == undefined) ? [] : response.data.activities.review;
+                            vm.done = (response.data.activities.done == undefined) ? [] : response.data.activities.done;
                         }
                         else {
                             vm.$message({

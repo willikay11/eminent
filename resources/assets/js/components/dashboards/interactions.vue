@@ -66,7 +66,7 @@
                 let vm = this;
                 axios.get('/api/interactions/'+vm.userId)
                     .then(function (response) {
-                        vm.tableData = [].concat(response.data.data);
+                        vm.tableData = response.data.interactions.data;
                     }).catch(function (error) {
                     console.log(error);
                 })
