@@ -31,3 +31,5 @@ Vue.component('interactionsTable', require('./interactions/interactionsTable.vue
 Vue.component('activities', require('./activities/activities.vue'));
 
 Vue.component('userRoles', require('./users/userRoles.vue'));
+
+Vue.component('teamTable', require('./team/teamTable.vue'));

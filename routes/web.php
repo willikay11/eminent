@@ -331,6 +331,25 @@ Route::group(['middleware' => 'auth'], function (){
     Route::post('/activity/search', [
         'uses' => 'ActivitiesController@search'
     ]);
+
+    /*
+     * Team
+     */
+    Route::get('/team', [
+        'uses' => 'TeamController@index'
+    ]);
+
+    Route::get('/api/teams', [
+        'uses' => 'TeamController@getTeams'
+    ]);
+
+    Route::get('/teams/info', [
+        'uses' => 'TeamController@getInfo'
+    ]);
+
+    Route::post('/team/save', [
+        'uses' => 'TeamController@store'
+    ]);
 });
 
 

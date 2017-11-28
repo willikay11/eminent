@@ -725,8 +725,6 @@
 
                                 vm.tableData = response.data.contacts.data;
                                 vm.total = response.data.contacts.last_page;
-
-                                vm.$refs[formName].resetFields();
                             }
                             else {
                                 vm.$message({

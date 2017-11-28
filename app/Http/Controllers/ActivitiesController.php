@@ -216,19 +216,16 @@ class ActivitiesController extends Controller
 
         if (!is_null($startDate) && $startDate != '')
         {
-            \Log::info("Start");
             $q->where('due_date', '>=', Carbon::parse($startDate));
         }
 
         if (!is_null($endDate) && $endDate != '')
         {
-            \Log::info("End");
             $q->where('due_date', '<=', Carbon::parse($endDate));
         }
 
         if (!is_null($priority) && $priority != '')
         {
-            \Log::info("Priority");
             $q->where('priority_type_id', $priority);
         }
 
