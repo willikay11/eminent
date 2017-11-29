@@ -350,6 +350,13 @@ Route::group(['middleware' => 'auth'], function (){
     Route::post('/team/save', [
         'uses' => 'TeamController@store'
     ]);
+
+    /*
+     * Team Member
+     */
+    Route::get('/team/{id}/members', [
+        'uses' => 'TeamMemberController@index'
+    ]);
 });
 
 

@@ -84651,6 +84651,8 @@ Vue.component('userRoles', __webpack_require__(198));
 
 Vue.component('teamTable', __webpack_require__(209));
 
+Vue.component('teamMemberTable', __webpack_require__(214));
+
 /***/ }),
 /* 115 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -97763,6 +97765,9 @@ exports.default = {
         },
         filterTag: function filterTag(value, row) {
             return row.tag === value;
+        },
+        members: function members(team) {
+            window.location.href = '/team/' + team.id + '/members';
         }
     }
 };
@@ -97846,7 +97851,7 @@ var render = function() {
               }),
               _vm._v(" "),
               _c("el-table-column", {
-                attrs: { label: "Actions", width: "120" },
+                attrs: { label: "Actions" },
                 scopedSlots: _vm._u([
                   {
                     key: "default",
@@ -97863,6 +97868,19 @@ var render = function() {
                             }
                           },
                           [_vm._v("Edit")]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "el-button",
+                          {
+                            attrs: { size: "small" },
+                            on: {
+                              click: function($event) {
+                                _vm.members(scope.row)
+                              }
+                            }
+                          },
+                          [_vm._v("Members")]
                         )
                       ]
                     }
@@ -98048,6 +98066,483 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-4fd5d516", module.exports)
+  }
+}
+
+/***/ }),
+/* 214 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(215)
+}
+var normalizeComponent = __webpack_require__(3)
+/* script */
+var __vue_script__ = __webpack_require__(217)
+/* template */
+var __vue_template__ = __webpack_require__(218)
+/* template functional */
+  var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/team/teamMembersTable.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-0096d2c6", Component.options)
+  } else {
+    hotAPI.reload("data-v-0096d2c6", Component.options)
+' + '  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 215 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(216);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(2)("7126e79b", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-0096d2c6\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./teamMembersTable.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-0096d2c6\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./teamMembersTable.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 216 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, "\n.el-table{\n    border-left: none;\n    border-right: none;\n}\n.el-select{\n    width:  100%;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 217 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+exports.default = {
+    props: ['teamId', 'teamName'],
+    data: function data() {
+        return {
+            tableData: [],
+            options: [{
+                value: '1',
+                label: 'Active'
+            }, {
+                value: '0',
+                label: 'Inactive'
+            }],
+            users: [],
+            total: 0,
+            dialogVisible: false,
+            teamId: null,
+            ruleForm: {
+                teamName: '',
+                active: '',
+                user: ''
+            },
+            rules: {
+                teamName: [{ required: true, message: 'Please input source name', trigger: 'blur' }],
+                active: [{ required: true, message: 'Please active status', trigger: 'change' }],
+                user: [{ required: true, message: 'Please user', trigger: 'change', type: 'number' }]
+            }
+        };
+    },
+
+    created: function created() {
+        var vm = this;
+
+        //            vm.getTeams();
+
+        vm.getInformation();
+    },
+
+    methods: {
+        handleClick: function handleClick() {
+            console.log('click');
+        },
+        getInformation: function getInformation() {
+            var vm = this;
+            axios.get('/teams/info').then(function (response) {
+                vm.users = response.data.users;
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        getTeams: function getTeams() {
+            var vm = this;
+            axios.get('/api/teams').then(function (response) {
+                vm.tableData = [].concat(response.data.data);
+                vm.total = response.data.last_page;
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        showAddTeamMemberDialog: function showAddTeamMemberDialog() {
+            var vm = this;
+
+            vm.dialogVisible = true;
+        },
+        handleClose: function handleClose(done) {
+            this.$confirm('Are you sure to close this dialog?').then(function (_) {
+                done();
+            }).catch(function (_) {});
+        },
+        addTeam: function addTeam(formName) {
+            var _this = this;
+
+            this.$refs[formName].validate(function (valid) {
+                if (valid) {
+                    var vm = _this;
+                    axios.post('/team/save', {
+                        name: vm.ruleForm.teamName,
+                        active: vm.ruleForm.active,
+                        user_id: vm.ruleForm.user,
+                        teamId: vm.teamId
+                    }).then(function (response) {
+                        vm.dialogVisible = false;
+
+                        vm.getTeams();
+
+                        if (response.data.success) {
+                            vm.$message({
+                                type: 'success',
+                                message: response.data.message
+                            });
+
+                            vm.$refs[formName].resetFields();
+                        } else {
+                            vm.$message({
+                                type: 'error',
+                                message: response.data.message
+                            });
+                        }
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+                } else {
+                    return false;
+                }
+            });
+        },
+        EditTeam: function EditTeam(team) {
+            var vm = this;
+
+            vm.dialogVisible = true;
+
+            vm.ruleForm.teamName = team.name;
+
+            vm.teamId = team.id;
+
+            vm.ruleForm.user = team.user_id;
+        },
+        filterTag: function filterTag(value, row) {
+            return row.tag === value;
+        },
+        members: function members(team) {}
+    }
+};
+
+/***/ }),
+/* 218 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "panel panel-default" },
+    [
+      _c("div", { staticClass: "col-lg-12 panel-header" }, [
+        _c("div", { staticClass: "col-lg-6" }, [
+          _c("h4", [_vm._v(_vm._s(_vm.teamName))])
+        ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "col-lg-6", staticStyle: { "text-align": "right" } },
+          [
+            _c(
+              "button",
+              {
+                staticClass: "btn ebg-button",
+                on: {
+                  click: function($event) {
+                    _vm.showAddTeamMemberDialog()
+                  }
+                }
+              },
+              [_vm._v("Add Members")]
+            )
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "panel-body" },
+        [
+          _c(
+            "el-table",
+            {
+              staticStyle: { width: "100%" },
+              attrs: { data: _vm.tableData, stripe: "" }
+            },
+            [
+              _c("el-table-column", { attrs: { prop: "name", label: "Name" } }),
+              _vm._v(" "),
+              _c("el-table-column", {
+                attrs: { label: "Actions" },
+                scopedSlots: _vm._u([
+                  {
+                    key: "default",
+                    fn: function(scope) {
+                      return [
+                        _c(
+                          "el-button",
+                          {
+                            attrs: { size: "small" },
+                            on: {
+                              click: function($event) {
+                                _vm.EditTeam(scope.row)
+                              }
+                            }
+                          },
+                          [_vm._v("Remove")]
+                        )
+                      ]
+                    }
+                  }
+                ])
+              })
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("hr", { staticClass: "panel-hr" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "panel-footer" }, [
+        _c(
+          "div",
+          { staticClass: "block" },
+          [
+            _c("el-pagination", {
+              attrs: { layout: "prev, pager, next", total: _vm.total }
+            })
+          ],
+          1
+        )
+      ]),
+      _vm._v(" "),
+      _c(
+        "el-dialog",
+        {
+          attrs: {
+            title: "Add Team Member",
+            visible: _vm.dialogVisible,
+            size: "tiny"
+          },
+          on: {
+            "update:visible": function($event) {
+              _vm.dialogVisible = $event
+            }
+          }
+        },
+        [
+          _c(
+            "el-form",
+            {
+              ref: "ruleForm",
+              attrs: {
+                model: _vm.ruleForm,
+                rules: _vm.rules,
+                "label-position": "top"
+              }
+            },
+            [
+              _c(
+                "el-form-item",
+                { attrs: { prop: "teamName", label: "Team Name" } },
+                [
+                  _c("el-input", {
+                    attrs: { placeholder: "Input Name" },
+                    model: {
+                      value: _vm.ruleForm.teamName,
+                      callback: function($$v) {
+                        _vm.$set(_vm.ruleForm, "teamName", $$v)
+                      },
+                      expression: "ruleForm.teamName"
+                    }
+                  })
+                ],
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "span",
+            {
+              staticClass: "dialog-footer",
+              attrs: { slot: "footer" },
+              slot: "footer"
+            },
+            [
+              _c(
+                "el-button",
+                {
+                  on: {
+                    click: function($event) {
+                      _vm.dialogVisible = false
+                    }
+                  }
+                },
+                [_vm._v("Cancel")]
+              ),
+              _vm._v(" "),
+              _c(
+                "el-button",
+                {
+                  attrs: { type: "primary" },
+                  on: {
+                    click: function($event) {
+                      _vm.addTeam("ruleForm")
+                    }
+                  }
+                },
+                [_vm._v("Save")]
+              )
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-0096d2c6", module.exports)
   }
 }
 

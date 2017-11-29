@@ -2,10 +2,10 @@
     <div class="panel panel-default">
         <div class="col-lg-12 panel-header">
             <div class="col-lg-6">
-                <h4>Teams</h4>
+                <h4>{{ teamName }}</h4>
             </div>
             <div class="col-lg-6" style="text-align: right">
-                <button class="btn ebg-button" v-on:click="showAddTeamDialog()">Add Team</button>
+                <button class="btn ebg-button" v-on:click="showAddTeamMemberDialog()">Add Members</button>
             </div>
         </div>
         <div class="panel-body">
@@ -18,23 +18,9 @@
                         label="Name">
                 </el-table-column>
                 <el-table-column
-                        prop="head"
-                        label="Team Head">
-                </el-table-column>
-                <el-table-column
-                        prop="tag"
-                        label="Active">
-                    <template slot-scope="scope">
-                        <el-tag
-                                :type="scope.row.active === 'Active' ? 'success' : 'danger'"
-                                close-transition>{{scope.row.active}}</el-tag>
-                    </template>
-                </el-table-column>
-                <el-table-column
                         label="Actions">
                     <template slot-scope="scope">
-                        <el-button @click="EditTeam(scope.row)" size="small">Edit</el-button>
-                        <el-button @click="members(scope.row)" size="small">Members</el-button>
+                        <el-button @click="EditTeam(scope.row)" size="small">Remove</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -50,7 +36,7 @@
         </div>
 
         <el-dialog
-                title="New/Edit Team"
+                title="Add Team Member"
                 :visible.sync="dialogVisible"
                 size="tiny">
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-position="top">
@@ -59,27 +45,6 @@
                     <el-input placeholder="Input Name" v-model="ruleForm.teamName"></el-input>
                 </el-form-item>
 
-                <el-form-item prop="user" label="Users">
-                    <el-select v-model="ruleForm.user" placeholder="Select user">
-                        <el-option
-                                v-for="item in users"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-
-                <el-form-item prop="active" label="Active">
-                    <el-select v-model="ruleForm.active" placeholder="Select">
-                        <el-option
-                                v-for="item in options"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">Cancel</el-button>
@@ -91,6 +56,7 @@
 
 <script>
     export default {
+        props: ['teamId', 'teamName'],
         data() {
             return {
                 tableData: [],
@@ -126,7 +92,7 @@
         created: function () {
             let vm = this;
 
-            vm.getTeams();
+//            vm.getTeams();
 
             vm.getInformation();
         },
@@ -157,7 +123,7 @@
                     console.log(error);
                 })
             },
-            showAddTeamDialog()
+            showAddTeamMemberDialog()
             {
                 let vm = this;
 
@@ -228,7 +194,7 @@
             },
             members(team)
             {
-                window.location.href = '/team/'+team.id+'/members'
+
             }
         }
     }
