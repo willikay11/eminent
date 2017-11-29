@@ -300,11 +300,11 @@ Route::group(['middleware' => 'auth'], function (){
     /*
      * Activities
      */
-    Route::get('/activities', [
+    Route::get('/activities/{userId?}', [
         'uses' => 'ActivitiesController@index'
     ]);
 
-    Route::get('/activities/info', [
+    Route::get('/info/activities/', [
         'uses' => 'ActivitiesController@getInformation'
     ]);
 
@@ -312,7 +312,7 @@ Route::group(['middleware' => 'auth'], function (){
         'uses' => 'ActivitiesController@save'
     ]);
 
-    Route::get('/api/activities', [
+    Route::get('/api/activities/{userId}', [
         'uses' => 'ActivitiesController@getActivities'
     ]);
 
@@ -356,6 +356,17 @@ Route::group(['middleware' => 'auth'], function (){
      */
     Route::get('/team/{id}/members', [
         'uses' => 'TeamMemberController@index'
+    ]);
+
+    Route::get('/api/team/{id}/members', [
+        'uses' => 'TeamMemberController@getTeamMembers'
+    ]);
+    Route::post('/team/member/save', [
+        'uses' => 'TeamMemberController@store'
+    ]);
+
+    Route::get('/api/team/{teamId}/member/{userId}/remove', [
+        'uses' => 'TeamMemberController@remove'
     ]);
 });
 

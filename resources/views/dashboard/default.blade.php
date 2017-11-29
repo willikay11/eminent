@@ -50,6 +50,7 @@
                         <li><a href="/permissions">Permissions</a></li>
                         <li><a href="/sources">Sources</a></li>
                         <li><a href="/services">Services</a></li>
+                        <li><a href="/team">Teams</a></li>
                         <li><a href="/departments">Departments</a></li>
                         <li><a href="/designations">Designations</a></li>
                         <li><a href="/professions">Professions</a></li>

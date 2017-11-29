@@ -613,7 +613,8 @@
             getInformation()
             {
                 let vm = this;
-                axios.get('/activities/info')
+
+                axios.get('/info/activities/')
                     .then(function (response) {
                         vm.users = response.data.users;
                         vm.priorityTypes = response.data.priorities;
@@ -625,7 +626,7 @@
             getActivities()
             {
                 let vm = this;
-                axios.get('/api/activities')
+                axios.get('/api/activities/'+vm.userId)
                     .then(function (response) {
                         vm.todo = (response.data.todo == undefined) ? [] : response.data.todo;
                         vm.inProgress = (response.data.progress == undefined) ? [] : response.data.progress;

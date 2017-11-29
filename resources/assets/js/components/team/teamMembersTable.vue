@@ -18,9 +18,16 @@
                         label="Name">
                 </el-table-column>
                 <el-table-column
+                        prop="email"
+                        label="Email">
+                </el-table-column>
+                <el-table-column
                         label="Actions">
                     <template slot-scope="scope">
-                        <el-button @click="EditTeam(scope.row)" size="small">Remove</el-button>
+                        <el-button @click="removeTeamMember(scope.row)" size="small">Remove</el-button>
+                        <el-button @click="contacts(scope.row)"size="small">Contacts</el-button>
+                        <el-button @click="interactions(scope.row)"size="small">Interactions</el-button>
+                        <el-button @click="activities(scope.row)"size="small">Activities</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -39,23 +46,32 @@
                 title="Add Team Member"
                 :visible.sync="dialogVisible"
                 size="tiny">
-            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-position="top">
+            <el-form label-position="top">
 
-                <el-form-item prop="teamName" label="Team Name">
-                    <el-input placeholder="Input Name" v-model="ruleForm.teamName"></el-input>
+                <el-form-item prop="teamMembers" label="Team Members">
+                    <multiselect
+                            v-model="selectedUsers"
+                            :options="users"
+                            :multiple="true"
+                            track-by="value"
+                            :custom-label="userName">
+                    </multiselect>
                 </el-form-item>
 
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">Cancel</el-button>
-                <el-button type="primary" @click="addTeam('ruleForm')">Save</el-button>
+                <el-button type="primary" @click="addTeamMembers">Save</el-button>
             </span>
         </el-dialog>
     </div>
 </template>
 
 <script>
+    import Multiselect from 'vue-multiselect';
+
     export default {
+        components: {Multiselect},
         props: ['teamId', 'teamName'],
         data() {
             return {
@@ -68,31 +84,15 @@
                     label: 'Inactive'
                 }],
                 users:[],
+                selectedUsers:[],
                 total: 0,
                 dialogVisible: false,
-                teamId: null,
-                ruleForm: {
-                    teamName: '',
-                    active: '',
-                    user: ''
-                },
-                rules: {
-                    teamName : [
-                        {required: true, message: 'Please input source name', trigger: 'blur'},
-                    ],
-                    active : [
-                        {required: true, message: 'Please active status', trigger: 'change'},
-                    ],
-                    user : [
-                        {required: true, message: 'Please user', trigger: 'change', type: 'number'},
-                    ],
-                },
             }
         },
         created: function () {
             let vm = this;
 
-//            vm.getTeams();
+            vm.getTeamMembers();
 
             vm.getInformation();
         },
@@ -112,10 +112,10 @@
                     console.log(error);
                 })
             },
-            getTeams()
+            getTeamMembers()
             {
                 let vm = this;
-                axios.get('/api/teams')
+                axios.get('/api/team/'+vm.teamId+'/members')
                     .then(function (response) {
                         vm.tableData = [].concat(response.data.data);
                         vm.total = response.data.last_page;
@@ -136,65 +136,82 @@
                     })
                     .catch(_ => {});
             },
-            addTeam(formName)
+            addTeamMembers()
             {
-                this.$refs[formName].validate((valid) => {
-                    if (valid) {
-                        let vm = this;
-                        axios.post('/team/save', {
-                            name     : vm.ruleForm.teamName,
-                            active : vm.ruleForm.active,
-                            user_id: vm.ruleForm.user,
-                            teamId: vm.teamId
-                        })
-                            .then(function (response)
+                    let vm = this;
+                    axios.post('/team/member/save', {
+                        teamId: vm.teamId,
+                        users: vm.selectedUsers
+                    })
+                        .then(function (response)
+                        {
+                            vm.dialogVisible = false;
+
+                            vm.getTeamMembers();
+
+                            if(response.data.success)
                             {
-                                vm.dialogVisible = false;
+                                vm.$message({
+                                    type: 'success',
+                                    message: response.data.message
+                                });
 
-                                vm.getTeams();
-
-                                if(response.data.success)
-                                {
-                                    vm.$message({
-                                        type: 'success',
-                                        message: response.data.message
-                                    });
-
-                                    vm.$refs[formName].resetFields();
-                                }
-                                else
-                                {
-                                    vm.$message({
-                                        type: 'error',
-                                        message: response.data.message
-                                    });
-                                }
-                            }).catch(function (error) {
-                            console.log(error);
-                        });
-                    } else {
-                        return false;
-                    }
-                });
+                            }
+                            else
+                            {
+                                vm.$message({
+                                    type: 'error',
+                                    message: response.data.message
+                                });
+                            }
+                        }).catch(function (error) {
+                        console.log(error);
+                    });
             },
-            EditTeam(team)
+            removeTeamMember(user)
             {
                 let vm = this;
+                axios.get('/api/team/'+vm.teamId+'/member/'+user.user_id+'/remove')
+                    .then(function (response) {
 
-                vm.dialogVisible = true;
+                        if(response.data.success)
+                        {
+                            vm.$message({
+                                type: 'success',
+                                message: response.data.message
+                            });
 
-                vm.ruleForm.teamName = team.name;
+                            vm.getTeamMembers();
 
-                vm.teamId = team.id;
-
-                vm.ruleForm.user = team.user_id;
+                        }
+                        else
+                        {
+                            vm.$message({
+                                type: 'error',
+                                message: response.data.message
+                            });
+                        }
+                    }).catch(function (error) {
+                    console.log(error);
+                })
             },
             filterTag(value, row) {
                 return row.tag === value;
             },
-            members(team)
+            userName (option) {
+                return `${option.label}`
+            },
+            contacts(user)
             {
-
+                window.location.href = '/contacts/user/'+user.user_id;
+            },
+            interactions(user)
+            {
+                window.location.href = '/interactions/user/'+user.user_id;
+            },
+            activities(user)
+            {
+                window.location.href = '/activities/'+user.user_id;
             }
         }
     }
@@ -209,3 +226,5 @@
         width:  100%;
     }
 </style>
+
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

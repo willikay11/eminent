@@ -65,9 +65,16 @@ class ActivitiesController extends Controller
         $this->activityWatcherRepository = $activityWatcherRepository;
     }
 
-    public function index()
+    public function index($userId = null)
     {
-        $user = $this->usersRepository->getUserById(Auth::id());
+        if (is_null($userId))
+        {
+            $user = $this->usersRepository->getUserById(Auth::id());
+        }
+        else
+        {
+            $user = $this->usersRepository->getUserById($userId);
+        }
 
         return view('activities.index', [
             'user' => $user
@@ -179,9 +186,9 @@ class ActivitiesController extends Controller
         ]);
     }
 
-    public function getActivities()
+    public function getActivities($userId)
     {
-        $activities = Activity::where('user_id', Auth::id())->get()->map(function ($activity)
+        $activities = Activity::where('user_id', $userId)->get()->map(function ($activity)
         {
             return [
                 'id' => $activity->id,
