@@ -102,7 +102,7 @@
                                         </el-badge>
                                     </el-col>
                                     <el-col :span="4">
-                                        <el-badge :value="element.comments.length" class="item">
+                                        <el-badge :value="element.countProgressUpdates" class="item">
                                             <button class="btn" @click="showTaskProgress(element)"><i class="fa fa-tasks font-icon" aria-hidden="true"></i></button>
                                         </el-badge>
                                     </el-col>
@@ -451,7 +451,6 @@
             </el-row>
         </el-dialog>
 
-
         <el-dialog
                 title="Update task progress"
                 :visible.sync="updateTaskProgressDialogVisible"
@@ -546,6 +545,57 @@
             </el-row>
         </el-dialog>
 
+        <el-dialog
+                title="Task Progress"
+                class="task-progress-update"
+                :visible.sync="taskProgressDialogVisible"
+                size="small">
+            <el-row :span="24">
+
+                <div class="form-item-container" v-for="progressUpdate in progressUpdateData">
+                    <el-card class="box-card" style="margin-bottom: 20px">
+                        <p>{{ progressUpdate.name }}</p>
+                        <p>{{ progressUpdate.description }}</p>
+                        <el-progress :percentage="progressUpdate.percentage"></el-progress>
+                        <hr>
+                        <el-row :span="24" :gutter="20">
+                            <el-col :span="2" v-if="progressUpdate.progress_files.length != 0">
+                                <el-badge :value="progressUpdate.progress_files.length" class="item">
+                                    <button class="btn" @click="showTaskProgressFiles(progressUpdate.progress_files)"><i class="fa fa-file font-icon" aria-hidden="true"></i></button>
+                                </el-badge>
+                            </el-col>
+                        </el-row>
+                    </el-card>
+                </div>
+            </el-row>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="taskProgressDialogVisible = false">Cancel</el-button>
+                <el-button type="primary" @click="showAddTaskProgress">Update Progress</el-button>
+            </div>
+        </el-dialog>
+
+        <el-dialog
+                title="Task Progress Files"
+                :visible.sync="taskProgressFileDialogVisible"
+                size="small">
+            <el-row :span="24">
+                <ul style="list-style: none; padding-left:0px" v-for="file in selectedProgressUpdateFiles">
+                    <li>
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <a :href="file.path">{{ file.name }}</a>
+                        </div>
+                        <div class="col-lg-12">
+                            <hr>
+                        </div>
+                    </li>
+                </ul>
+
+            </el-row>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="taskProgressFileDialogVisible = false">Close</el-button>
+            </div>
+        </el-dialog>
+
     </div>
 
 
@@ -576,14 +626,18 @@
                 selectedTask: {
                     'comments': []
                 },
+                selectedProgressUpdateFiles : '',
                 todo: [],
                 inProgress: [],
                 inReview: [],
                 done: [],
+                progressUpdateData: [],
                 taskDialogVisible: false,
                 watchTaskDialogVisible: false,
                 commentsDialog: false,
+                taskProgressDialogVisible: false,
                 updateTaskProgressDialogVisible: false,
+                taskProgressFileDialogVisible: false,
                 activity_status_id: '',
                 targetElementName: '',
                 draggedElement: '',
@@ -629,15 +683,15 @@
                     ],
                 },
                 searchRules: {
-                    startDate: [
-                        {required: false, message: 'Please input start date', trigger: 'blur', type: 'date'},
-                    ],
-                    endDate: [
-                        {required: false, message: 'Please input end date', trigger: 'blur', type: 'date'},
-                    ],
-                    user: [
-                        {required: false, message: 'Please select user', trigger: 'change'},
-                    ],
+//                    startDate: [
+//                        {required: false, message: 'Please input start date', trigger: 'blur', type: 'date'},
+//                    ],
+//                    endDate: [
+//                        {required: false, message: 'Please input end date', trigger: 'blur', type: 'date'},
+//                    ],
+//                    user: [
+//                        {required: false, message: 'Please select user', trigger: 'change'},
+//                    ],
 //                    priority: [
 //                        {required: false, message: 'Please select status', trigger: 'change'},
 //                    ],
@@ -721,7 +775,8 @@
 
             },
 
-            showMove(evt, originalEvent){
+            showMove(evt, originalEvent)
+            {
                 let vm = this;
 
                 vm.draggedElement = evt.draggedContext;
@@ -731,7 +786,8 @@
                 vm.to = evt.to.id;
             },
 
-            onEnd(evt){
+            onEnd(evt)
+            {
                 let vm = this;
 
                 console.log(vm.draggedElement.element.user_id, vm.userId);
@@ -794,7 +850,7 @@
                         vm.done = (response.data.done == undefined) ? [] : response.data.done;
                     }).catch(function (error) {
                     console.log(error);
-                })
+                });
             },
 
             addTask(formName)
@@ -856,13 +912,46 @@
                 vm.scrollToEnd();
             },
 
+            showTaskProgressFiles(files)
+            {
+                let vm = this;
+
+                vm.taskProgressFileDialogVisible = true;
+
+                vm.selectedProgressUpdateFiles = files;
+
+            },
+
             showTaskProgress(task)
             {
                 let vm = this;
 
-                vm.updateTaskProgressDialogVisible = true;
+                vm.taskProgressDialogVisible = true;
 
                 vm.selectedTask = task;
+
+                vm.getTaskProgressUpdate();
+            },
+
+            showAddTaskProgress()
+            {
+                let vm = this;
+
+                vm.updateTaskProgressDialogVisible = true;
+            },
+
+            getTaskProgressUpdate()
+            {
+                let vm = this;
+
+                vm.progressUpdateData = [];
+
+                axios.get('/api/progress/update/'+vm.selectedTask.id)
+                    .then(function (response) {
+                        vm.progressUpdateData = response.data.progressUpdates;
+                    }).catch(function (error) {
+                    console.log(error);
+                });
             },
 
             postComment()
@@ -928,6 +1017,10 @@
                             vm.$refs.progressUpload.submit();
 
                             vm.$refs[formName].resetFields();
+
+                            vm.getTaskProgressUpdate();
+
+                            vm.updateTaskProgressDialogVisible = false;
                         }
                         else {
                             axios.post('/activity/progress/update', {
@@ -941,6 +1034,11 @@
                                     vm.progressFile = false;
 
                                     if (response.data.success) {
+
+                                        vm.getTaskProgressUpdate();
+
+                                        vm.updateTaskProgressDialogVisible = false;
+
                                         vm.$message({
                                             type: 'success',
                                             message: response.data.message
@@ -1065,6 +1163,12 @@
 <style>
     .comment-container .el-dialog__body {
         padding: 20px 20px;
+        max-height: 700px;
+        overflow: hidden;
+        overflow-y: scroll;
+    }
+
+    .task-progress-update .el-dialog__body{
         max-height: 700px;
         overflow: hidden;
         overflow-y: scroll;

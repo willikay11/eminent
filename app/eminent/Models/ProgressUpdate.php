@@ -43,4 +43,9 @@ class ProgressUpdate extends Model
     {
         return $this->belongsTo(ProgressUpdateStatus::class);
     }
+
+    public function progressUpdateFiles()
+    {
+        return $this->hasMany(ProgressUpdateFile::class);
+    }
 }

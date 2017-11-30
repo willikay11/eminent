@@ -180,7 +180,6 @@ class ActivitiesController extends Controller
         ]);
     }
 
-
     public function storeProgressUpdate(Request $request)
     {
         $input = [
@@ -231,6 +230,28 @@ class ActivitiesController extends Controller
 
     }
 
+    public function getProgressUpdate($activityId)
+    {
+        $progressUpdates = $this->progressUpdateRepository->getProgressUpdatesByActivityId($activityId);
+
+        $progressUpdates = $progressUpdates->map(function ($progressUpdate)
+        {
+            return [
+                'name' => $progressUpdate->name,
+                'description' => $progressUpdate->description,
+                'percentage' => $progressUpdate->percentage,
+                'progress_update_status_id' => $progressUpdate->progress_update_status_id,
+                'progress_files' => $this->getFile($progressUpdate->progressUpdateFiles)
+            ];
+        });
+
+        return self::toResponse(null, [
+            'success' => true,
+            'progressUpdates' => $progressUpdates
+        ]);
+    }
+
+
     public function updateActivityStatus(Request $request)
     {
         $activity = $this->activityRepository->updateActivities($request->get('activity_id'), $request->all());
@@ -266,7 +287,8 @@ class ActivitiesController extends Controller
                 'user_id' => $activity->user_id,
                 'comments' => $this->getActivityComments($activity->id),
                 'watchers' => $this->getActivityWatchers($activity->id),
-                'isWatcher' => ($this->activityWatcherRepository->getActivityWatcherByUserIdAndActivityId(Auth::id(), $activity->id) != null)?true:false
+                'isWatcher' => ($this->activityWatcherRepository->getActivityWatcherByUserIdAndActivityId(Auth::id(), $activity->id) != null)?true:false,
+                'countProgressUpdates' =>$activity->progressUpdates->count()
             ];
         })->groupBy('activity_status');
 
@@ -300,7 +322,6 @@ class ActivitiesController extends Controller
             $q->where('priority_type_id', $priority);
         }
 
-
         $activities = $q->get()->map(function ($activity)
         {
             return [
@@ -315,7 +336,8 @@ class ActivitiesController extends Controller
                 'user_id' => $activity->user_id,
                 'comments' => $this->getActivityComments($activity->id),
                 'watchers' => $this->getActivityWatchers($activity->id),
-                'isWatcher' => ($this->activityWatcherRepository->getActivityWatcherByUserIdAndActivityId(Auth::id(), $activity->id) != null)?true:false
+                'isWatcher' => ($this->activityWatcherRepository->getActivityWatcherByUserIdAndActivityId(Auth::id(), $activity->id) != null)?true:false,
+                'countProgressUpdates' =>$activity->progressUpdates->count()
             ];
         })->groupBy('activity_status');
 
@@ -325,6 +347,7 @@ class ActivitiesController extends Controller
             'message' => 'Search Completed'
         ]);
     }
+
     public function getActivityComments($activityId)
     {
         $comments = $this->commentsRepository->getCommentByActivityId($activityId);
@@ -337,12 +360,12 @@ class ActivitiesController extends Controller
                 'username' => $comment->user->present()->fullName,
                 'time' => Carbon::parse($comment->created_at)->format('l jS F Y, h:i A'),
                 'avatar' => '../../images/avatar_circle_blue.png',
-                'files' => $this->getCommentFile($comment->files)
+                'files' => $this->getFile($comment->files)
             ];
         });
     }
 
-    public function getCommentFile($files)
+    public function getFile($files)
     {
         return $files->map(function ($file)
         {
@@ -405,7 +428,7 @@ class ActivitiesController extends Controller
                 'username' => $comment->user->present()->fullName,
                 'time' => Carbon::parse($comment->created_at)->format('l jS F Y, h:i A'),
                 'avatar' => '../../images/avatar_circle_blue.png',
-                'files' => $this->getCommentFile($comment->files)
+                'files' => $this->getFile($comment->files)
             ];
 
             event(new TaskCommentPosted($comment));

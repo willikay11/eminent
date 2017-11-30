@@ -344,6 +344,10 @@ Route::group(['middleware' => 'auth'], function (){
     Route::post('/activity/progress/update', [
         'uses' => 'ActivitiesController@storeProgressUpdate'
     ]);
+
+    Route::get('/api/progress/update/{activityId}', [
+        'uses' => 'ActivitiesController@getProgressUpdate'
+    ]);
     /*
      * Team
      */

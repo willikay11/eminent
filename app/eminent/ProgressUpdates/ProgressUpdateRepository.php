@@ -18,4 +18,9 @@ class ProgressUpdateRepository
     {
         return ProgressUpdate::create($input);
     }
+
+    public function getProgressUpdatesByActivityId($activityId)
+    {
+        return ProgressUpdate::where('activity_id', $activityId)->orderBy('created_at', 'DESC')->get();
+    }
 }

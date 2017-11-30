@@ -69,4 +69,9 @@ class Activity extends Model
     {
         return $this->hasMany(ActivityWatcher::class);
     }
+
+    public function progressUpdates()
+    {
+        return $this->hasMany(ProgressUpdate::class);
+    }
 }
