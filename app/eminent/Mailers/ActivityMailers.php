@@ -22,7 +22,7 @@ class ActivityMailers
         });
     }
 
-    public static function taskProgressUpdated($data)
+    public static function taskStatusUpdated($data)
     {
         $data['subject'] = 'Eminent CRM : Task Status Update Notification';
 
@@ -37,6 +37,16 @@ class ActivityMailers
         $data['subject'] = 'Eminent CRM : Task Comment Posted Notification';
 
         Mail::send('emails.activities.taskCommentPosted', $data, function ($message) use ($data)
+        {
+            $message->to($data['to'])->subject($data['subject'])->cc($data['cc']);
+        });
+    }
+
+    public static function taskProgressUpdated($data)
+    {
+        $data['subject'] = 'Eminent CRM : Task Progress Updated Notification';
+
+        Mail::send('emails.activities.taskProgressUpdated', $data, function ($message) use ($data)
         {
             $message->to($data['to'])->subject($data['subject'])->cc($data['cc']);
         });

@@ -11,6 +11,7 @@ namespace App\Http\Controllers;
 
 use App\Events\Activities\TaskAssigned;
 use App\Events\Activities\TaskCommentPosted;
+use App\Events\Activities\TaskProgressUpdated;
 use App\Events\Activities\TaskStatusUpdated;
 use Carbon\Carbon;
 use eminent\Activities\ActivityRepository;
@@ -187,7 +188,8 @@ class ActivitiesController extends Controller
             'description' => $request->get('description'),
             'percentage' => $request->get('percentage'),
             'activity_id' => $request->get('activity_id'),
-            'progress_update_status_id' => 1
+            'progress_update_status_id' => 1,
+            'user_id' => Auth::id()
         ];
 
         $progressUpdate = $this->progressUpdateRepository->create($input);
@@ -217,6 +219,8 @@ class ActivitiesController extends Controller
 
         if ($progressUpdate)
         {
+            event(new TaskProgressUpdated($progressUpdate));
+
             return  self::toResponse(null, [
                 'success' => true,
                 'message' => 'Progress update added successfully'

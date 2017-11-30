@@ -1035,14 +1035,14 @@
 
                                     if (response.data.success) {
 
-                                        vm.getTaskProgressUpdate();
-
-                                        vm.updateTaskProgressDialogVisible = false;
-
                                         vm.$message({
                                             type: 'success',
                                             message: response.data.message
                                         });
+
+                                        vm.getTaskProgressUpdate();
+
+                                        vm.updateTaskProgressDialogVisible = false;
 
                                         vm.$refs[formName].resetFields();
                                     }

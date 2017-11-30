@@ -25,7 +25,8 @@ class ProgressUpdate extends Model
         'description',
         'activity_id',
         'percentage',
-        'progress_update_status_id'
+        'progress_update_status_id',
+        'user_id'
     ];
 
     /**
@@ -47,5 +48,10 @@ class ProgressUpdate extends Model
     public function progressUpdateFiles()
     {
         return $this->hasMany(ProgressUpdateFile::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
