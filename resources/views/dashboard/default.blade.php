@@ -4,7 +4,7 @@
 
     <div class="wrapper">
         <!-- Sidebar Holder -->
-        <nav id="sidebar">
+        <nav id="sidebar" class="active">
             <div class="sidebar-header">
                 <h4>Eminent Business Group</h4>
                 <strong>EBG</strong>
@@ -12,7 +12,7 @@
 
             <ul class="list-unstyled components">
                 <li class="active">
-                    <a href="/" aria-expanded="false">
+                    <a href="/">
                         <i class="glyphicon glyphicon-home"></i>
                         Dashboard
                     </a>
@@ -22,7 +22,7 @@
                         <i class="glyphicon glyphicon-briefcase"></i>
                         Contacts
                     </a>
-                    <a href="/interactions/user" aria-expanded="false">
+                    <a href="/interactions/user">
                         <i class="glyphicon glyphicon-duplicate"></i>
                         Interactions
                     </a>
@@ -64,13 +64,13 @@
         <div id="content">
 
             <!-- Fixed navbar -->
-            <div id="fixedNav" class="navbar navbar-fixed-top" role="navigation">
+            <div id="fixedNav" class="navbar navbar-fixed-top active" role="navigation">
                     <div class="navbar-header">
                         <div class="navbar-left">
-                            <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
-                                <i class="glyphicon glyphicon-align-left"></i>
-                                <span></span>
-                            </button>
+                            {{--<button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">--}}
+                                {{--<i class="glyphicon glyphicon-align-left"></i>--}}
+                                {{--<span></span>--}}
+                            {{--</button>--}}
                         </div>
                     </div>
                     <div class="navbar-right" style="margin-right: 40px">

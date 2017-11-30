@@ -8670,6 +8670,18 @@ a.article:hover {
   }
 }
 
+@media (min-width: 992px) {
+  #sidebar {
+    min-width: 210px;
+    max-width: 210px;
+    text-align: center;
+  }
+
+  .navbar-fixed-top {
+    left: 215px !important;
+  }
+}
+
 .login-background {
   height: 100vh;
   width: 100vw;
@@ -8807,6 +8819,12 @@ a.article:hover {
 
   .logo-container {
     display: none;
+  }
+}
+
+@media (min-width: 992px) {
+  .navbar-fixed-top {
+    left: 210px !important;
   }
 }
 

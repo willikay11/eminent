@@ -90736,6 +90736,15 @@ exports.default = {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /***/ }),
 /* 167 */
@@ -90755,7 +90764,10 @@ var render = function() {
         [
           _c(
             "el-col",
-            { staticStyle: { "padding-left": "40px" }, attrs: { span: 12 } },
+            {
+              staticStyle: { "padding-left": "40px" },
+              attrs: { xs: 12, sm: 12, md: 12, lg: 12 }
+            },
             [_c("h4", [_vm._v("Contacts")])]
           ),
           _vm._v(" "),
@@ -90763,36 +90775,45 @@ var render = function() {
             "el-col",
             {
               staticStyle: { "text-align": "right", "padding-right": "40px" },
-              attrs: { span: 12 }
+              attrs: { xs: 12, sm: 12, md: 12, lg: 12 }
             },
             [
-              _c(
-                "button",
-                {
-                  staticClass: "btn ebg-button",
-                  staticStyle: { "margin-right": "20px" },
-                  on: {
-                    click: function($event) {
-                      _vm.showReassignContactsDialog()
+              _c("el-col", { attrs: { xs: 12, sm: 12, md: 12, lg: 12 } }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn ebg-button",
+                    staticStyle: { "margin-right": "20px" },
+                    on: {
+                      click: function($event) {
+                        _vm.showReassignContactsDialog()
+                      }
                     }
-                  }
-                },
-                [_vm._v("\n                Reassign Contact\n            ")]
-              ),
+                  },
+                  [
+                    _vm._v(
+                      "\n                    Reassign Contact\n                "
+                    )
+                  ]
+                )
+              ]),
               _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "btn ebg-button",
-                  on: {
-                    click: function($event) {
-                      _vm.showAddDialog()
+              _c("el-col", { attrs: { xs: 12, sm: 12, md: 12, lg: 12 } }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn ebg-button",
+                    on: {
+                      click: function($event) {
+                        _vm.showAddDialog()
+                      }
                     }
-                  }
-                },
-                [_vm._v("Add Contact")]
-              )
-            ]
+                  },
+                  [_vm._v("Add Contact")]
+                )
+              ])
+            ],
+            1
           )
         ],
         1
@@ -90806,7 +90827,7 @@ var render = function() {
         [
           _c(
             "el-row",
-            { attrs: { gutter: 20 } },
+            { attrs: { xs: 24, sm: 24, md: 24, lg: 24, gutter: 20 } },
             [
               _c(
                 "el-form",
@@ -90822,7 +90843,7 @@ var render = function() {
                 [
                   _c(
                     "el-col",
-                    { attrs: { span: 2 } },
+                    { attrs: { xs: 2, sm: 1, md: 1, lg: 2 } },
                     [
                       _c("el-form-item", {
                         attrs: { prop: "filter", label: "Filter By:" }
@@ -90833,7 +90854,7 @@ var render = function() {
                   _vm._v(" "),
                   _c(
                     "el-col",
-                    { attrs: { span: 5 } },
+                    { attrs: { xs: 3, sm: 2, md: 3, lg: 4 } },
                     [
                       _c(
                         "el-form-item",
@@ -90858,7 +90879,7 @@ var render = function() {
                   _vm._v(" "),
                   _c(
                     "el-col",
-                    { attrs: { span: 5 } },
+                    { attrs: { xs: 3, sm: 2, md: 3, lg: 4 } },
                     [
                       _c(
                         "el-form-item",
@@ -90883,7 +90904,7 @@ var render = function() {
                   _vm._v(" "),
                   _c(
                     "el-col",
-                    { attrs: { span: 5 } },
+                    { attrs: { xs: 3, sm: 2, md: 3, lg: 4 } },
                     [
                       _c(
                         "el-form-item",
@@ -90917,7 +90938,7 @@ var render = function() {
                   _vm._v(" "),
                   _c(
                     "el-col",
-                    { attrs: { span: 5 } },
+                    { attrs: { xs: 3, sm: 2, md: 3, lg: 4 } },
                     [
                       _c(
                         "el-form-item",
@@ -90951,7 +90972,7 @@ var render = function() {
                   _vm._v(" "),
                   _c(
                     "el-col",
-                    { attrs: { span: 2 } },
+                    { attrs: { xs: 1, sm: 1, md: 1, lg: 2 } },
                     [
                       _c(
                         "el-form-item",
@@ -90977,33 +90998,39 @@ var render = function() {
                       )
                     ],
                     1
-                  )
-                ],
-                1
-              )
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "el-row",
-            { staticStyle: { "padding-left": "30px" } },
-            [
-              _c(
-                "el-col",
-                { attrs: { span: 2 } },
-                [
+                  ),
+                  _vm._v(" "),
                   _c(
-                    "el-button",
-                    {
-                      attrs: { type: "primary" },
-                      on: {
-                        click: function($event) {
-                          _vm.exportContacts()
-                        }
-                      }
-                    },
-                    [_vm._v("Export")]
+                    "el-col",
+                    { attrs: { xs: 1, sm: 1, md: 1, lg: 2 } },
+                    [
+                      _c(
+                        "el-form-item",
+                        {
+                          staticStyle: {
+                            "margin-top": "30px",
+                            "margin-left": "20px"
+                          },
+                          attrs: { prop: "search" }
+                        },
+                        [
+                          _c(
+                            "el-button",
+                            {
+                              attrs: { type: "primary" },
+                              on: {
+                                click: function($event) {
+                                  _vm.exportContacts()
+                                }
+                              }
+                            },
+                            [_vm._v("Export")]
+                          )
+                        ],
+                        1
+                      )
+                    ],
+                    1
                   )
                 ],
                 1

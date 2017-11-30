@@ -11,6 +11,7 @@
 .content-container{
   margin-top: 100px;
 }
+
 @media (max-width: 768px) {
   .navbar-fixed-top {
     left: 0px !important;
@@ -18,5 +19,11 @@
 
   .logo-container{
     display: none;
+  }
+}
+
+@media (min-width: 992px) {
+  .navbar-fixed-top{
+    left: 210px !important;
   }
 }

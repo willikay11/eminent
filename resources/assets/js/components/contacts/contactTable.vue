@@ -1,14 +1,18 @@
 <template>
     <div class="panel panel-default">
         <el-row class="panel-header">
-            <el-col :span="12" style="padding-left: 40px">
+            <el-col :xs="12" :sm="12" :md="12" :lg="12" style="padding-left: 40px">
                 <h4>Contacts</h4>
             </el-col>
-            <el-col :span="12" style="text-align: right; padding-right: 40px">
-                <button class="btn ebg-button" v-on:click="showReassignContactsDialog()" style="margin-right: 20px">
-                    Reassign Contact
-                </button>
-                <button class="btn ebg-button" v-on:click="showAddDialog()">Add Contact</button>
+            <el-col :xs="12" :sm="12" :md="12" :lg="12" style="text-align: right; padding-right: 40px">
+                <el-col :xs="12" :sm="12" :md="12" :lg="12">
+                    <button class="btn ebg-button" v-on:click="showReassignContactsDialog()" style="margin-right: 20px">
+                        Reassign Contact
+                    </button>
+                </el-col>
+                <el-col :xs="12" :sm="12" :md="12" :lg="12">
+                    <button class="btn ebg-button" v-on:click="showAddDialog()">Add Contact</button>
+                </el-col>
             </el-col>
         </el-row>
 
@@ -18,16 +22,16 @@
 
         <div class="panel-body">
 
-            <el-row :gutter="20">
+            <el-row :xs="24" :sm="24" :md="24" :lg="24" :gutter="20">
                 <el-form :model="searchForm" :rules="searchRules" ref="searchForm" label-position="top"
                          style="padding-left: 30px">
 
-                    <el-col :span="2">
+                    <el-col :xs="2" :sm="1" :md="1" :lg="2">
                         <el-form-item prop="filter" label="Filter By:">
                         </el-form-item>
                     </el-col>
 
-                    <el-col :span="5">
+                    <el-col :xs="3" :sm="2" :md="3" :lg="4">
                         <el-form-item prop="startDate" label="From date:">
                             <el-date-picker
                                     v-model="searchForm.startDate"
@@ -37,7 +41,7 @@
                         </el-form-item>
                     </el-col>
 
-                    <el-col :span="5">
+                    <el-col :xs="3" :sm="2" :md="3" :lg="4">
                         <el-form-item prop="endDate" label="To date:">
                             <el-date-picker
                                     v-model="searchForm.endDate"
@@ -47,7 +51,7 @@
                         </el-form-item>
                     </el-col>
 
-                    <el-col :span="5">
+                    <el-col :xs="3" :sm="2" :md="3" :lg="4">
                         <el-form-item prop="source" label="Source:">
                             <el-select v-model="searchForm.source" placeholder="Select source">
                                 <el-option
@@ -60,7 +64,7 @@
                         </el-form-item>
                     </el-col>
 
-                    <el-col :span="5">
+                    <el-col :xs="3" :sm="2" :md="3" :lg="4">
                         <el-form-item prop="source" label="Status:">
                             <el-select v-model="searchForm.status" placeholder="Select status">
                                 <el-option
@@ -73,20 +77,25 @@
                         </el-form-item>
                     </el-col>
 
-                    <el-col :span="2">
+                    <el-col :xs="1" :sm="1" :md="1" :lg="2">
                         <el-form-item prop="search" style="margin-top: 30px">
                             <el-button type="primary" @click="searchContacts()">Search</el-button>
                         </el-form-item>
                     </el-col>
 
+                    <el-col :xs="1" :sm="1" :md="1" :lg="2">
+                        <el-form-item prop="search" style="margin-top: 30px; margin-left: 20px">
+                            <el-button type="primary" @click="exportContacts()">Export</el-button>
+                        </el-form-item>
+                    </el-col>
                 </el-form>
             </el-row>
 
-            <el-row style="padding-left: 30px">
-                <el-col :span="2">
-                    <el-button type="primary" @click="exportContacts()">Export</el-button>
-                </el-col>
-            </el-row>
+            <!--<el-row style="padding-left: 30px">-->
+                <!--<el-col :span="2">-->
+                    <!--<el-button type="primary" @click="exportContacts()">Export</el-button>-->
+                <!--</el-col>-->
+            <!--</el-row>-->
 
             <div class="col-lg-12">
                 <hr>

@@ -253,3 +253,16 @@ a.article, a.article:hover {
     display: none;
   }
 }
+
+@media (min-width: 992px) {
+  #sidebar {
+    min-width: 210px;
+    max-width: 210px;
+    text-align: center;
+    //margin-left: -80px !important ;
+  }
+
+  .navbar-fixed-top{
+    left: 215px !important;
+  }
+}
