@@ -20,6 +20,8 @@ use eminent\Comments\CommentsRepository;
 use eminent\Models\Activity;
 use eminent\Models\ActivityWatcher;
 use eminent\Models\PriorityType;
+use eminent\ProgressUpdates\ProgressUpdateRepository;
+use eminent\ProjectUpdateFiles\ProjectUpdateFilesRepository;
 use eminent\Users\UsersRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -49,13 +51,23 @@ class ActivitiesController extends Controller
      * @var ActivityWatcherRepository
      */
     private $activityWatcherRepository;
+    /**
+     * @var ProgressUpdateRepository
+     */
+    private $progressUpdateRepository;
+    /**
+     * @var ProjectUpdateFilesRepository
+     */
+    private $projectUpdateFilesRepository;
 
 
     public function __construct(UsersRepository $usersRepository,
                                 ActivityRepository $activityRepository,
                                 CommentsRepository $commentsRepository,
                                 ActivityFileRepository $activityFileRepository,
-                                ActivityWatcherRepository $activityWatcherRepository)
+                                ActivityWatcherRepository $activityWatcherRepository,
+                                ProgressUpdateRepository $progressUpdateRepository,
+                                ProjectUpdateFilesRepository $projectUpdateFilesRepository)
     {
 
         $this->usersRepository = $usersRepository;
@@ -63,6 +75,8 @@ class ActivitiesController extends Controller
         $this->commentsRepository = $commentsRepository;
         $this->activityFileRepository = $activityFileRepository;
         $this->activityWatcherRepository = $activityWatcherRepository;
+        $this->progressUpdateRepository = $progressUpdateRepository;
+        $this->projectUpdateFilesRepository = $projectUpdateFilesRepository;
     }
 
     public function index($userId = null)
@@ -166,6 +180,56 @@ class ActivitiesController extends Controller
         ]);
     }
 
+
+    public function storeProgressUpdate(Request $request)
+    {
+        $input = [
+            'name' => 'Progress Update as at '.Carbon::now()->toDateTimeString(),
+            'description' => $request->get('description'),
+            'percentage' => $request->get('percentage'),
+            'activity_id' => $request->get('activity_id'),
+            'progress_update_status_id' => 1
+        ];
+
+        $progressUpdate = $this->progressUpdateRepository->create($input);
+
+        if (!is_null($request->file('file')))
+        {
+            $file = $request->file('file');
+
+            if ($file->isValid()) {
+
+                $fileName = $file->getClientOriginalName();
+
+                $fileExtension = $file->getClientMimeType();
+
+                $filePath = Storage::putFile('/uploads/progress/updates', $file);
+
+                $fileInput = [
+                    'progress_update_id' => $progressUpdate->id,
+                    'name' => $fileName,
+                    'extension' => $fileExtension,
+                    'path' => '/storage/'.$filePath
+                ];
+
+                $this->projectUpdateFilesRepository->save($fileInput);
+            }
+        }
+
+        if ($progressUpdate)
+        {
+            return  self::toResponse(null, [
+                'success' => true,
+                'message' => 'Progress update added successfully'
+            ]);
+        }
+
+        return self::toResponse(null, [
+            'success' => false,
+            'message' => 'Oops! Progress update not added'
+        ]);
+
+    }
 
     public function updateActivityStatus(Request $request)
     {

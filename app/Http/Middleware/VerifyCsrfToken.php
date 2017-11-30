@@ -12,6 +12,7 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
     protected $except = [
-        '/activity/comment'
+        '/activity/comment',
+        '/activity/progress/update'
     ];
 }

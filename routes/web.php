@@ -341,6 +341,9 @@ Route::group(['middleware' => 'auth'], function (){
         'uses' => 'ActivitiesController@search'
     ]);
 
+    Route::post('/activity/progress/update', [
+        'uses' => 'ActivitiesController@storeProgressUpdate'
+    ]);
     /*
      * Team
      */

@@ -95108,7 +95108,7 @@ exports = module.exports = __webpack_require__(0)(undefined);
 
 
 // module
-exports.push([module.i, "\n.comment-container .el-dialog__body {\n    padding: 20px 20px;\n    max-height: 700px;\n    overflow: hidden;\n    overflow-y: scroll;\n}\n.el-select {\n    width: 100%;\n}\n.el-date-editor.el-input {\n    width: 100%;\n}\n.dragArea {\n    min-height: 50px;\n}\n.dragElements {\n    margin: 15px 10px 0px 10px;\n    background-color: #ffffff;\n    min-height: 100px;\n    border-radius: 5px;\n    color: black;\n    padding: 10px;\n}\n.element-container {\n    margin-top: 20px;\n    margin-bottom: 20px;\n}\n.to-do-panel {\n    border-color: transparent;\n    border-top: 5px solid #e43e52;\n    background-color: #f7f8fc !important;\n}\n.panel-heading {\n    color: black !important;\n    background-color: transparent !important;\n    border-color: transparent !important;\n}\n.in-progress-panel {\n    border-color: transparent;\n    border-top: 5px solid #f5a622;\n    background-color: #f7f8fc !important;\n}\n.in-review-panel {\n    border-color: transparent;\n    border-top: 5px solid #4b8fe3;\n    background-color: #f7f8fc !important;\n}\n.done-panel {\n    border-color: transparent;\n    border-top: 5px solid #12884b;\n    background-color: #f7f8fc !important;\n}\n.low-priority-span {\n    padding: 5px 10px 5px 10px;\n    background-color: #4b8fe3;\n    color: white;\n    border-radius: 5px;\n    font-size: 12px;\n}\n.med-priority-span {\n    padding: 5px 10px 5px 10px;\n    background-color: #12884b;\n    color: white;\n    border-radius: 5px;\n    font-size: 12px;\n}\n.high-priority-span {\n    padding: 5px 10px 5px 10px;\n    background-color: #e43e52;\n    color: white;\n    border-radius: 5px;\n    font-size: 12px;\n}\n.chat {\n    list-style: none;\n    background: none;\n    margin: 0;\n    margin-top: 60px;\n    margin-bottom: 50px;\n    min-height: 500px;\n    overflow: auto;\n}\n.chat li {\n    padding: 0.5rem;\n    overflow: hidden;\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n}\n.chat .avatar {\n    width: 40px;\n    height: 40px;\n    position: relative;\n    display: block;\n    z-index: 2;\n    border-radius: 100%;\n    -webkit-border-radius: 100%;\n    -moz-border-radius: 100%;\n    -ms-border-radius: 100%;\n    background-color: rgba(255, 255, 255, 0.9);\n}\n.chat .avatar img {\n    width: 40px;\n    height: 40px;\n    border-radius: 100%;\n    -webkit-border-radius: 100%;\n    -moz-border-radius: 100%;\n    -ms-border-radius: 100%;\n    background-color: rgba(255, 255, 255, 0.9);\n    -webkit-touch-callout: none;\n    -webkit-user-select: none;\n    -moz-user-select: none;\n    -ms-user-select: none;\n}\n.other .msg {\n    -webkit-box-ordinal-group: 2;\n        -ms-flex-order: 1;\n            order: 1;\n    margin-left: 15px;\n    border-top-left-radius: 0px;\n    -webkit-box-shadow: -1px 2px 0px #d7e8f9;\n            box-shadow: -1px 2px 0px #d7e8f9;\n}\n.other:before {\n    content: \"\";\n    position: relative;\n    top: 0px;\n    right: 0px;\n    left: 53px;\n    width: 0px;\n    height: 0px;\n    border: 5px solid #f6f8fa;\n    border-left-color: transparent;\n    border-bottom-color: transparent;\n}\n.self {\n    -webkit-box-pack: end;\n        -ms-flex-pack: end;\n            justify-content: flex-end;\n    -webkit-box-align: end;\n        -ms-flex-align: end;\n            align-items: flex-end;\n}\n.self .msg {\n    -webkit-box-ordinal-group: 2;\n        -ms-flex-order: 1;\n            order: 1;\n    margin-right: 15px;\n    background-color: #d7e8f9;\n    border-bottom-right-radius: 0px;\n    -webkit-box-shadow: 1px 2px 0px #d7e8f9;\n            box-shadow: 1px 2px 0px #d7e8f9;\n}\n.self .avatar {\n    -webkit-box-ordinal-group: 3;\n        -ms-flex-order: 2;\n            order: 2;\n}\n.self .avatar:after {\n    content: \"\";\n    position: relative;\n    display: inline-block;\n    bottom: 19px;\n    right: 15px;\n    width: 0px;\n    height: 0px;\n    border: 5px solid #fff;\n    border-left-color: #d7e8f9;\n    border-right-color: transparent;\n    border-top-color: transparent;\n    border-bottom-color: #d7e8f9;\n    -webkit-box-shadow: 0px 2px 0px #d7e8f9;\n            box-shadow: 0px 2px 0px #d7e8f9;\n}\n.msg {\n    background: #f6f8fa;\n    min-width: 50px;\n    padding: 10px;\n    border-radius: 2px;\n    -webkit-box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.07);\n            box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.07);\n}\n.msg p {\n    font-size: 14px;\n    letter-spacing: 1px;\n    margin: 0 0 0.2rem 0;\n    color: #777;\n}\n.msg .name {\n    font-size: 0.7em;\n    color: #0000fe;\n}\n.msg img {\n    position: relative;\n    display: block;\n    width: 300px;\n    border-radius: 5px;\n    -webkit-box-shadow: 0px 0px 3px #eee;\n            box-shadow: 0px 0px 3px #eee;\n    -webkit-transition: all .4s cubic-bezier(0.565, -0.260, 0.255, 1.410);\n    transition: all .4s cubic-bezier(0.565, -0.260, 0.255, 1.410);\n    cursor: default;\n    -webkit-touch-callout: none;\n    -webkit-user-select: none;\n    -moz-user-select: none;\n    -ms-user-select: none;\n}\n@media screen and (max-width: 800px) {\n.msg img {\n        width: 300px;\n}\n}\n@media screen and (max-width: 550px) {\n.msg img {\n        width: 200px;\n}\n}\n.msg img:hover {\n    opacity: 0.4;\n}\n.msg time {\n    font-size: 13px;\n    color: #777;;\n    margin-top: 5px;\n    float: right;\n    cursor: default;\n    -webkit-touch-callout: none;\n    -webkit-user-select: none;\n    -moz-user-select: none;\n    -ms-user-select: none;\n}\n.msg time:before {\n    content: \"\\F017\";\n    color: #777;\n    font-family: FontAwesome;\n    display: inline-block;\n    margin-right: 4px;\n}\n.msg .edit {\n    font-size: 12px;\n    color: #777;;\n    margin-top: 5px;\n    float: left;\n}\n.chat-comments-control input[type=\"text\"].comment-box {\n    bottom: 0;\n    width: 90%;\n    padding: 5px;\n    font-size: 0.9rem;\n    color: #777;\n    height: 50px;\n    float: left;\n    background-color: transparent !important;\n    border-style: none !important;\n    border-color: transparent !important;\n    -webkit-box-shadow: none !important;\n            box-shadow: none !important;\n}\ninput[type=\"submit\"] .send {\n    background-color: #42ff55;\n}\n.chat-comments-control {\n    border-top: solid 1px #d7e8f9;\n    width: 90%;\n    height: 50px;\n    border-radius: 2px;\n    margin: auto;\n    margin-top: 5px;\n}\n.attachbox {\n    float: left;\n    width: 70px;\n    height: 100%;\n    margin-right: 10px;\n}\n.attachbox .clip {\n    color: #d7e8f9;\n    font-size: 25px;\n    margin-top: 10px;\n    float: right;\n}\n.attachbox .image {\n    color: #d7e8f9;\n    font-size: 25px;\n    margin-top: 10px;\n    float: left;\n}\n.sendbox {\n    float: right;\n    width: 20px;\n    height: 100%;\n    margin-right: 10px;\n}\n.sendbox .send {\n    color: #d7e8f9;\n    font-size: 25px;\n    background-color: white;\n    float: left;\n}\n.clip:hover {\n    font-size: 35px;\n}\n.image:hover {\n    font-size: 35px;\n}\n.holder {\n    width: 80%;\n    background: white;\n    position: fixed;\n    bottom: 0;\n    margin-left: -1%;\n    margin-top: 10px;\n    height: 80px;\n}\n.load-more {\n    background-color: #66b0fb;\n    margin-left: 200px;\n    margin-right: 200px;\n    margin-top: 10px;\n    margin-bottom: 10px;\n}\n.load-more:hover {\n    background-color: #4c91d7;\n}\n.component-users {\n    background: #006B5B;\n    color: #FFFFFF;\n    margin-right: 5px;\n    font-weight: 300;\n    padding: 2px 10px;\n    border-radius: 3px;\n    line-height: 20px;\n    font-size: 12px;\n    display: -webkit-inline-box;\n    display: -ms-inline-flexbox;\n    display: inline-flex;\n    margin-top: 10px;\n}\n.component-remove {\n    margin-left: 5px;\n    border-left: solid white 1px;\n    padding-left: 5px;\n    color: #ffffff;\n}\n.el-upload__input {\n    display: none !important;\n}\n.el-upload-list__item-name {\n    background-color: transparent !important;\n}\n.font-icon {\n    font-size: 20px;\n    color: #1b6d85;\n}\n", ""]);
+exports.push([module.i, "\n.comment-container .el-dialog__body {\n    padding: 20px 20px;\n    max-height: 700px;\n    overflow: hidden;\n    overflow-y: scroll;\n}\n.el-select {\n    width: 100%;\n}\n.el-date-editor.el-input {\n    width: 100%;\n}\n.el-input-number{\n    width: 100%;\n}\n.dragArea {\n    min-height: 50px;\n}\n.dragElements {\n    margin: 15px 10px 0px 10px;\n    background-color: #ffffff;\n    min-height: 100px;\n    border-radius: 5px;\n    color: black;\n    padding: 10px;\n}\n.element-container {\n    margin-top: 20px;\n    margin-bottom: 20px;\n}\n.to-do-panel {\n    border-color: transparent;\n    border-top: 5px solid #e43e52;\n    background-color: #f7f8fc !important;\n}\n.panel-heading {\n    color: black !important;\n    background-color: transparent !important;\n    border-color: transparent !important;\n}\n.in-progress-panel {\n    border-color: transparent;\n    border-top: 5px solid #f5a622;\n    background-color: #f7f8fc !important;\n}\n.in-review-panel {\n    border-color: transparent;\n    border-top: 5px solid #4b8fe3;\n    background-color: #f7f8fc !important;\n}\n.done-panel {\n    border-color: transparent;\n    border-top: 5px solid #12884b;\n    background-color: #f7f8fc !important;\n}\n.low-priority-span {\n    padding: 5px 10px 5px 10px;\n    background-color: #4b8fe3;\n    color: white;\n    border-radius: 5px;\n    font-size: 12px;\n}\n.med-priority-span {\n    padding: 5px 10px 5px 10px;\n    background-color: #12884b;\n    color: white;\n    border-radius: 5px;\n    font-size: 12px;\n}\n.high-priority-span {\n    padding: 5px 10px 5px 10px;\n    background-color: #e43e52;\n    color: white;\n    border-radius: 5px;\n    font-size: 12px;\n}\n.chat {\n    list-style: none;\n    background: none;\n    margin: 0;\n    margin-top: 60px;\n    margin-bottom: 50px;\n    min-height: 500px;\n    overflow: auto;\n}\n.chat li {\n    padding: 0.5rem;\n    overflow: hidden;\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n}\n.chat .avatar {\n    width: 40px;\n    height: 40px;\n    position: relative;\n    display: block;\n    z-index: 2;\n    border-radius: 100%;\n    -webkit-border-radius: 100%;\n    -moz-border-radius: 100%;\n    -ms-border-radius: 100%;\n    background-color: rgba(255, 255, 255, 0.9);\n}\n.chat .avatar img {\n    width: 40px;\n    height: 40px;\n    border-radius: 100%;\n    -webkit-border-radius: 100%;\n    -moz-border-radius: 100%;\n    -ms-border-radius: 100%;\n    background-color: rgba(255, 255, 255, 0.9);\n    -webkit-touch-callout: none;\n    -webkit-user-select: none;\n    -moz-user-select: none;\n    -ms-user-select: none;\n}\n.other .msg {\n    -webkit-box-ordinal-group: 2;\n        -ms-flex-order: 1;\n            order: 1;\n    margin-left: 15px;\n    border-top-left-radius: 0px;\n    -webkit-box-shadow: -1px 2px 0px #d7e8f9;\n            box-shadow: -1px 2px 0px #d7e8f9;\n}\n.other:before {\n    content: \"\";\n    position: relative;\n    top: 0px;\n    right: 0px;\n    left: 53px;\n    width: 0px;\n    height: 0px;\n    border: 5px solid #f6f8fa;\n    border-left-color: transparent;\n    border-bottom-color: transparent;\n}\n.self {\n    -webkit-box-pack: end;\n        -ms-flex-pack: end;\n            justify-content: flex-end;\n    -webkit-box-align: end;\n        -ms-flex-align: end;\n            align-items: flex-end;\n}\n.self .msg {\n    -webkit-box-ordinal-group: 2;\n        -ms-flex-order: 1;\n            order: 1;\n    margin-right: 15px;\n    background-color: #d7e8f9;\n    border-bottom-right-radius: 0px;\n    -webkit-box-shadow: 1px 2px 0px #d7e8f9;\n            box-shadow: 1px 2px 0px #d7e8f9;\n}\n.self .avatar {\n    -webkit-box-ordinal-group: 3;\n        -ms-flex-order: 2;\n            order: 2;\n}\n.self .avatar:after {\n    content: \"\";\n    position: relative;\n    display: inline-block;\n    bottom: 19px;\n    right: 15px;\n    width: 0px;\n    height: 0px;\n    border: 5px solid #fff;\n    border-left-color: #d7e8f9;\n    border-right-color: transparent;\n    border-top-color: transparent;\n    border-bottom-color: #d7e8f9;\n    -webkit-box-shadow: 0px 2px 0px #d7e8f9;\n            box-shadow: 0px 2px 0px #d7e8f9;\n}\n.msg {\n    background: #f6f8fa;\n    min-width: 50px;\n    padding: 10px;\n    border-radius: 2px;\n    -webkit-box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.07);\n            box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.07);\n}\n.msg p {\n    font-size: 14px;\n    letter-spacing: 1px;\n    margin: 0 0 0.2rem 0;\n    color: #777;\n}\n.msg .name {\n    font-size: 0.7em;\n    color: #0000fe;\n}\n.msg img {\n    position: relative;\n    display: block;\n    width: 300px;\n    border-radius: 5px;\n    -webkit-box-shadow: 0px 0px 3px #eee;\n            box-shadow: 0px 0px 3px #eee;\n    -webkit-transition: all .4s cubic-bezier(0.565, -0.260, 0.255, 1.410);\n    transition: all .4s cubic-bezier(0.565, -0.260, 0.255, 1.410);\n    cursor: default;\n    -webkit-touch-callout: none;\n    -webkit-user-select: none;\n    -moz-user-select: none;\n    -ms-user-select: none;\n}\n@media screen and (max-width: 800px) {\n.msg img {\n        width: 300px;\n}\n}\n@media screen and (max-width: 550px) {\n.msg img {\n        width: 200px;\n}\n}\n.msg img:hover {\n    opacity: 0.4;\n}\n.msg time {\n    font-size: 13px;\n    color: #777;;\n    margin-top: 5px;\n    float: right;\n    cursor: default;\n    -webkit-touch-callout: none;\n    -webkit-user-select: none;\n    -moz-user-select: none;\n    -ms-user-select: none;\n}\n.msg time:before {\n    content: \"\\F017\";\n    color: #777;\n    font-family: FontAwesome;\n    display: inline-block;\n    margin-right: 4px;\n}\n.msg .edit {\n    font-size: 12px;\n    color: #777;;\n    margin-top: 5px;\n    float: left;\n}\n.chat-comments-control input[type=\"text\"].comment-box {\n    bottom: 0;\n    width: 90%;\n    padding: 5px;\n    font-size: 0.9rem;\n    color: #777;\n    height: 50px;\n    float: left;\n    background-color: transparent !important;\n    border-style: none !important;\n    border-color: transparent !important;\n    -webkit-box-shadow: none !important;\n            box-shadow: none !important;\n}\ninput[type=\"submit\"] .send {\n    background-color: #42ff55;\n}\n.chat-comments-control {\n    border-top: solid 1px #d7e8f9;\n    width: 90%;\n    height: 50px;\n    border-radius: 2px;\n    margin: auto;\n    margin-top: 5px;\n}\n.attachbox {\n    float: left;\n    width: 70px;\n    height: 100%;\n    margin-right: 10px;\n}\n.attachbox .clip {\n    color: #d7e8f9;\n    font-size: 25px;\n    margin-top: 10px;\n    float: right;\n}\n.attachbox .image {\n    color: #d7e8f9;\n    font-size: 25px;\n    margin-top: 10px;\n    float: left;\n}\n.sendbox {\n    float: right;\n    width: 20px;\n    height: 100%;\n    margin-right: 10px;\n}\n.sendbox .send {\n    color: #d7e8f9;\n    font-size: 25px;\n    background-color: white;\n    float: left;\n}\n.clip:hover {\n    font-size: 35px;\n}\n.image:hover {\n    font-size: 35px;\n}\n.holder {\n    width: 80%;\n    background: white;\n    position: fixed;\n    bottom: 0;\n    margin-left: -1%;\n    margin-top: 10px;\n    height: 80px;\n}\n.load-more {\n    background-color: #66b0fb;\n    margin-left: 200px;\n    margin-right: 200px;\n    margin-top: 10px;\n    margin-bottom: 10px;\n}\n.load-more:hover {\n    background-color: #4c91d7;\n}\n.component-users {\n    background: #006B5B;\n    color: #FFFFFF;\n    margin-right: 5px;\n    font-weight: 300;\n    padding: 2px 10px;\n    border-radius: 3px;\n    line-height: 20px;\n    font-size: 12px;\n    display: -webkit-inline-box;\n    display: -ms-inline-flexbox;\n    display: inline-flex;\n    margin-top: 10px;\n}\n.component-remove {\n    margin-left: 5px;\n    border-left: solid white 1px;\n    padding-left: 5px;\n    color: #ffffff;\n}\n.el-upload__input {\n    display: none !important;\n}\n.el-upload-list__item-name {\n    background-color: transparent !important;\n}\n.font-icon {\n    font-size: 20px;\n    color: #1b6d85;\n}\n.el-badge__content.is-fixed {\n    top: 10px;\n    right: 18px;\n    position: absolute;\n    -webkit-transform: translateY(-50%) translateX(100%);\n            transform: translateY(-50%) translateX(100%);\n}\n", ""]);
 
 // exports
 
@@ -95136,8 +95136,15 @@ exports.default = {
     data: function data() {
         return {
             file: false,
+            progressFile: false,
             data: {
                 comment: '',
+                activity_id: ''
+            },
+            progressData: {
+                description: '',
+                status: '',
+                percentage: '',
                 activity_id: ''
             },
             input: '',
@@ -95151,6 +95158,7 @@ exports.default = {
             taskDialogVisible: false,
             watchTaskDialogVisible: false,
             commentsDialog: false,
+            updateTaskProgressDialogVisible: false,
             activity_status_id: '',
             targetElementName: '',
             draggedElement: '',
@@ -95166,6 +95174,11 @@ exports.default = {
                 value: '0',
                 label: 'Inactive'
             }],
+            progressRuleForm: {
+                description: '',
+                status: '',
+                percentage: ''
+            },
             ruleForm: {
                 name: '',
                 description: '',
@@ -95178,6 +95191,11 @@ exports.default = {
                 endDate: '',
                 user: '',
                 priority: ''
+            },
+            progressRules: {
+                description: [{ required: true, message: 'Please input progress description', trigger: 'blur' }],
+                percentage: [{ required: true, message: 'Please input progress percentage', trigger: 'blur', type: 'number' }],
+                status: [{ required: false, message: 'Please select progress status', trigger: 'change', type: 'number' }]
             },
             searchRules: {
                 startDate: [{ required: false, message: 'Please input start date', trigger: 'blur', type: 'date' }],
@@ -95213,6 +95231,11 @@ exports.default = {
 
             vm.file = false;
         },
+        removeProgressFileSelected: function removeProgressFileSelected() {
+            var vm = this;
+
+            vm.progressFile = false;
+        },
         checkIfFileIsSelected: function checkIfFileIsSelected(file) {
             var vm = this;
 
@@ -95224,6 +95247,22 @@ exports.default = {
                 vm.input = '';
 
                 vm.scrollToEnd();
+            }
+        },
+        checkIfProgressFileIsSelected: function checkIfProgressFileIsSelected(file, fileList) {
+            var vm = this;
+
+            if (fileList.length > 1) {
+                vm.progressFile = false;
+
+                vm.$message({
+                    type: 'error',
+                    message: 'You cannot upload multiple files'
+                });
+
+                fileList.pop();
+            } else {
+                vm.progressFile = true;
             }
         },
         showMove: function showMove(evt, originalEvent) {
@@ -95345,6 +95384,13 @@ exports.default = {
 
             vm.scrollToEnd();
         },
+        showTaskProgress: function showTaskProgress(task) {
+            var vm = this;
+
+            vm.updateTaskProgressDialogVisible = true;
+
+            vm.selectedTask = task;
+        },
         postComment: function postComment() {
             var vm = this;
 
@@ -95382,6 +95428,58 @@ exports.default = {
                     console.log(error);
                 });
             }
+        },
+        addProgressUpdate: function addProgressUpdate(formName) {
+            var _this2 = this;
+
+            this.$refs[formName].validate(function (valid) {
+                if (valid) {
+                    var vm = _this2;
+
+                    if (vm.progressFile) {
+
+                        vm.progressData.activity_id = vm.selectedTask.id;
+
+                        vm.progressData.description = vm.progressRuleForm.description;
+
+                        vm.progressData.status = vm.progressRuleForm.status;
+
+                        vm.progressData.percentage = vm.progressRuleForm.percentage;
+
+                        vm.$refs.progressUpload.submit();
+
+                        vm.$refs[formName].resetFields();
+                    } else {
+                        axios.post('/activity/progress/update', {
+                            activity_id: vm.selectedTask.id,
+                            description: vm.progressRuleForm.description,
+                            status: vm.progressRuleForm.status,
+                            percentage: vm.progressRuleForm.percentage
+                        }).then(function (response) {
+
+                            vm.progressFile = false;
+
+                            if (response.data.success) {
+                                vm.$message({
+                                    type: 'success',
+                                    message: response.data.message
+                                });
+
+                                vm.$refs[formName].resetFields();
+                            } else {
+                                vm.$message({
+                                    type: 'error',
+                                    message: response.data.message
+                                });
+                            }
+                        }).catch(function (error) {
+                            console.log(error);
+                        });
+                    }
+                } else {
+                    return false;
+                }
+            });
         },
         showTaskWatchDialog: function showTaskWatchDialog(task) {
             var vm = this;
@@ -95469,6 +95567,114 @@ exports.default = {
         }
     }
 }; //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -96188,8 +96394,9 @@ var render = function() {
                                     },
                                     [
                                       _c(
-                                        "el-button",
+                                        "a",
                                         {
+                                          attrs: { href: "#" },
                                           on: {
                                             click: function($event) {
                                               _vm.showTaskWatchDialog(element)
@@ -96203,8 +96410,7 @@ var render = function() {
                                           })
                                         ]
                                       )
-                                    ],
-                                    1
+                                    ]
                                   )
                                 ],
                                 1
@@ -96221,28 +96427,75 @@ var render = function() {
                             "el-row",
                             { attrs: { span: 24, gutter: 20 } },
                             [
-                              _c("el-col", { attrs: { span: 12 } }, [
-                                _c(
-                                  "button",
-                                  {
-                                    staticClass: "btn",
-                                    on: {
-                                      click: function($event) {
-                                        _vm.getSelectedTask(element)
-                                      }
-                                    }
-                                  },
-                                  [
-                                    _c("i", {
-                                      staticClass: "fa fa-comment font-icon",
-                                      attrs: { "aria-hidden": "true" }
-                                    }),
-                                    _vm._v(
-                                      "   " + _vm._s(element.comments.length)
-                                    )
-                                  ]
-                                )
-                              ])
+                              _c(
+                                "el-col",
+                                { attrs: { span: 4 } },
+                                [
+                                  _c(
+                                    "el-badge",
+                                    {
+                                      staticClass: "item",
+                                      attrs: { value: element.comments.length }
+                                    },
+                                    [
+                                      _c(
+                                        "button",
+                                        {
+                                          staticClass: "btn",
+                                          on: {
+                                            click: function($event) {
+                                              _vm.getSelectedTask(element)
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _c("i", {
+                                            staticClass:
+                                              "fa fa-comment font-icon",
+                                            attrs: { "aria-hidden": "true" }
+                                          })
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "el-col",
+                                { attrs: { span: 4 } },
+                                [
+                                  _c(
+                                    "el-badge",
+                                    {
+                                      staticClass: "item",
+                                      attrs: { value: element.comments.length }
+                                    },
+                                    [
+                                      _c(
+                                        "button",
+                                        {
+                                          staticClass: "btn",
+                                          on: {
+                                            click: function($event) {
+                                              _vm.showTaskProgress(element)
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _c("i", {
+                                            staticClass:
+                                              "fa fa-tasks font-icon",
+                                            attrs: { "aria-hidden": "true" }
+                                          })
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                ],
+                                1
+                              )
                             ],
                             1
                           )
@@ -96369,8 +96622,9 @@ var render = function() {
                                       },
                                       [
                                         _c(
-                                          "el-button",
+                                          "a",
                                           {
+                                            attrs: { href: "#" },
                                             on: {
                                               click: function($event) {
                                                 _vm.showTaskWatchDialog(element)
@@ -96384,8 +96638,7 @@ var render = function() {
                                             })
                                           ]
                                         )
-                                      ],
-                                      1
+                                      ]
                                     )
                                   ],
                                   1
@@ -96402,28 +96655,42 @@ var render = function() {
                               "el-row",
                               { attrs: { span: 24, gutter: 20 } },
                               [
-                                _c("el-col", { attrs: { span: 12 } }, [
-                                  _c(
-                                    "button",
-                                    {
-                                      staticClass: "btn",
-                                      on: {
-                                        click: function($event) {
-                                          _vm.getSelectedTask(element)
+                                _c(
+                                  "el-col",
+                                  { attrs: { span: 12 } },
+                                  [
+                                    _c(
+                                      "el-badge",
+                                      {
+                                        staticClass: "item",
+                                        attrs: {
+                                          value: element.comments.length
                                         }
-                                      }
-                                    },
-                                    [
-                                      _c("i", {
-                                        staticClass: "fa fa-comment font-icon",
-                                        attrs: { "aria-hidden": "true" }
-                                      }),
-                                      _vm._v(
-                                        "   " + _vm._s(element.comments.length)
-                                      )
-                                    ]
-                                  )
-                                ])
+                                      },
+                                      [
+                                        _c(
+                                          "button",
+                                          {
+                                            staticClass: "btn",
+                                            on: {
+                                              click: function($event) {
+                                                _vm.getSelectedTask(element)
+                                              }
+                                            }
+                                          },
+                                          [
+                                            _c("i", {
+                                              staticClass:
+                                                "fa fa-comment font-icon",
+                                              attrs: { "aria-hidden": "true" }
+                                            })
+                                          ]
+                                        )
+                                      ]
+                                    )
+                                  ],
+                                  1
+                                )
                               ],
                               1
                             )
@@ -96517,8 +96784,9 @@ var render = function() {
                                     },
                                     [
                                       _c(
-                                        "el-button",
+                                        "a",
                                         {
+                                          attrs: { href: "#" },
                                           on: {
                                             click: function($event) {
                                               _vm.showTaskWatchDialog(element)
@@ -96532,8 +96800,7 @@ var render = function() {
                                           })
                                         ]
                                       )
-                                    ],
-                                    1
+                                    ]
                                   )
                                 ],
                                 1
@@ -96550,28 +96817,40 @@ var render = function() {
                             "el-row",
                             { attrs: { span: 24, gutter: 20 } },
                             [
-                              _c("el-col", { attrs: { span: 12 } }, [
-                                _c(
-                                  "button",
-                                  {
-                                    staticClass: "btn",
-                                    on: {
-                                      click: function($event) {
-                                        _vm.getSelectedTask(element)
-                                      }
-                                    }
-                                  },
-                                  [
-                                    _c("i", {
-                                      staticClass: "fa fa-comment font-icon",
-                                      attrs: { "aria-hidden": "true" }
-                                    }),
-                                    _vm._v(
-                                      "   " + _vm._s(element.comments.length)
-                                    )
-                                  ]
-                                )
-                              ])
+                              _c(
+                                "el-col",
+                                { attrs: { span: 12 } },
+                                [
+                                  _c(
+                                    "el-badge",
+                                    {
+                                      staticClass: "item",
+                                      attrs: { value: element.comments.length }
+                                    },
+                                    [
+                                      _c(
+                                        "button",
+                                        {
+                                          staticClass: "btn",
+                                          on: {
+                                            click: function($event) {
+                                              _vm.getSelectedTask(element)
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _c("i", {
+                                            staticClass:
+                                              "fa fa-comment font-icon",
+                                            attrs: { "aria-hidden": "true" }
+                                          })
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                ],
+                                1
+                              )
                             ],
                             1
                           )
@@ -96670,28 +96949,40 @@ var render = function() {
                             "el-row",
                             { attrs: { span: 24, gutter: 20 } },
                             [
-                              _c("el-col", { attrs: { span: 12 } }, [
-                                _c(
-                                  "button",
-                                  {
-                                    staticClass: "btn",
-                                    on: {
-                                      click: function($event) {
-                                        _vm.getSelectedTask(element)
-                                      }
-                                    }
-                                  },
-                                  [
-                                    _c("i", {
-                                      staticClass: "fa fa-comment font-icon",
-                                      attrs: { "aria-hidden": "true" }
-                                    }),
-                                    _vm._v(
-                                      "   " + _vm._s(element.comments.length)
-                                    )
-                                  ]
-                                )
-                              ])
+                              _c(
+                                "el-col",
+                                { attrs: { span: 12 } },
+                                [
+                                  _c(
+                                    "el-badge",
+                                    {
+                                      staticClass: "item",
+                                      attrs: { value: element.comments.length }
+                                    },
+                                    [
+                                      _c(
+                                        "button",
+                                        {
+                                          staticClass: "btn",
+                                          on: {
+                                            click: function($event) {
+                                              _vm.getSelectedTask(element)
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _c("i", {
+                                            staticClass:
+                                              "fa fa-comment font-icon",
+                                            attrs: { "aria-hidden": "true" }
+                                          })
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                ],
+                                1
+                              )
                             ],
                             1
                           )
@@ -97367,6 +97658,301 @@ var render = function() {
               })
             ],
             2
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "el-dialog",
+        {
+          attrs: {
+            title: "Update task progress",
+            visible: _vm.updateTaskProgressDialogVisible,
+            size: "small"
+          },
+          on: {
+            "update:visible": function($event) {
+              _vm.updateTaskProgressDialogVisible = $event
+            }
+          }
+        },
+        [
+          _c(
+            "el-row",
+            { attrs: { span: 24 } },
+            [
+              _c(
+                "el-form",
+                {
+                  ref: "progressRuleForm",
+                  attrs: {
+                    model: _vm.progressRuleForm,
+                    rules: _vm.progressRules,
+                    "label-position": "left"
+                  }
+                },
+                [
+                  _c(
+                    "div",
+                    { staticClass: "form-item-container" },
+                    [
+                      _c(
+                        "el-row",
+                        { attrs: { span: 24, gutter: 20 } },
+                        [
+                          _c("el-col", { attrs: { span: 4 } }, [
+                            _c("span", [_vm._v("Progress Description: ")])
+                          ]),
+                          _vm._v(" "),
+                          _c(
+                            "el-col",
+                            { attrs: { span: 20 } },
+                            [
+                              _c(
+                                "el-form-item",
+                                { attrs: { prop: "description" } },
+                                [
+                                  _c("el-input", {
+                                    attrs: {
+                                      placeholder: "Progress Description",
+                                      type: "textarea",
+                                      rows: 3
+                                    },
+                                    model: {
+                                      value: _vm.progressRuleForm.description,
+                                      callback: function($$v) {
+                                        _vm.$set(
+                                          _vm.progressRuleForm,
+                                          "description",
+                                          $$v
+                                        )
+                                      },
+                                      expression: "progressRuleForm.description"
+                                    }
+                                  })
+                                ],
+                                1
+                              )
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "el-row",
+                        { attrs: { span: 24, gutter: 20 } },
+                        [
+                          _c("el-col", { attrs: { span: 4 } }, [
+                            _c("span", [_vm._v("Status: ")])
+                          ]),
+                          _vm._v(" "),
+                          _c(
+                            "el-col",
+                            { attrs: { span: 20 } },
+                            [
+                              _c(
+                                "el-form-item",
+                                { attrs: { prop: "status" } },
+                                [
+                                  _c(
+                                    "el-select",
+                                    {
+                                      attrs: { placeholder: "Select Status" },
+                                      model: {
+                                        value: _vm.progressRuleForm.status,
+                                        callback: function($$v) {
+                                          _vm.$set(
+                                            _vm.progressRuleForm,
+                                            "status",
+                                            $$v
+                                          )
+                                        },
+                                        expression: "progressRuleForm.status"
+                                      }
+                                    },
+                                    _vm._l(_vm.users, function(item) {
+                                      return _c("el-option", {
+                                        key: item.value,
+                                        attrs: {
+                                          label: item.label,
+                                          value: item.value
+                                        }
+                                      })
+                                    })
+                                  )
+                                ],
+                                1
+                              )
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "el-row",
+                        { attrs: { span: 24, gutter: 20 } },
+                        [
+                          _c("el-col", { attrs: { span: 4 } }, [
+                            _c("span", [_vm._v("Progress Percentage: ")])
+                          ]),
+                          _vm._v(" "),
+                          _c(
+                            "el-col",
+                            { attrs: { span: 20 } },
+                            [
+                              _c(
+                                "el-form-item",
+                                { attrs: { prop: "percentage" } },
+                                [
+                                  _c("el-input-number", {
+                                    attrs: {
+                                      placeholder: "Progress Percentage",
+                                      min: 0,
+                                      max: 100
+                                    },
+                                    model: {
+                                      value: _vm.progressRuleForm.percentage,
+                                      callback: function($$v) {
+                                        _vm.$set(
+                                          _vm.progressRuleForm,
+                                          "percentage",
+                                          $$v
+                                        )
+                                      },
+                                      expression: "progressRuleForm.percentage"
+                                    }
+                                  })
+                                ],
+                                1
+                              )
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "el-row",
+                        { attrs: { span: 24, gutter: 20 } },
+                        [
+                          _c("el-col", { attrs: { span: 4 } }, [
+                            _c("span", [_vm._v("File: ")])
+                          ]),
+                          _vm._v(" "),
+                          _c(
+                            "el-col",
+                            { attrs: { span: 20 } },
+                            [
+                              _c(
+                                "el-form-item",
+                                { attrs: { prop: "file" } },
+                                [
+                                  _c(
+                                    "el-upload",
+                                    {
+                                      ref: "progressUpload",
+                                      staticClass: "upload-demo",
+                                      attrs: {
+                                        action: "/activity/progress/update",
+                                        data: _vm.progressData,
+                                        multiple: false,
+                                        "on-change":
+                                          _vm.checkIfProgressFileIsSelected,
+                                        "on-remove":
+                                          _vm.removeProgressFileSelected,
+                                        "auto-upload": false
+                                      }
+                                    },
+                                    [
+                                      _c(
+                                        "el-button",
+                                        {
+                                          attrs: {
+                                            size: "small",
+                                            type: "primary"
+                                          }
+                                        },
+                                        [_vm._v("Click to upload")]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "div",
+                                        {
+                                          staticClass: "el-upload__tip",
+                                          attrs: { slot: "tip" },
+                                          slot: "tip"
+                                        },
+                                        [
+                                          _vm._v(
+                                            "jpg/png files with a size less than 500kb"
+                                          )
+                                        ]
+                                      )
+                                    ],
+                                    1
+                                  )
+                                ],
+                                1
+                              )
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c("hr"),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-item-container" }, [
+                    _c(
+                      "span",
+                      {
+                        staticClass: "dialog-footer",
+                        attrs: { slot: "footer" },
+                        slot: "footer"
+                      },
+                      [
+                        _c(
+                          "el-button",
+                          {
+                            on: {
+                              click: function($event) {
+                                _vm.updateTaskProgressDialogVisible = false
+                              }
+                            }
+                          },
+                          [_vm._v("Cancel")]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "el-button",
+                          {
+                            attrs: { type: "primary" },
+                            on: {
+                              click: function($event) {
+                                _vm.addProgressUpdate("progressRuleForm")
+                              }
+                            }
+                          },
+                          [_vm._v("Save")]
+                        )
+                      ],
+                      1
+                    )
+                  ])
+                ]
+              )
+            ],
+            1
           )
         ],
         1

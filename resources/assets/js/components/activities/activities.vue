@@ -88,16 +88,23 @@
                                         <el-col :span="12"><span v-if="element.priority_type == 'High'" class="high-priority-span">High Priority</span>
                                         </el-col>
                                         <el-col :span="12" style="text-align: right">
-                                            <el-button @click="showTaskWatchDialog(element)"><i class="fa fa-eye" aria-hidden="true"></i></el-button>
+                                            <a href="#" @click="showTaskWatchDialog(element)"><i class="fa fa-eye" aria-hidden="true"></i></a>
                                         </el-col>
                                     </el-row>
                                 </div>
 
                                 <div class="element-container">{{ element.name }}</div>
                                 <el-row :span="24" :gutter="20">
-                                    <el-col :span="12">
-                                        <button class="btn" @click="getSelectedTask(element)"><i
-                                                class="fa fa-comment font-icon" aria-hidden="true"></i> &nbsp; {{element.comments.length }}</button>
+                                    <el-col :span="4">
+                                        <el-badge :value="element.comments.length" class="item">
+                                            <button class="btn" @click="getSelectedTask(element)"><i
+                                                    class="fa fa-comment font-icon" aria-hidden="true"></i></button>
+                                        </el-badge>
+                                    </el-col>
+                                    <el-col :span="4">
+                                        <el-badge :value="element.comments.length" class="item">
+                                            <button class="btn" @click="showTaskProgress(element)"><i class="fa fa-tasks font-icon" aria-hidden="true"></i></button>
+                                        </el-badge>
                                     </el-col>
                                 </el-row>
                             </div>
@@ -132,7 +139,7 @@
                                         <el-col :span="12"><span v-if="element.priority_type == 'High'" class="high-priority-span">High Priority</span>
                                         </el-col>
                                         <el-col :span="12" style="text-align: right">
-                                            <el-button @click="showTaskWatchDialog(element)"><i class="fa fa-eye" aria-hidden="true"></i></el-button>
+                                            <a href="#" @click="showTaskWatchDialog(element)"><i class="fa fa-eye" aria-hidden="true"></i></a>
                                         </el-col>
                                     </el-row>
                                 </div>
@@ -140,8 +147,10 @@
                                 <div class="element-container">{{ element.name }}</div>
                                 <el-row :span="24" :gutter="20">
                                     <el-col :span="12">
-                                        <button class="btn" @click="getSelectedTask(element)"><i
-                                                class="fa fa-comment font-icon" aria-hidden="true"></i> &nbsp; {{element.comments.length }}</button>
+                                        <el-badge :value="element.comments.length" class="item">
+                                            <button class="btn" @click="getSelectedTask(element)"><i
+                                                    class="fa fa-comment font-icon" aria-hidden="true"></i></button>
+                                        </el-badge>
                                     </el-col>
                                 </el-row>
                             </div>
@@ -173,7 +182,7 @@
                                         <el-col :span="12"><span v-if="element.priority_type == 'High'" class="high-priority-span">High Priority</span>
                                         </el-col>
                                         <el-col :span="12" style="text-align: right">
-                                            <el-button @click="showTaskWatchDialog(element)"><i class="fa fa-eye" aria-hidden="true"></i></el-button>
+                                            <a href="#" @click="showTaskWatchDialog(element)"><i class="fa fa-eye" aria-hidden="true"></i></a>
                                         </el-col>
                                     </el-row>
                                 </div>
@@ -181,8 +190,10 @@
                                 <div class="element-container">{{ element.name }}</div>
                                 <el-row :span="24" :gutter="20">
                                     <el-col :span="12">
-                                        <button class="btn" @click="getSelectedTask(element)"><i
-                                                class="fa fa-comment font-icon" aria-hidden="true"></i> &nbsp; {{element.comments.length }}</button>
+                                        <el-badge :value="element.comments.length" class="item">
+                                            <button class="btn" @click="getSelectedTask(element)"><i
+                                                    class="fa fa-comment font-icon" aria-hidden="true"></i></button>
+                                        </el-badge>
                                     </el-col>
                                 </el-row>
                             </div>
@@ -218,8 +229,10 @@
                                 <div class="element-container">{{ element.name }}</div>
                                 <el-row :span="24" :gutter="20">
                                     <el-col :span="12">
-                                        <button class="btn" @click="getSelectedTask(element)"><i
-                                                class="fa fa-comment font-icon" aria-hidden="true"></i> &nbsp; {{element.comments.length }}</button>
+                                        <el-badge :value="element.comments.length" class="item">
+                                            <button class="btn" @click="getSelectedTask(element)"><i
+                                                    class="fa fa-comment font-icon" aria-hidden="true"></i></button>
+                                        </el-badge>
                                     </el-col>
                                 </el-row>
                             </div>
@@ -438,6 +451,101 @@
             </el-row>
         </el-dialog>
 
+
+        <el-dialog
+                title="Update task progress"
+                :visible.sync="updateTaskProgressDialogVisible"
+                size="small">
+            <el-row :span="24">
+
+                <el-form :model="progressRuleForm" :rules="progressRules" ref="progressRuleForm" label-position="left">
+
+                    <div class="form-item-container">
+                        <el-row :span="24" :gutter="20">
+                            <el-col :span="4">
+                                <span>Progress Description: </span>
+                            </el-col>
+                            <el-col :span="20">
+                                <el-form-item prop="description">
+                                    <el-input placeholder="Progress Description"
+                                              type="textarea"
+                                              :rows="3"
+                                              v-model="progressRuleForm.description"></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+
+                        <el-row :span="24" :gutter="20">
+                            <el-col :span="4">
+                                <span>Status: </span>
+                            </el-col>
+
+                            <el-col :span="20">
+                                <el-form-item prop="status">
+                                    <el-select v-model="progressRuleForm.status" placeholder="Select Status">
+                                        <el-option
+                                                v-for="item in users"
+                                                :key="item.value"
+                                                :label="item.label"
+                                                :value="item.value">
+                                        </el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+
+                        <el-row :span="24" :gutter="20">
+                            <el-col :span="4">
+                                <span>Progress Percentage: </span>
+                            </el-col>
+                            <el-col :span="20">
+                                <el-form-item prop="percentage">
+                                    <el-input-number placeholder="Progress Percentage"
+                                                     :min="0"
+                                                     :max="100"
+                                              v-model="progressRuleForm.percentage"></el-input-number>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+
+                        <el-row :span="24" :gutter="20">
+                            <el-col :span="4">
+                                <span>File: </span>
+                            </el-col>
+
+                            <el-col :span="20">
+                                <el-form-item prop="file">
+                                    <el-upload
+                                            class="upload-demo"
+                                            ref="progressUpload"
+                                            action="/activity/progress/update"
+                                            :data="progressData"
+                                            :multiple="false"
+                                            :on-change="checkIfProgressFileIsSelected"
+                                            :on-remove="removeProgressFileSelected"
+                                            :auto-upload="false">
+                                        <el-button size="small" type="primary">Click to upload</el-button>
+                                        <div slot="tip" class="el-upload__tip">jpg/png files with a size less than 500kb</div>
+                                    </el-upload>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                    </div>
+
+                    <hr>
+
+                    <div class="form-item-container">
+                        <span slot="footer" class="dialog-footer">
+                            <el-button @click="updateTaskProgressDialogVisible = false">Cancel</el-button>
+                            <el-button type="primary" @click="addProgressUpdate('progressRuleForm')">Save</el-button>
+                        </span>
+                    </div>
+
+                </el-form>
+
+            </el-row>
+        </el-dialog>
+
     </div>
 
 
@@ -453,8 +561,15 @@
         data (){
             return {
                 file: false,
+                progressFile: false,
                 data: {
                     comment: '',
+                    activity_id: ''
+                },
+                progressData: {
+                    description: '',
+                    status: '',
+                    percentage: '',
                     activity_id: ''
                 },
                 input: '',
@@ -468,6 +583,7 @@
                 taskDialogVisible: false,
                 watchTaskDialogVisible: false,
                 commentsDialog: false,
+                updateTaskProgressDialogVisible: false,
                 activity_status_id: '',
                 targetElementName: '',
                 draggedElement: '',
@@ -483,6 +599,11 @@
                     value: '0',
                     label: 'Inactive'
                 }],
+                progressRuleForm: {
+                    description: '',
+                    status: '',
+                    percentage: '',
+                },
                 ruleForm: {
                     name: '',
                     description: '',
@@ -495,6 +616,17 @@
                     endDate: '',
                     user: '',
                     priority: '',
+                },
+                progressRules: {
+                    description: [
+                        {required: true, message: 'Please input progress description', trigger: 'blur'},
+                    ],
+                    percentage: [
+                        {required: true, message: 'Please input progress percentage', trigger: 'blur', type: 'number'},
+                    ],
+                    status: [
+                        {required: false, message: 'Please select progress status', trigger: 'change', type: 'number'},
+                    ],
                 },
                 searchRules: {
                     startDate: [
@@ -545,6 +677,13 @@
                 vm.file = false;
             },
 
+            removeProgressFileSelected()
+            {
+                let vm = this;
+
+                vm.progressFile = false;
+            },
+
             checkIfFileIsSelected(file)
             {
                 let vm = this;
@@ -557,6 +696,27 @@
                     vm.input = '';
 
                     vm.scrollToEnd();
+                }
+
+            },
+
+            checkIfProgressFileIsSelected(file, fileList)
+            {
+                let vm = this;
+
+                if (fileList.length >1)
+                {
+                    vm.progressFile = false;
+
+                    vm.$message({
+                        type: 'error',
+                        message: 'You cannot upload multiple files'
+                    });
+
+                    fileList.pop();
+                }else
+                {
+                    vm.progressFile = true;
                 }
 
             },
@@ -696,6 +856,15 @@
                 vm.scrollToEnd();
             },
 
+            showTaskProgress(task)
+            {
+                let vm = this;
+
+                vm.updateTaskProgressDialogVisible = true;
+
+                vm.selectedTask = task;
+            },
+
             postComment()
             {
                 let vm = this;
@@ -738,6 +907,62 @@
                         console.log(error);
                     });
                 }
+            },
+
+            addProgressUpdate(formName)
+            {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        let vm = this;
+
+                        if (vm.progressFile) {
+
+                            vm.progressData.activity_id = vm.selectedTask.id;
+
+                            vm.progressData.description = vm.progressRuleForm.description;
+
+                            vm.progressData.status = vm.progressRuleForm.status;
+
+                            vm.progressData.percentage = vm.progressRuleForm.percentage;
+
+                            vm.$refs.progressUpload.submit();
+
+                            vm.$refs[formName].resetFields();
+                        }
+                        else {
+                            axios.post('/activity/progress/update', {
+                                activity_id : vm.selectedTask.id,
+                                description : vm.progressRuleForm.description,
+                                status : vm.progressRuleForm.status,
+                                percentage : vm.progressRuleForm.percentage,
+                            })
+                                .then(function (response) {
+
+                                    vm.progressFile = false;
+
+                                    if (response.data.success) {
+                                        vm.$message({
+                                            type: 'success',
+                                            message: response.data.message
+                                        });
+
+                                        vm.$refs[formName].resetFields();
+                                    }
+                                    else {
+                                        vm.$message({
+                                            type: 'error',
+                                            message: response.data.message
+                                        });
+                                    }
+                                }).catch(function (error) {
+                                console.log(error);
+                            });
+                        }
+                    } else {
+                        return false;
+                    }
+                });
+
             },
 
             showTaskWatchDialog(task)
@@ -850,6 +1075,10 @@
     }
 
     .el-date-editor.el-input {
+        width: 100%;
+    }
+
+    .el-input-number{
         width: 100%;
     }
 
@@ -1221,5 +1450,12 @@
     .font-icon {
         font-size: 20px;
         color: #1b6d85;
+    }
+
+    .el-badge__content.is-fixed {
+        top: 10px;
+        right: 18px;
+        position: absolute;
+        transform: translateY(-50%) translateX(100%);
     }
 </style>
