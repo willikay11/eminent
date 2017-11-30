@@ -187,31 +187,27 @@ class InteractionController extends Controller
 
         $userId = $request->get('userId');
 
-        $userName = $this->usersRepository->getUserById($userId)->contact->present()->fullName;
+        $q = Interaction::where('user_id', $userId);
 
-        if (!is_null($startDate) && $startDate != '')
-        {
-            $q = Interaction::where('interaction_date', '>=', Carbon::parse($startDate));
+        if (!is_null($startDate) && $startDate != '') {
+            $q->where('interaction_date', '>=', Carbon::parse($startDate));
 
-            if (!is_null($endDate) && $endDate != '')
-            {
-                $q = $q->where('interaction_date', '<=', Carbon::parse($endDate));
-            }
-        }else
-        {
-            $q = new Interaction();
+        }
+
+        if (!is_null($endDate) && $endDate != '') {
+            $q->where('interaction_date', '<=', Carbon::parse($endDate));
         }
 
         $interactions = $q->get();
 
-        $interactions = $interactions->map(function ($interaction) use ($userName)
+        $interactions = $interactions->map(function ($interaction)
         {
             return [
                 'client' => $interaction->client->contact->present()->fullName,
                 'interactionType' => $interaction->interactionType->name,
                 'date' => Carbon::parse($interaction->interaction_date)->format('jS F Y'),
                 'remarks' => $interaction->remarks,
-                'user' => $userName
+                'user' => $interaction->user->contact->present()->fullName
             ];
         });
 

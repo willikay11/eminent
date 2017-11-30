@@ -4,9 +4,6 @@
             <div class="col-lg-6">
                 <h4>Contacts</h4>
             </div>
-            <div class="col-lg-6" style="text-align: right">
-                <!--<button class="btn ebg-button" v-on:click="showAddDialog()">Add Contact</button>-->
-            </div>
         </div>
 
         <div class="panel-body">
@@ -55,12 +52,9 @@
                                                 :key="item.value"
                                                 :label="item.label"
                                                 :value="item.value"
-                                                :change="changeStatus">
+                                                change="changeStatus()">
                                         </el-option>
                                     </el-select>
-                                </el-col>
-                                <el-col :span="6">
-                                    <button class="btn ebg-button" v-on:click="showAddDialog()">Add Product Feedback</button>
                                 </el-col>
 
                                 <el-col :span="6">
@@ -150,11 +144,53 @@
                             </el-col>
 
                             <el-col :span="6">
-                                <button class="btn ebg-button" v-on:click="addInteraction('ruleForm')">Save this Interaction</button>
+                                <button class="btn ebg-button" @click="addInteraction('ruleForm')">Save this Interaction</button>
                             </el-col>
                         </el-row>
                     </el-form>
 
+                </el-row>
+
+                <el-row :span="24" style="margin-top: 20px">
+                    <el-tabs v-model="activeName">
+                        <el-tab-pane label="Interactions" name="first">
+                            <ul style="list-style: none; padding-left:0px" v-for="interaction in interactionData">
+                                <li>
+                                    <div class="col-lg-6 col-md-6 col-sm-12">
+                                        <span>{{ interaction.remarks }}</span>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12" style="text-align: right">
+                                        <span> <i class="fa fa-clock-o" aria-hidden="true"></i> &nbsp; {{ interaction.date }}</span>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12">
+                                        <span v-if="interaction.interactionTypeId == 1"> <i class="fa fa-meetup" aria-hidden="true"></i> &nbsp; Interacted over {{ interaction.interactionType }}</span>
+                                        <span v-if="interaction.interactionTypeId == 2"> <i class="fa fa-phone" aria-hidden="true"></i> &nbsp; Interacted over {{ interaction.interactionType }}</span>
+                                        <span v-if="interaction.interactionTypeId == 3"> <i class="fa fa-envelope-o" aria-hidden="true"></i> &nbsp; Interacted over {{ interaction.interactionType }}</span>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <hr>
+                                    </div>
+                                </li>
+                            </ul>
+                            <span v-if="interactionData.length == 0">No interactions recorded</span>
+                        </el-tab-pane>
+                        <el-tab-pane label="Notes" name="second">
+                            <ul v-if="noteData.length > 0" style="list-style: none; padding-left:0px" v-for="note in noteData">
+                                <li>
+                                    <div class="col-lg-6 col-md-6 col-sm-12">
+                                        <span>{{ note.note }}</span>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12" style="text-align: right">
+                                        <span> <i class="fa fa-clock-o" aria-hidden="true"></i> &nbsp; {{ note.date }}</span>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <hr>
+                                    </div>
+                                </li>
+                            </ul>
+                            <span v-if="noteData.length == 0">No notes recorded</span>
+                        </el-tab-pane>
+                    </el-tabs>
                 </el-row>
 
                 <el-dialog
@@ -209,6 +245,8 @@
                 contact: [],
                 statuses: [],
                 interactionTypes: [],
+                interactionData: [],
+                noteData: [],
                 options: [{
                     value: 'Option1',
                     label: 'Option1'
@@ -269,7 +307,8 @@
                     nextInteractionDate: [
                         {required: false, message: 'Please input interaction date', trigger: 'blur', type: 'date'},
                     ],
-                }
+                },
+                activeName: 'first'
             }
         },
         created()
@@ -304,6 +343,8 @@
                                     type: 'success',
                                     message: response.data.message
                                 });
+
+                                vm.getContactInfo();
 
                                 vm.$refs[formName].resetFields();
                             }
@@ -367,47 +408,45 @@
 
             addInteraction(formName)
             {
-                this.$refs[formName].validate((valid) => {
-                    if (valid) {
-
-                        let vm = this;
-
-                        vm.$message({
-                            type: 'info',
-                            message: 'Saving Interaction'
-                        });
-
-                        axios.post('/interaction/save', {
-                            remarks: vm.ruleForm.interactionRemarks,
-                            interaction_type_id: vm.ruleForm.interaction,
-                            interaction_date: vm.ruleForm.interactionDate+'',
-                            next_interaction_date: vm.ruleForm.nextInteractionDate+'',
-                            userClientId: vm.userClientId
-                        })
-                            .then(function (response) {
-                                vm.interactionDialogVisible = false;
-
-                                if (response.data.success) {
-                                    vm.$message({
-                                        type: 'success',
-                                        message: response.data.message
-                                    });
-
-                                    vm.$refs[formName].resetFields();
-                                }
-                                else {
-                                    vm.$message({
-                                        type: 'error',
-                                        message: response.data.message
-                                    });
-                                }
-                            }).catch(function (error) {
-                            console.log(error);
-                        });
-                    } else {
-                        return false;
-                    }
-                });
+//                this.$refs[formName].validate((valid) => {
+//                    if (valid) {
+//
+//                        let vm = this;
+//
+//                        vm.$message({
+//                            type: 'info',
+//                            message: 'Saving Interaction'
+//                        });
+//
+//                        axios.post('/interaction/save', {
+//                            remarks: vm.ruleForm.interactionRemarks,
+//                            interaction_type_id: vm.ruleForm.interaction,
+//                            interaction_date: vm.ruleForm.interactionDate+'',
+//                            next_interaction_date: vm.ruleForm.nextInteractionDate+'',
+//                            userClientId: vm.userClientId
+//                        })
+//                            .then(function (response) {
+//                                if (response.data.success) {
+//                                    vm.$message({
+//                                        type: 'success',
+//                                        message: response.data.message
+//                                    });
+//
+//                                    vm.$refs[formName].resetFields();
+//                                }
+//                                else {
+//                                    vm.$message({
+//                                        type: 'error',
+//                                        message: response.data.message
+//                                    });
+//                                }
+//                            }).catch(function (error) {
+//                            console.log(error);
+//                        });
+//                    } else {
+//                        return false;
+//                    }
+//                });
             },
 
             getContactInfo()
@@ -419,6 +458,8 @@
                         vm.interactionTypes = response.data.interactionTypes;
                         vm.contact = response.data.contact;
                         vm.statusValue = vm.contact.status;
+                        vm.interactionData = response.data.interactions;
+                        vm.noteData = response.data.notes;
                     }).catch(function (error) {
                     console.log(error);
                 })

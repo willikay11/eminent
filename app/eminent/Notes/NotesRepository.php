@@ -24,4 +24,10 @@ class NotesRepository
     {
         return Note::create($input);
     }
+
+    public function getNotesByUserIdAndClientId($userId, $clientId)
+    {
+        return Note::where('user_id', $userId)->where('client_id', $clientId)->get();
+
+    }
 }

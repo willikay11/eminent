@@ -64,7 +64,7 @@
             getInteractions()
             {
                 let vm = this;
-                axios.get('/api/interactions/'+vm.userId)
+                axios.get('/api/dashboard/interactions/'+vm.userId)
                     .then(function (response) {
                         vm.tableData = response.data.interactions.data;
                     }).catch(function (error) {

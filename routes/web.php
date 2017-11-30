@@ -17,6 +17,15 @@ Route::group(['middleware' => 'auth'], function (){
         'uses' => 'DashboardController@index'
     ]);
 
+    Route::get('/api/dashboard/contacts/user/{userId}', [
+        'uses' => 'DashboardController@getDashBoardUserClients'
+    ]);
+
+    Route::get('/api/dashboard/interactions/{userId}', [
+        'uses' => 'DashboardController@getDashBoardInteractions'
+    ]);
+
+
     Route::get('/logout', [
         'as' => 'auth.logout',
         'uses' => 'LoginController@destroy'

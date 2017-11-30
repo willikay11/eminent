@@ -82,8 +82,10 @@
                 </el-form>
             </el-row>
 
-            <el-row>
-                <el-button type="primary" @click="exportContacts()">Export</el-button>
+            <el-row style="padding-left: 30px">
+                <el-col :span="2">
+                    <el-button type="primary" @click="exportContacts()">Export</el-button>
+                </el-col>
             </el-row>
 
             <div class="col-lg-12">

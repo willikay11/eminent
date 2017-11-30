@@ -17,10 +17,12 @@ use eminent\Authorization\Authorizer;
 use eminent\Clients\ClientsRepository;
 use eminent\Contacts\ContactRules;
 use eminent\Contacts\ContactsRepository;
+use eminent\Interactions\InteractionsRepository;
 use eminent\Interests\InterestsRepository;
 use eminent\Models\Contact;
 use eminent\Models\Country;
 use eminent\Models\Gender;
+use eminent\Models\Interaction;
 use eminent\Models\InteractionType;
 use eminent\Models\Service;
 use eminent\Models\Profession;
@@ -28,6 +30,7 @@ use eminent\Models\Religions;
 use eminent\Models\Sources;
 use eminent\Models\Status;
 use eminent\Models\Title;
+use eminent\Notes\NotesRepository;
 use eminent\UserClients\UserClientsRepository;
 use eminent\Users\UsersRepository;
 use Illuminate\Http\Request;
@@ -48,18 +51,30 @@ class ContactController extends Controller
     protected $userClientsRepository;
     protected $interestsRepository;
     protected $usersRepository;
+    /**
+     * @var InteractionsRepository
+     */
+    private $interactionsRepository;
+    /**
+     * @var NotesRepository
+     */
+    private $notesRepository;
 
     public function __construct(ContactsRepository $contactsRepository,
                                 ClientsRepository $clientsRepository,
                                 UserClientsRepository $userClientsRepository,
                                 InterestsRepository $interestsRepository,
-                                UsersRepository $usersRepository)
+                                UsersRepository $usersRepository,
+                                InteractionsRepository $interactionsRepository,
+                                NotesRepository $notesRepository)
     {
         $this->contactsRepository = $contactsRepository;
         $this->clientsRepository = $clientsRepository;
         $this->userClientsRepository = $userClientsRepository;
         $this->interestsRepository = $interestsRepository;
         $this->usersRepository = $usersRepository;
+        $this->interactionsRepository = $interactionsRepository;
+        $this->notesRepository = $notesRepository;
     }
 
     public function getInfo($userId)
@@ -434,10 +449,36 @@ class ContactController extends Controller
             ];
         });
 
+        $interactions = $this->interactionsRepository->getInteractionsByUserIdAndClientId($userClient->user_id, $userClient->client_id);
+
+        $interactions = $interactions->map(function ($interaction)
+        {
+            return [
+                'id' => $interaction->id,
+                'remarks' => $interaction->remarks,
+                'interactionType' => $interaction->interactionType->name,
+                'interactionTypeId' => $interaction->interaction_type_id,
+                'date' => Carbon::parse($interaction->interaction_date)->format('jS F Y'),
+            ];
+        });
+
+        $notes = $this->notesRepository->getNotesByUserIdAndClientId($userClient->user_id, $userClient->client_id);
+
+        $notes = $notes->map(function ($note)
+        {
+            return [
+                'id' => $note->id,
+                'note' => $note->note,
+                'date' => Carbon::parse($note->created_at)->format('jS F Y'),
+            ];
+        });
+
         $data = [
             'contact' => $contact,
             'statuses' => $statuses,
-            'interactionTypes' => $interactionTypes
+            'interactionTypes' => $interactionTypes,
+            'interactions' => $interactions,
+            'notes' => $notes
         ];
 
         return $this->toResponse(null, $data);

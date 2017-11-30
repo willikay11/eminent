@@ -32,4 +32,10 @@ class InteractionsRepository
             return $interaction;
         }
     }
+
+    public function getInteractionsByUserIdAndClientId($userId, $clientId)
+    {
+        return Interaction::where('user_id', $userId)->where('client_id', $clientId)->get();
+
+    }
 }

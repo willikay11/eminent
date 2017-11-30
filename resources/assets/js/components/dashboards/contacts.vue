@@ -59,7 +59,7 @@
             getUsers()
             {
                 let vm = this;
-                axios.get('/api/contacts/user/'+vm.userId)
+                axios.get('/api/dashboard/contacts/user/'+vm.userId)
                     .then(function (response) {
                         vm.tableData = response.data.contacts.data;
                     }).catch(function (error) {
