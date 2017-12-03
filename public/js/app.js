@@ -93080,14 +93080,15 @@ var render = function() {
         [
           _c(
             "el-row",
+            { attrs: { gutter: 20 } },
             [
-              _c("el-col", { attrs: { span: 5 } }, [
+              _c("el-col", { attrs: { xs: 6, sm: 6, md: 6, lg: 6 } }, [
                 _c("div", { staticClass: "avatar" })
               ]),
               _vm._v(" "),
               _c(
                 "el-col",
-                { attrs: { span: 19 } },
+                { attrs: { xs: 18, sm: 18, md: 18, lg: 18 } },
                 [
                   _c("el-col", { attrs: { span: 24 } }, [
                     _c("h4", [_vm._v(_vm._s(_vm.contact.name))])
@@ -95184,6 +95185,7 @@ exports.default = {
             inReview: [],
             done: [],
             progressUpdateData: [],
+            progressUpdateStatuses: [],
             taskDialogVisible: false,
             watchTaskDialogVisible: false,
             commentsDialog: false,
@@ -95351,6 +95353,7 @@ exports.default = {
             axios.get('/info/activities/').then(function (response) {
                 vm.users = response.data.users;
                 vm.priorityTypes = response.data.priorities;
+                vm.progressUpdateStatuses = response.data.progressUpdateStatuses;
             }).catch(function (error) {
                 console.log(error);
             });
@@ -95638,6 +95641,21 @@ exports.default = {
         }
     }
 }; //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -96780,7 +96798,7 @@ var render = function() {
                               [
                                 _c(
                                   "el-col",
-                                  { attrs: { span: 12 } },
+                                  { attrs: { span: 4 } },
                                   [
                                     _c(
                                       "el-badge",
@@ -96805,6 +96823,43 @@ var render = function() {
                                             _c("i", {
                                               staticClass:
                                                 "fa fa-comment font-icon",
+                                              attrs: { "aria-hidden": "true" }
+                                            })
+                                          ]
+                                        )
+                                      ]
+                                    )
+                                  ],
+                                  1
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "el-col",
+                                  { attrs: { span: 4 } },
+                                  [
+                                    _c(
+                                      "el-badge",
+                                      {
+                                        staticClass: "item",
+                                        attrs: {
+                                          value: element.countProgressUpdates
+                                        }
+                                      },
+                                      [
+                                        _c(
+                                          "button",
+                                          {
+                                            staticClass: "btn",
+                                            on: {
+                                              click: function($event) {
+                                                _vm.showTaskProgress(element)
+                                              }
+                                            }
+                                          },
+                                          [
+                                            _c("i", {
+                                              staticClass:
+                                                "fa fa-tasks font-icon",
                                               attrs: { "aria-hidden": "true" }
                                             })
                                           ]
@@ -96942,7 +96997,7 @@ var render = function() {
                             [
                               _c(
                                 "el-col",
-                                { attrs: { span: 12 } },
+                                { attrs: { span: 4 } },
                                 [
                                   _c(
                                     "el-badge",
@@ -96965,6 +97020,43 @@ var render = function() {
                                           _c("i", {
                                             staticClass:
                                               "fa fa-comment font-icon",
+                                            attrs: { "aria-hidden": "true" }
+                                          })
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "el-col",
+                                { attrs: { span: 4 } },
+                                [
+                                  _c(
+                                    "el-badge",
+                                    {
+                                      staticClass: "item",
+                                      attrs: {
+                                        value: element.countProgressUpdates
+                                      }
+                                    },
+                                    [
+                                      _c(
+                                        "button",
+                                        {
+                                          staticClass: "btn",
+                                          on: {
+                                            click: function($event) {
+                                              _vm.showTaskProgress(element)
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _c("i", {
+                                            staticClass:
+                                              "fa fa-tasks font-icon",
                                             attrs: { "aria-hidden": "true" }
                                           })
                                         ]
@@ -97074,7 +97166,7 @@ var render = function() {
                             [
                               _c(
                                 "el-col",
-                                { attrs: { span: 12 } },
+                                { attrs: { span: 4 } },
                                 [
                                   _c(
                                     "el-badge",
@@ -97097,6 +97189,43 @@ var render = function() {
                                           _c("i", {
                                             staticClass:
                                               "fa fa-comment font-icon",
+                                            attrs: { "aria-hidden": "true" }
+                                          })
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "el-col",
+                                { attrs: { span: 4 } },
+                                [
+                                  _c(
+                                    "el-badge",
+                                    {
+                                      staticClass: "item",
+                                      attrs: {
+                                        value: element.countProgressUpdates
+                                      }
+                                    },
+                                    [
+                                      _c(
+                                        "button",
+                                        {
+                                          staticClass: "btn",
+                                          on: {
+                                            click: function($event) {
+                                              _vm.showTaskProgress(element)
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _c("i", {
+                                            staticClass:
+                                              "fa fa-tasks font-icon",
                                             attrs: { "aria-hidden": "true" }
                                           })
                                         ]
@@ -97896,7 +98025,9 @@ var render = function() {
                                         expression: "progressRuleForm.status"
                                       }
                                     },
-                                    _vm._l(_vm.users, function(item) {
+                                    _vm._l(_vm.progressUpdateStatuses, function(
+                                      item
+                                    ) {
                                       return _c("el-option", {
                                         key: item.value,
                                         attrs: {

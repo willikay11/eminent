@@ -146,10 +146,15 @@
 
                                 <div class="element-container">{{ element.name }}</div>
                                 <el-row :span="24" :gutter="20">
-                                    <el-col :span="12">
+                                    <el-col :span="4">
                                         <el-badge :value="element.comments.length" class="item">
                                             <button class="btn" @click="getSelectedTask(element)"><i
                                                     class="fa fa-comment font-icon" aria-hidden="true"></i></button>
+                                        </el-badge>
+                                    </el-col>
+                                    <el-col :span="4">
+                                        <el-badge :value="element.countProgressUpdates" class="item">
+                                            <button class="btn" @click="showTaskProgress(element)"><i class="fa fa-tasks font-icon" aria-hidden="true"></i></button>
                                         </el-badge>
                                     </el-col>
                                 </el-row>
@@ -189,10 +194,15 @@
 
                                 <div class="element-container">{{ element.name }}</div>
                                 <el-row :span="24" :gutter="20">
-                                    <el-col :span="12">
+                                    <el-col :span="4">
                                         <el-badge :value="element.comments.length" class="item">
                                             <button class="btn" @click="getSelectedTask(element)"><i
                                                     class="fa fa-comment font-icon" aria-hidden="true"></i></button>
+                                        </el-badge>
+                                    </el-col>
+                                    <el-col :span="4">
+                                        <el-badge :value="element.countProgressUpdates" class="item">
+                                            <button class="btn" @click="showTaskProgress(element)"><i class="fa fa-tasks font-icon" aria-hidden="true"></i></button>
                                         </el-badge>
                                     </el-col>
                                 </el-row>
@@ -228,10 +238,15 @@
                                 </div>
                                 <div class="element-container">{{ element.name }}</div>
                                 <el-row :span="24" :gutter="20">
-                                    <el-col :span="12">
+                                    <el-col :span="4">
                                         <el-badge :value="element.comments.length" class="item">
                                             <button class="btn" @click="getSelectedTask(element)"><i
                                                     class="fa fa-comment font-icon" aria-hidden="true"></i></button>
+                                        </el-badge>
+                                    </el-col>
+                                    <el-col :span="4">
+                                        <el-badge :value="element.countProgressUpdates" class="item">
+                                            <button class="btn" @click="showTaskProgress(element)"><i class="fa fa-tasks font-icon" aria-hidden="true"></i></button>
                                         </el-badge>
                                     </el-col>
                                 </el-row>
@@ -483,7 +498,7 @@
                                 <el-form-item prop="status">
                                     <el-select v-model="progressRuleForm.status" placeholder="Select Status">
                                         <el-option
-                                                v-for="item in users"
+                                                v-for="item in progressUpdateStatuses"
                                                 :key="item.value"
                                                 :label="item.label"
                                                 :value="item.value">
@@ -632,6 +647,7 @@
                 inReview: [],
                 done: [],
                 progressUpdateData: [],
+                progressUpdateStatuses:[],
                 taskDialogVisible: false,
                 watchTaskDialogVisible: false,
                 commentsDialog: false,
@@ -834,6 +850,7 @@
                     .then(function (response) {
                         vm.users = response.data.users;
                         vm.priorityTypes = response.data.priorities;
+                        vm.progressUpdateStatuses = response.data.progressUpdateStatuses;
                     }).catch(function (error) {
                     console.log(error);
                 })

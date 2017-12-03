@@ -12,11 +12,11 @@
 
             <div class="contact-container">
 
-                <el-row>
-                    <el-col :span="5">
+                <el-row :gutter="20">
+                    <el-col :xs="6" :sm="6" :md="6" :lg="6">
                         <div class="avatar"></div>
                     </el-col>
-                    <el-col :span="19">
+                    <el-col :xs="18" :sm="18" :md="18" :lg="18">
                         <el-col :span="24">
                             <h4>{{ contact.name }}</h4>
                         </el-col>

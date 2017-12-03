@@ -21,6 +21,7 @@ use eminent\Comments\CommentsRepository;
 use eminent\Models\Activity;
 use eminent\Models\ActivityWatcher;
 use eminent\Models\PriorityType;
+use eminent\Models\ProgressUpdateStatus;
 use eminent\ProgressUpdates\ProgressUpdateRepository;
 use eminent\ProjectUpdateFiles\ProjectUpdateFilesRepository;
 use eminent\Users\UsersRepository;
@@ -117,9 +118,19 @@ class ActivitiesController extends Controller
                 ];
             });
 
+        $progressUpdateStatuses = ProgressUpdateStatus::all()
+            ->map(function ($progressUpdateStatuse)
+            {
+                return [
+                    'label' => $progressUpdateStatuse->name,
+                    'value' => $progressUpdateStatuse->id
+                ];
+            });
+
         return self::toResponse(null, [
             'users' => $users,
             'priorities' => $priorities,
+            'progressUpdateStatuses' => $progressUpdateStatuses
         ]);
 
     }
@@ -188,7 +199,7 @@ class ActivitiesController extends Controller
             'description' => $request->get('description'),
             'percentage' => $request->get('percentage'),
             'activity_id' => $request->get('activity_id'),
-            'progress_update_status_id' => 1,
+            'progress_update_status_id' => $request->get('status'),
             'user_id' => Auth::id()
         ];
 

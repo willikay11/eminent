@@ -29,8 +29,8 @@
         <hr style="border-color: #ffdaba;">
 
         <div id="info" style="padding-bottom: 50px; padding-top: 50px; padding-right: 100px; padding-left: 100px;">
-            <p>Fedha Plaza, Westlands</p>
-            <p>P.O. BOX 3246523</p>
+            <p>8 Downhill Court, Riara Lane</p>
+            <p>P.O. BOX 10216 – 00100</p>
             <p>Nairobi, Kenya</p>
         </div>
 
