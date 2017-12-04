@@ -91,6 +91,17 @@
                                 </el-form-item>
                             </el-col>
 
+                            <el-col :span="24">
+                                <el-form-item prop="feedback" label="Did the client provide any feeedback?">
+                                    <el-input
+                                            type="textarea"
+                                            :rows="5"
+                                            placeholder="Enter the feedback remarks"
+                                            v-model="ruleForm.feedback">
+                                    </el-input>
+                                </el-form-item>
+                            </el-col>
+
                             <el-col :span="8">
                                 <el-form-item prop="interaction" label="How did you interact?">
                                     <el-select v-model="ruleForm.interaction" placeholder="Select the type of interaction">
@@ -121,21 +132,6 @@
                                             type="date"
                                             placeholder="Schedule a date for the next interaction">
                                     </el-date-picker>
-                                </el-form-item>
-                            </el-col>
-
-                            <el-col :span="24">
-                                <hr class="interaction-hr">
-                            </el-col>
-
-                            <el-col :span="24">
-                                <el-form-item prop="feedback" label="Did the client provide any feeedback?">
-                                    <el-input
-                                            type="textarea"
-                                            :rows="5"
-                                            placeholder="Enter the feedback remarks"
-                                            v-model="ruleForm.feedback">
-                                    </el-input>
                                 </el-form-item>
                             </el-col>
 
@@ -296,7 +292,7 @@
                         {required: true, message: 'Please input interaction remarks', trigger: 'blur'},
                     ],
                     feedback: [
-                        {required: false, message: 'Please input interaction remarks', trigger: 'blur'},
+                        {required: true, message: 'Please input interaction remarks', trigger: 'blur'},
                     ],
                     interaction: [
                         {required: true, message: 'Please select interaction type', trigger: 'change', type: 'number'},
@@ -408,45 +404,46 @@
 
             addInteraction(formName)
             {
-//                this.$refs[formName].validate((valid) => {
-//                    if (valid) {
-//
-//                        let vm = this;
-//
-//                        vm.$message({
-//                            type: 'info',
-//                            message: 'Saving Interaction'
-//                        });
-//
-//                        axios.post('/interaction/save', {
-//                            remarks: vm.ruleForm.interactionRemarks,
-//                            interaction_type_id: vm.ruleForm.interaction,
-//                            interaction_date: vm.ruleForm.interactionDate+'',
-//                            next_interaction_date: vm.ruleForm.nextInteractionDate+'',
-//                            userClientId: vm.userClientId
-//                        })
-//                            .then(function (response) {
-//                                if (response.data.success) {
-//                                    vm.$message({
-//                                        type: 'success',
-//                                        message: response.data.message
-//                                    });
-//
-//                                    vm.$refs[formName].resetFields();
-//                                }
-//                                else {
-//                                    vm.$message({
-//                                        type: 'error',
-//                                        message: response.data.message
-//                                    });
-//                                }
-//                            }).catch(function (error) {
-//                            console.log(error);
-//                        });
-//                    } else {
-//                        return false;
-//                    }
-//                });
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+
+                        let vm = this;
+
+                        vm.$message({
+                            type: 'info',
+                            message: 'Saving Interaction'
+                        });
+
+                        axios.post('/interaction/save', {
+                            remarks: vm.ruleForm.interactionRemarks,
+                            interaction_type_id: vm.ruleForm.interaction,
+                            interaction_date: vm.ruleForm.interactionDate+'',
+                            next_interaction_date: vm.ruleForm.nextInteractionDate+'',
+                            feedback: vm.ruleForm.feedback,
+                            userClientId: vm.userClientId
+                        })
+                            .then(function (response) {
+                                if (response.data.success) {
+                                    vm.$message({
+                                        type: 'success',
+                                        message: response.data.message
+                                    });
+
+                                    vm.$refs[formName].resetFields();
+                                }
+                                else {
+                                    vm.$message({
+                                        type: 'error',
+                                        message: response.data.message
+                                    });
+                                }
+                            }).catch(function (error) {
+                            console.log(error);
+                        });
+                    } else {
+                        return false;
+                    }
+                });
             },
 
             getContactInfo()

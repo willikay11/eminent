@@ -92836,10 +92836,6 @@ Object.defineProperty(exports, "__esModule", {
 //
 //
 //
-//
-//
-//
-//
 
 exports.default = {
     props: ['userClientId'],
@@ -92892,7 +92888,7 @@ exports.default = {
             },
             rules: {
                 interactionRemarks: [{ required: true, message: 'Please input interaction remarks', trigger: 'blur' }],
-                feedback: [{ required: false, message: 'Please input interaction remarks', trigger: 'blur' }],
+                feedback: [{ required: true, message: 'Please input interaction remarks', trigger: 'blur' }],
                 interaction: [{ required: true, message: 'Please select interaction type', trigger: 'change', type: 'number' }],
                 interactionDate: [{ required: true, message: 'Please input interaction date', trigger: 'blur', type: 'date' }],
                 nextInteractionDate: [{ required: false, message: 'Please input interaction date', trigger: 'blur', type: 'date' }]
@@ -92991,45 +92987,46 @@ exports.default = {
             });
         },
         addInteraction: function addInteraction(formName) {
-            //                this.$refs[formName].validate((valid) => {
-            //                    if (valid) {
-            //
-            //                        let vm = this;
-            //
-            //                        vm.$message({
-            //                            type: 'info',
-            //                            message: 'Saving Interaction'
-            //                        });
-            //
-            //                        axios.post('/interaction/save', {
-            //                            remarks: vm.ruleForm.interactionRemarks,
-            //                            interaction_type_id: vm.ruleForm.interaction,
-            //                            interaction_date: vm.ruleForm.interactionDate+'',
-            //                            next_interaction_date: vm.ruleForm.nextInteractionDate+'',
-            //                            userClientId: vm.userClientId
-            //                        })
-            //                            .then(function (response) {
-            //                                if (response.data.success) {
-            //                                    vm.$message({
-            //                                        type: 'success',
-            //                                        message: response.data.message
-            //                                    });
-            //
-            //                                    vm.$refs[formName].resetFields();
-            //                                }
-            //                                else {
-            //                                    vm.$message({
-            //                                        type: 'error',
-            //                                        message: response.data.message
-            //                                    });
-            //                                }
-            //                            }).catch(function (error) {
-            //                            console.log(error);
-            //                        });
-            //                    } else {
-            //                        return false;
-            //                    }
-            //                });
+            var _this3 = this;
+
+            this.$refs[formName].validate(function (valid) {
+                if (valid) {
+
+                    var vm = _this3;
+
+                    vm.$message({
+                        type: 'info',
+                        message: 'Saving Interaction'
+                    });
+
+                    axios.post('/interaction/save', {
+                        remarks: vm.ruleForm.interactionRemarks,
+                        interaction_type_id: vm.ruleForm.interaction,
+                        interaction_date: vm.ruleForm.interactionDate + '',
+                        next_interaction_date: vm.ruleForm.nextInteractionDate + '',
+                        feedback: vm.ruleForm.feedback,
+                        userClientId: vm.userClientId
+                    }).then(function (response) {
+                        if (response.data.success) {
+                            vm.$message({
+                                type: 'success',
+                                message: response.data.message
+                            });
+
+                            vm.$refs[formName].resetFields();
+                        } else {
+                            vm.$message({
+                                type: 'error',
+                                message: response.data.message
+                            });
+                        }
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+                } else {
+                    return false;
+                }
+            });
         },
         getContactInfo: function getContactInfo() {
             var vm = this;
@@ -93321,6 +93318,40 @@ var render = function() {
                       _vm._v(" "),
                       _c(
                         "el-col",
+                        { attrs: { span: 24 } },
+                        [
+                          _c(
+                            "el-form-item",
+                            {
+                              attrs: {
+                                prop: "feedback",
+                                label: "Did the client provide any feeedback?"
+                              }
+                            },
+                            [
+                              _c("el-input", {
+                                attrs: {
+                                  type: "textarea",
+                                  rows: 5,
+                                  placeholder: "Enter the feedback remarks"
+                                },
+                                model: {
+                                  value: _vm.ruleForm.feedback,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.ruleForm, "feedback", $$v)
+                                  },
+                                  expression: "ruleForm.feedback"
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "el-col",
                         { attrs: { span: 8 } },
                         [
                           _c(
@@ -93430,44 +93461,6 @@ var render = function() {
                                     )
                                   },
                                   expression: "ruleForm.nextInteractionDate"
-                                }
-                              })
-                            ],
-                            1
-                          )
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c("el-col", { attrs: { span: 24 } }, [
-                        _c("hr", { staticClass: "interaction-hr" })
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "el-col",
-                        { attrs: { span: 24 } },
-                        [
-                          _c(
-                            "el-form-item",
-                            {
-                              attrs: {
-                                prop: "feedback",
-                                label: "Did the client provide any feeedback?"
-                              }
-                            },
-                            [
-                              _c("el-input", {
-                                attrs: {
-                                  type: "textarea",
-                                  rows: 5,
-                                  placeholder: "Enter the feedback remarks"
-                                },
-                                model: {
-                                  value: _vm.ruleForm.feedback,
-                                  callback: function($$v) {
-                                    _vm.$set(_vm.ruleForm, "feedback", $$v)
-                                  },
-                                  expression: "ruleForm.feedback"
                                 }
                               })
                             ],

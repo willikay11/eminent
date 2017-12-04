@@ -30,7 +30,8 @@ class Interaction extends Model
         'client_id',
         'interaction_type_id',
         'interaction_date',
-        'remarks'
+        'remarks',
+        'feedback'
     ];
 
     /**
