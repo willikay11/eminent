@@ -34,6 +34,7 @@ class WhenTaskAssigned
                 'firstname' => $activity->user->contact->firstname,
                 'to' => $activity->user->email,
                 'name' => $activity->name,
+                'type' => $activity->activityType->name,
                 'assigner' => $activity->assigner->contact->present()->fullName,
                 'description' => $activity->description,
                 'priority' => $activity->priorityType->name,

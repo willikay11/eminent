@@ -12,6 +12,11 @@
             </tr>
 
             <tr>
+                <td><b style="font-weight: bold">Type:</b></td>
+                <td>{!! $type !!}</td>
+            </tr>
+
+            <tr>
                 <td><b style="font-weight: bold">Description:</b></td>
                 <td>{!! $description !!}</td>
             </tr>

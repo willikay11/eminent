@@ -19,9 +19,11 @@ use eminent\ActivityFile\ActivityFileRepository;
 use eminent\ActivityWatcher\ActivityWatcherRepository;
 use eminent\Comments\CommentsRepository;
 use eminent\Models\Activity;
+use eminent\Models\ActivityType;
 use eminent\Models\ActivityWatcher;
 use eminent\Models\PriorityType;
 use eminent\Models\ProgressUpdateStatus;
+use eminent\Models\UserClient;
 use eminent\ProgressUpdates\ProgressUpdateRepository;
 use eminent\ProjectUpdateFiles\ProjectUpdateFilesRepository;
 use eminent\Users\UsersRepository;
@@ -119,22 +121,42 @@ class ActivitiesController extends Controller
             });
 
         $progressUpdateStatuses = ProgressUpdateStatus::all()
-            ->map(function ($progressUpdateStatuse)
+            ->map(function ($progressUpdateStatus)
             {
                 return [
-                    'label' => $progressUpdateStatuse->name,
-                    'value' => $progressUpdateStatuse->id
+                    'label' => $progressUpdateStatus->name,
+                    'value' => $progressUpdateStatus->id
                 ];
             });
+
+        $activityTypes = ActivityType::all()
+            ->map(function ($activityType)
+            {
+                return [
+                    'label' => $activityType->name,
+                    'value' => $activityType->id
+                ];
+            });
+
+        $userClients = UserClient::where('user_id', Auth::id())->get()->map(function ($userClient)
+        {
+            $client = $userClient->client;
+
+            return[
+                'label' => $client->contact->present()->fullName,
+                'value' => $client->id
+            ];
+        });
 
         return self::toResponse(null, [
             'users' => $users,
             'priorities' => $priorities,
-            'progressUpdateStatuses' => $progressUpdateStatuses
+            'progressUpdateStatuses' => $progressUpdateStatuses,
+            'activityTypes' => $activityTypes,
+            'userClients' => $userClients
         ]);
 
     }
-
 
     public function save(Request $request)
     {
@@ -145,8 +167,15 @@ class ActivitiesController extends Controller
             'priority_type_id' => $request->get('priority_type_id'),
             'due_date' => Carbon::parse($request->get('due_date'))->toDateString(),
             'activity_status_id' => $request->get('activity_status_id'),
-            'created_by' => Auth::id()
+            'created_by' => Auth::id(),
+            'activity_type_id' => $request->get('activity_type_id'),
         ];
+
+        if($request->get('activity_type_id') == 2)
+        {
+            $input['user_client_id'] = $request->get('user_client_id');
+            $input['projected_revenue'] = $request->get('projected_revenue');
+        }
 
         $activity = $this->activityRepository->store($input);
 

@@ -312,6 +312,54 @@
 
                     <el-row :span="24" :gutter="20">
                         <el-col :span="4">
+                            <span>Activity Type: </span>
+                        </el-col>
+
+                        <el-col :span="20">
+                            <el-form-item prop="activityType">
+                                <el-select v-model="ruleForm.activityType" placeholder="Select Activity Type">
+                                    <el-option
+                                            v-for="item in activityTypes"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+
+                    <el-row :span="24" :gutter="20" v-if="ruleForm.activityType == 2">
+                        <el-col :span="4">
+                            <span>Source: </span>
+                        </el-col>
+                        <el-col :span="20">
+                            <el-form-item prop="source">
+                                <el-select v-model="ruleForm.source" filterable placeholder="Select Source">
+                                    <el-option
+                                            v-for="item in userClients"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+
+                    <el-row :span="24" :gutter="20" v-if="ruleForm.activityType == 2">
+                        <el-col :span="4">
+                            <span>Projected Revenue: </span>
+                        </el-col>
+                        <el-col :span="20">
+                            <el-form-item prop="projectedRevenue">
+                                <el-input-number placeholder="Projected Revenue" v-model="ruleForm.projectedRevenue"></el-input-number>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+
+                    <el-row :span="24" :gutter="20">
+                        <el-col :span="4">
                             <span>Assign To: </span>
                         </el-col>
 
@@ -662,6 +710,8 @@
                 users: [],
                 statuses: [],
                 priorityTypes: [],
+                activityTypes: [],
+                userClients: [],
                 options: [{
                     value: '1',
                     label: 'Active'
@@ -677,9 +727,11 @@
                 ruleForm: {
                     name: '',
                     description: '',
+                    activityType: '',
                     user: '',
                     priority: '',
                     dueDate: '',
+                    projectedRevenue: '',
                 },
                 searchForm: {
                     startDate: '',
@@ -716,11 +768,17 @@
                     name: [
                         {required: true, message: 'Please input activity name', trigger: 'blur'},
                     ],
+                    projectedRevenue: [
+                        {required: false, message: 'Please input projected revenue', trigger: 'blur', type: 'number'},
+                    ],
                     description: [
                         {required: true, message: 'Please input activity description', trigger: 'blur'},
                     ],
                     user: [
                         {required: false, message: 'Please select user', trigger: 'change', type: 'number'},
+                    ],
+                    activityType: [
+                        {required: false, message: 'Please select activity type', trigger: 'change', type: 'number'},
                     ],
 //                    priority: [
 //                        {required: false, message: 'Please select priority', trigger: 'change'},
@@ -851,6 +909,8 @@
                         vm.users = response.data.users;
                         vm.priorityTypes = response.data.priorities;
                         vm.progressUpdateStatuses = response.data.progressUpdateStatuses;
+                        vm.activityTypes = response.data.activityTypes;
+                        vm.userClients = response.data.userClients;
                     }).catch(function (error) {
                     console.log(error);
                 })
@@ -888,7 +948,10 @@
                             user_id: vm.ruleForm.user,
                             priority_type_id: vm.ruleForm.priority,
                             due_date: vm.ruleForm.dueDate + '',
-                            activity_status_id: 1
+                            activity_status_id: 1,
+                            activity_type_id: vm.ruleForm.activityType,
+                            projected_revenue: vm.ruleForm.projectedRevenue,
+                            user_client_id: vm.ruleForm.source
                         })
                             .then(function (response) {
                                 vm.taskDialogVisible = false;

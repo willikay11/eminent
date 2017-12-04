@@ -35,7 +35,10 @@ class Activity extends Model
         'priority_type_id',
         'activity_status_id',
         'due_date',
-        'created_by'
+        'created_by',
+        'user_client_id',
+        'activity_type_id',
+        'projected_revenue'
     ];
 
     /**
@@ -73,5 +76,10 @@ class Activity extends Model
     public function progressUpdates()
     {
         return $this->hasMany(ProgressUpdate::class);
+    }
+
+    public function activityType()
+    {
+        return $this->belongsTo(ActivityType::class);
     }
 }
