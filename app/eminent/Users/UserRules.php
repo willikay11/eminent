@@ -184,4 +184,37 @@ trait UserRules
 
         return $this->verdict($request, $rules);
     }
+
+    public function createContactFromUser($request)
+    {
+
+        $rules = [
+            'title_id' => 'required',
+            'firstname' => 'required',
+            'lastname' => 'required',
+            'email' => 'required| unique:contacts,email| email',
+            'phone' => 'required| unique:contacts,phone| numeric',
+            'country_id' => 'required',
+            'gender_id' => 'required',
+        ];
+
+        return $this->verdict($request, $rules);
+    }
+
+
+    public function editContactFromUser($request, $contactId)
+    {
+
+        $rules = [
+            'title_id' => 'required',
+            'firstname' => 'required',
+            'lastname' => 'required',
+            'email' => 'required| unique:contacts,email,'. $contactId .'| email',
+            'phone' => 'required| unique:contacts,phone,'. $contactId .'| numeric',
+            'country_id' => 'required',
+            'gender_id' => 'required',
+        ];
+
+        return $this->verdict($request, $rules);
+    }
 }

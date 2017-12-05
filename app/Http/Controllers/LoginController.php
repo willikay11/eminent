@@ -87,7 +87,7 @@ class LoginController extends Controller
             $otp = $this->getOTP($user);
 
             //Raise event to send email to user
-//            event(new UserAuthenticated($user, $otp));
+            event(new UserAuthenticated($user, $otp));
 
             //Save the last login time and reset login attempts
 
@@ -99,15 +99,11 @@ class LoginController extends Controller
 
             $request->session()->flash('company_email', $loggedIn);
 
-            Auth::login($user);
+            Flash::message('Enter the 6 digit pin you received in your email to confirm login');
 
-            return redirect('/');
-
-//            Flash::message('Enter the 6 digit pin you received in your email to confirm login');
-//
-//            return view('login.confirm', [
-//                'email' => $email
-//            ]);
+            return view('login.confirm', [
+                'email' => $email
+            ]);
 
         }else{
 

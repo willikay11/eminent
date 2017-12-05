@@ -239,6 +239,7 @@
                 departments: [],
                 countries: [],
                 designations: [],
+                errors: [],
                 roles: [],
                 total: 0,
                 dialogVisible: false,
@@ -353,7 +354,14 @@
             {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
+
                         let vm = this;
+
+                        vm.$message({
+                            type: 'info',
+                            message: "Saving User"
+                        });
+
                         axios.post('/users/save', {
                             type: 1,
                             title_id: vm.ruleForm.title,
@@ -390,10 +398,14 @@
                                 }
                                 else
                                 {
-                                    vm.$message({
-                                        type: 'error',
-                                        message: response.data.message
-                                    });
+                                    vm.errors = response.data.errors;
+
+                                    vm.showErrors();
+
+//                                    vm.$message({
+//                                        type: 'error',
+//                                        message: response.data.message
+//                                    });
                                 }
                             }).catch(function (error) {
                             console.log(error);
@@ -436,6 +448,17 @@
             userRole (option) {
                 return `${option.label}`
             },
+            showErrors(){
+                let vm = this;
+
+                vm.errors.forEach(error => {
+                    vm.$notify.error({
+                        title: 'Error',
+                        message: error,
+                        duration: 0
+                    });
+                });
+            }
         }
     }
 </script>

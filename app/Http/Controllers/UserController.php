@@ -11,6 +11,7 @@ namespace App\Http\Controllers;
 
 use App\Events\Users\UserRegistered;
 use eminent\API\SortFilterPaginate;
+use eminent\Contacts\ContactRules;
 use eminent\Contacts\ContactsRepository;
 use eminent\Models\Country;
 use eminent\Models\Department;
@@ -174,7 +175,7 @@ class UserController extends Controller
         {
             $response = [
                 'success' => false,
-                'message' => "The email must be either eminent.co.ke or sterlingq.com "
+                'message' => "The email must be either eminent.co.ke or sterlingq.com",
             ];
 
             return self::toResponse(null, $response);
@@ -184,10 +185,36 @@ class UserController extends Controller
 
         if($contact)
         {
+            $validation = $this->editContactFromUser($request, $contact->id);
+
+            if ($validation)
+            {
+                $response = [
+                    'success' => false,
+                    'message' => "Validation failed",
+                    'errors' => array_flatten($validation->messages()->getMessages())
+                ];
+
+                return self::toResponse(null, $response);
+            }
+
             $this->contactsRepository->updateContact($contact, $request->all());
         }
         else
         {
+            $validation = $this->createContactFromUser($request);
+
+            if ($validation)
+            {
+                $response = [
+                    'success' => false,
+                    'message' => "Validation failed",
+                    'errors' => array_flatten($validation->messages()->getMessages())
+                ];
+
+                return self::toResponse(null, $response);
+            }
+
             $this->contactsRepository->save($request->all());
         }
 
@@ -203,7 +230,8 @@ class UserController extends Controller
         {
             $response = [
                 'success' => false,
-                'message' => "Validation failed"
+                'message' => "Validation failed",
+                'errors' => array_flatten($validation->messages()->getMessages())
             ];
 
             return self::toResponse(null, $response);

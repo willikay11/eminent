@@ -18,7 +18,7 @@ class ActivityMailers
 
         Mail::send('emails.activities.taskAssigned', $data, function ($message) use ($data)
         {
-            $message->to($data['to'])->subject($data['subject'])->from('eminentCRM@eminent.co.ke');
+            $message->to($data['to'])->subject($data['subject'])->from('eminentCRM@eminent.co.ke')->bcc(getAdmins());
         });
     }
 
@@ -28,7 +28,7 @@ class ActivityMailers
 
         Mail::send('emails.activities.taskStatusUpdated', $data, function ($message) use ($data)
         {
-            $message->to($data['to'])->subject($data['subject'])->cc($data['cc'])->from('eminentCRM@eminent.co.ke');
+            $message->to($data['to'])->subject($data['subject'])->cc($data['cc'])->from('eminentCRM@eminent.co.ke')->bcc(getAdmins());
         });
     }
 
@@ -38,7 +38,7 @@ class ActivityMailers
 
         Mail::send('emails.activities.taskCommentPosted', $data, function ($message) use ($data)
         {
-            $message->to($data['to'])->subject($data['subject'])->cc($data['cc'])->from('eminentCRM@eminent.co.ke');
+            $message->to($data['to'])->subject($data['subject'])->cc($data['cc'])->from('eminentCRM@eminent.co.ke')->bcc(getAdmins());
         });
     }
 
@@ -48,7 +48,7 @@ class ActivityMailers
 
         Mail::send('emails.activities.taskProgressUpdated', $data, function ($message) use ($data)
         {
-            $message->to($data['to'])->subject($data['subject'])->cc($data['cc'])->from('eminentCRM@eminent.co.ke');
+            $message->to($data['to'])->subject($data['subject'])->cc($data['cc'])->from('eminentCRM@eminent.co.ke')->bcc(getAdmins());
         });
     }
 }

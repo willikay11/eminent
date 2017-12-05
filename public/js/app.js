@@ -88797,6 +88797,7 @@ exports.default = {
             departments: [],
             countries: [],
             designations: [],
+            errors: [],
             roles: [],
             total: 0,
             dialogVisible: false,
@@ -88882,7 +88883,14 @@ exports.default = {
 
             this.$refs[formName].validate(function (valid) {
                 if (valid) {
+
                     var vm = _this;
+
+                    vm.$message({
+                        type: 'info',
+                        message: "Saving User"
+                    });
+
                     axios.post('/users/save', {
                         type: 1,
                         title_id: vm.ruleForm.title,
@@ -88914,10 +88922,14 @@ exports.default = {
 
                             vm.$refs[formName].resetFields();
                         } else {
-                            vm.$message({
-                                type: 'error',
-                                message: response.data.message
-                            });
+                            vm.errors = response.data.errors;
+
+                            vm.showErrors();
+
+                            //                                    vm.$message({
+                            //                                        type: 'error',
+                            //                                        message: response.data.message
+                            //                                    });
                         }
                     }).catch(function (error) {
                         console.log(error);
@@ -88955,6 +88967,17 @@ exports.default = {
         },
         userRole: function userRole(option) {
             return '' + option.label;
+        },
+        showErrors: function showErrors() {
+            var vm = this;
+
+            vm.errors.forEach(function (error) {
+                vm.$notify.error({
+                    title: 'Error',
+                    message: error,
+                    duration: 0
+                });
+            });
         }
     }
 }; //

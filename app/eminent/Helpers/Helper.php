@@ -64,3 +64,8 @@ function resetPermissions()
 
     Session::put('permissionsArray_' . Auth::user()->id, array_unique($permissions));
 }
+
+function getAdmins()
+{
+    return explode(',', getenv('ADMIN_EMAIL'));
+}
