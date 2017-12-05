@@ -14,6 +14,7 @@ use eminent\Users\UserRules;
 use Illuminate\Http\Request;
 use eminent\Users\UsersRepository;
 use eminent\Users\SessionRepository;
+use Illuminate\Support\Facades\Session;
 use Laracasts\Flash\Flash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -210,6 +211,8 @@ class LoginController extends Controller
 
         Auth::logout();
 
+        Session::flush();
+        
         Flash::message('You have now been Logged out');
 
         return redirect('/login');
