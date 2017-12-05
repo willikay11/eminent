@@ -23,7 +23,7 @@ class UserMailers
 
         Mail::send('emails.users.one_time_key', $data, function ($message) use ($data)
         {
-            $message->to($data['email'])->subject($data['subject']);
+            $message->to($data['email'])->subject($data['subject'])->from('eminentCRM@eminent.co.ke');
         });
     }
 

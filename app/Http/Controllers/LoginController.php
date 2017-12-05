@@ -212,7 +212,7 @@ class LoginController extends Controller
         Auth::logout();
 
         Session::flush();
-        
+
         Flash::message('You have now been Logged out');
 
         return redirect('/login');
