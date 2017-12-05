@@ -88978,6 +88978,26 @@ exports.default = {
                     duration: 0
                 });
             });
+        },
+        resendActivationLink: function resendActivationLink(user) {
+            var vm = this;
+            axios.get('/users/resend/activation/link/' + user.id).then(function (response) {
+                if (response.data.success) {
+                    vm.$message({
+                        type: 'success',
+                        message: response.data.message
+                    });
+
+                    vm.getUsers();
+                } else {
+                    vm.$message({
+                        type: 'error',
+                        message: response.data.message
+                    });
+                }
+            }).catch(function (error) {
+                console.log(error);
+            });
         }
     }
 }; //

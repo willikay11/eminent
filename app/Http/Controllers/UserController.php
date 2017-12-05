@@ -11,6 +11,7 @@ namespace App\Http\Controllers;
 
 use App\Events\Users\UserRegistered;
 use eminent\API\SortFilterPaginate;
+use eminent\Authorization\Authorizer;
 use eminent\Contacts\ContactRules;
 use eminent\Contacts\ContactsRepository;
 use eminent\Models\Country;
@@ -30,9 +31,13 @@ class UserController extends Controller
 {
 
     use SortFilterPaginate;
+
     use UserRules;
 
+    use Authorizer;
+
     protected $usersRepository;
+
     protected $contactsRepository;
     /**
      * @var UserHasRolesRepository
@@ -282,7 +287,7 @@ class UserController extends Controller
         {
             if(is_null($user->activation_key) && $user->active == 1)
             {
-                Flash::error('Account is already activated, you can now login');
+                Flash('Account is already activated, you can now login')->error();
 
                 return redirect('/login');
             }
@@ -290,25 +295,25 @@ class UserController extends Controller
             {
                 if(! $this->usersRepository->checkActivationKeyExpiry( $user->activation_key_created_at ))
                 {
-                    Flash::error('Activation Key has expired, please request a new one from the administrator');
+                    Flash('Activation Key has expired, please request a new one from the administrator')->error();
 
                     return redirect('/login');
                 }
 
-                Flash::success('Account activated succesfully. Now create a new password for your account');
+                Flash('Account activated successfully. Now create a new password for your account')->success();
 
                 return redirect('/users/create_password/'. $code);
             }
             else
             {
-                Flash::error('Could not activate that user, check that the activation link is correct or contact the administrator');
+                Flash('Could not activate that user, check that the activation link is correct or contact the administrator')->error();
 
                 return redirect('/login');
             }
         }
         else
         {
-            Flash::error('Could not activate account, check that the activation link is correct or whether account is already activated or contact the administrator');
+            Flash('Could not activate account, check that the activation link is correct or whether account is already activated or contact the administrator')->error();
 
             return redirect('/login');
         }
@@ -343,7 +348,7 @@ class UserController extends Controller
 
             $this->usersRepository->activate($user, $request->all());
 
-            Flash::success('Password created succesfully. You can now login');
+            Flash::success('Password created successfully. You can now login');
 
             return redirect('/');
         }
@@ -360,6 +365,24 @@ class UserController extends Controller
         return view('users.roles', [
             'userId' => $id
         ]);
+    }
+
+    public function resendActivation($id)
+    {
+        $this->hasPermission('manageUsers', true);
+
+        $user = $this->usersRepository->getUserById($id);
+
+        $user = $this->usersRepository->resendActivation($user);
+
+        event(new UserRegistered($user));
+
+        $response = [
+            'success' => true,
+            'message' => "Account activation email resent successfully",
+        ];
+
+        return self::toResponse(null, $response);
     }
 
     public function toResponse($request = null, $data)

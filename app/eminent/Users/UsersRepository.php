@@ -122,4 +122,15 @@ class UsersRepository
 
         $user->save();
     }
+
+    public function resendActivation($user)
+    {
+        $user->activation_key = sha1(md5(time()));
+
+        $user->activation_key_created_at = Carbon::now();
+
+        $user->save();
+
+        return $user;
+    }
 }

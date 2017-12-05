@@ -53,6 +53,7 @@
                                     <template slot-scope="scope">
                                         <el-button @click="EditUser(scope.row)" size="small">Edit</el-button>
                                         <el-button @click="UserRole(scope.row)" size="small">Roles</el-button>
+                                        {{--<el-button @click="resendActivationLink(scope.row)" size="small">Resend Activation Link</el-button>--}}
                                     </template>
                                 </el-table-column>
                             @endif

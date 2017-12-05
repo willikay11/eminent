@@ -143,19 +143,8 @@ Route::group(['middleware' => 'auth'], function (){
         'uses' => 'UserController@storeUser'
     ]);
 
-    Route::get('/users/activation/userId/{id}/code/{code}', [
-        'as' => 'users.activation',
-        'uses' => 'UserController@activation'
-    ]);
-
-    Route::get('/users/create_password/{id}', [
-        'as' => 'users.create_password',
-        'uses' => 'UserController@createPassword'
-    ]);
-
-    Route::post('/users/create_password/{id}', [
-        'as' => 'users.create_password',
-        'uses' => 'UserController@savePassword'
+    Route::get('/users/resend/activation/link/{id}', [
+        'uses' => 'UserController@resendActivation'
     ]);
 
     Route::get('/user/{id}/role/', [
@@ -424,5 +413,20 @@ Route::group(['middleware' => 'guest'], function() {
     Route::post('/password/reset/user/{id}', [
         'as' => 'login.reset',
         'uses' => 'RemindersController@savePassword'
+    ]);
+
+    Route::get('/users/activation/userId/{id}/code/{code}', [
+        'as' => 'users.activation',
+        'uses' => 'UserController@activation'
+    ]);
+
+    Route::get('/users/create_password/{id}', [
+        'as' => 'users.create_password',
+        'uses' => 'UserController@createPassword'
+    ]);
+
+    Route::post('/users/create_password/{id}', [
+        'as' => 'users.create_password',
+        'uses' => 'UserController@savePassword'
     ]);
 });
