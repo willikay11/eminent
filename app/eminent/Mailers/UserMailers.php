@@ -36,7 +36,7 @@ class UserMailers
 
         Mail::send('emails.users.reset_password', $data, function ($message) use ($data)
         {
-            $message->to($data['email'])->subject($data['subject']);
+            $message->to($data['email'])->subject($data['subject'])->from('eminentCRM@eminent.co.ke');
         });
     }
 
@@ -46,7 +46,7 @@ class UserMailers
 
         Mail::send('emails.users.accountactivation', $data, function ($message) use ($data)
         {
-            $message->to($data['email'])->subject($data['subject']);
+            $message->to($data['email'])->subject($data['subject'])->from('eminentCRM@eminent.co.ke');
         });
     }
 }

@@ -19,7 +19,7 @@ class InteractionMailers
 
         Mail::send('emails.interactions.interactions_generated', $data, function($message) use ($data)
         {
-            $message->to($data['to'])->subject($data['subject']);
+            $message->to($data['to'])->subject($data['subject'])->from('eminentCRM@eminent.co.ke');
 
             $message->attach(storage_path('excels/'. $data['path']));
         });

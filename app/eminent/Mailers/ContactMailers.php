@@ -19,7 +19,7 @@ class ContactMailers
 
         Mail::send('emails.contacts.assigned', $data, function ($message) use ($data)
         {
-            $message->to($data['to'])->subject($data['subject'])->cc($data['cc']);
+            $message->to($data['to'])->subject($data['subject'])->cc($data['cc'])->from('eminentCRM@eminent.co.ke');
         });
     }
 
@@ -27,7 +27,7 @@ class ContactMailers
     {
         Mail::send('emails.contacts.reassigned', $data, function($message) use ($data)
         {
-            $message->to($data['to'])->subject($data['subject'])->cc($data['cc']);
+            $message->to($data['to'])->subject($data['subject'])->cc($data['cc'])->from('eminentCRM@eminent.co.ke');
         });
     }
 
@@ -37,7 +37,7 @@ class ContactMailers
 
         Mail::send('emails.contacts.contacts_generated', $data, function($message) use ($data)
         {
-            $message->to($data['to'])->subject($data['subject']);
+            $message->to($data['to'])->subject($data['subject'])->from('eminentCRM@eminent.co.ke');
 
             $message->attach(storage_path('excels/'. $data['path']));
         });
