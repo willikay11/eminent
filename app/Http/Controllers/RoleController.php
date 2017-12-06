@@ -60,20 +60,30 @@ class RoleController extends Controller
 
     public function getMembers($roleId)
     {
-        $filter = [
-            'column' => 'role_id',
-            'sign' => '=',
-            'value' =>  $roleId
-        ];
+        $userHasRoles = UserHasRole::where('role_id', $roleId)->get();
 
-        $users = $this->sortFilterPaginate(new User(), [$filter], function ($user)
+        $users = array();
+
+        foreach ($userHasRoles as $userHasRole)
         {
-            return[
+            $user = $userHasRole->user;
+
+            $users[] = [
                 'id' => $user->id,
                 'name' => $user->contact->firstname.' '.$user->contact->lastname,
                 'email' => $user->email,
             ];
-        },null, null);
+
+        }
+
+//        $users = $this->sortFilterPaginate(new User(), [$filter], function ($user)
+//        {
+//            return[
+//                'id' => $user->id,
+//                'name' => $user->contact->firstname.' '.$user->contact->lastname,
+//                'email' => $user->email,
+//            ];
+//        },null, null);
 
         return self::toResponse(null, $users);
         

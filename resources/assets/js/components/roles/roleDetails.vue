@@ -117,8 +117,8 @@
                 let vm = this;
                 axios.get('/api/role/'+ vm.id +'/members')
                     .then(function (response) {
-                        vm.memberTableData = [].concat(response.data.data);
-                        vm.total = response.data.last_page;
+                        vm.memberTableData = response.data;
+//                        vm.total = response.data.last_page;
                     }).catch(function (error) {
                     console.log(error);
                 })
