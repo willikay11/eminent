@@ -10,6 +10,7 @@
         <div class="panel-body">
             <el-table
                     :data="tableData"
+                    v-loading.body="loading"
                     stripe
                     style="width: 100%">
                 <el-table-column
@@ -34,6 +35,7 @@
             <div class="block">
                 <el-pagination
                         layout="prev, pager, next"
+                        @current-change="handleCurrentChange"
                         :total="total">
                 </el-pagination>
             </div>
@@ -46,7 +48,8 @@
         data() {
             return {
                 tableData: [],
-                total: 0
+                total: 0,
+                loading: true
             }
         },
         created: function () {
@@ -59,18 +62,33 @@
             handleClick() {
                 console.log('click');
             },
-            getPermissions()
+            getPermissions(page = null)
             {
                 let vm = this;
-                axios.get('/api/permissions')
+
+                vm.loading = true;
+
+                let url = '/api/permissions';
+
+                if (page != null)
+                {
+                    url = '/api/permissions/?page='+page
+                }
+
+                axios.get(url)
                     .then(function (response) {
-                        vm.tableData = [].concat(response.data.data);
-                        vm.total = response.data.last_page;
+                        vm.tableData = response.data.data;
+                        vm.total = response.data.last_page * 10;
+                        vm.loading = false;
                     }).catch(function (error) {
                     console.log(error);
                 })
             },
+            handleCurrentChange(val) {
+                let vm = this;
 
+                vm.getPermissions(val);
+            }
         }
     }
 </script>

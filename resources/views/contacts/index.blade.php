@@ -14,7 +14,7 @@
                         <el-col :xs="12" :sm="12" :md="12" :lg="12" style="text-align: right; padding-right: 40px">
                             <el-col :xs="12" :sm="12" :md="12" :lg="12">
                                 @if(in_array(7, getPermissions()))
-                                    <button class="btn ebg-button" v-on:click="showReassignContactsDialog()" style="margin-right: 20px">
+                                    <button class="btn ebg-button" v-if="selectedUsersForReassign.length != 0" v-on:click="showReassignContactsDialog()" style="margin-right: 20px">
                                         Reassign Contact
                                     </button>
                                 @endif
@@ -88,6 +88,21 @@
                                     </el-form-item>
                                 </el-col>
 
+                                @if(in_array(5, getPermissions()))
+                                    <el-col :xs="3" :sm="2" :md="3" :lg="4">
+                                        <el-form-item prop="users" label="Users:">
+                                            <el-select v-model="searchForm.user" placeholder="Select User">
+                                                <el-option
+                                                        v-for="item in allUsers"
+                                                        :key="item.value"
+                                                        :label="item.label"
+                                                        :value="item.value">
+                                                </el-option>
+                                            </el-select>
+                                        </el-form-item>
+                                    </el-col>
+                                @endif()
+
                                 <el-col :xs="1" :sm="1" :md="1" :lg="2">
                                     <el-form-item prop="search" style="margin-top: 30px">
                                         <el-button type="primary" @click="searchContacts()">Search</el-button>
@@ -104,20 +119,20 @@
                             </el-form>
                         </el-row>
 
-                        <!--<el-row style="padding-left: 30px">-->
-                        <!--<el-col :span="2">-->
-                    <!--<el-button type="primary" @click="exportContacts()">Export</el-button>-->
-                        <!--</el-col>-->
-                        <!--</el-row>-->
-
                         <div class="col-lg-12">
                             <hr>
                         </div>
 
                         <el-table
+                                v-loading.body="tableLoading"
                                 :data="tableData"
                                 stripe
-                                style="width: 100%">
+                                style="width: 100%"
+                                @selection-change="handleSelectionChange">
+                            <el-table-column
+                                    type="selection"
+                                    width="55">
+                            </el-table-column>
                             <el-table-column
                                     prop="name"
                                     label="Name">
@@ -390,7 +405,7 @@
                                     </el-col>
 
                                     <el-col :span="20">
-                                        <span> @{{ tableData.length }}</span>
+                                        <span>@{{ selectedUsersForReassign.length }}</span>
                                     </el-col>
                                 </el-row>
 
@@ -406,7 +421,7 @@
                                                     v-model="reassignForm.users"
                                                     :options="users"
                                                     :multiple="true"
-                                                    track-by="id"
+                                                    track-by="value"
                                                     :custom-label="userLabel">
                                             </multiselect>
                                         </el-form-item>

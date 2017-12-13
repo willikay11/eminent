@@ -50,7 +50,7 @@ class UserClientsRepository
             foreach($chuckedClient as $userClient)
             {
                 UserClient::create([
-                    'client_id' => $userClient['client_id'],
+                    'client_id' => $userClient['clientId'],
                     'user_id' => $userArray[$index]['id'],
                 ]);
 

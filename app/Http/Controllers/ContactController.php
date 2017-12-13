@@ -154,8 +154,18 @@ class ContactController extends Controller
         $users = $users->map(function ($user)
         {
             return [
-                'id' => $user->id,
-                'name' => $user->contact->present()->fullName
+                'value' => $user->id,
+                'label' => $user->contact->present()->fullName
+            ];
+        });
+
+        $allUsers = $this->usersRepository->getAllActiveUsers();
+
+        $allUsers = $allUsers->map(function ($user)
+        {
+            return [
+                'value' => $user->id,
+                'label' => $user->contact->present()->fullName
             ];
         });
 
@@ -188,6 +198,7 @@ class ContactController extends Controller
             'users' => $users->toArray(),
             'selectedUser' => $selectedUser,
             'statuses' => $statuses,
+            'allUsers' => $allUsers
         ];
 
         return self::toResponse(null, $data);
@@ -239,6 +250,7 @@ class ContactController extends Controller
             return[
                 'id' => $contact->present()->getUserClientId(Auth::id()),
                 'contactId' => $contact->id,
+                'clientId' => $contact->clients->id,
                 'name' => $contact->present()->fullName,
                 'firstName' => $contact->firstname,
                 'lastName' => $contact->lastname,
@@ -323,6 +335,7 @@ class ContactController extends Controller
             return[
                 'id' => $contact->present()->getUserClientId(Auth::id()),
                 'contactId' => $contact->id,
+                'clientId' => $contact->clients->id,
                 'name' => $contact->present()->fullName,
                 'firstName' => $contact->firstname,
                 'lastName' => $contact->lastname,
@@ -674,7 +687,7 @@ class ContactController extends Controller
 
         if($validation)
         {
-            return self::toResponse([
+            return self::toResponse(null,[
                 'success' => false,
                 'message' => 'Validation Failed'
             ]);
@@ -686,7 +699,7 @@ class ContactController extends Controller
 
         foreach($assignedUsers as $assignedUser)
         {
-            $user = $this->usersRepository->getUserById($assignedUser['id']);
+            $user = $this->usersRepository->getUserById($assignedUser['value']);
 
             $userArray[] = [
                 'firstname' => $user->contact->firstname,
@@ -694,12 +707,13 @@ class ContactController extends Controller
                 'id' => $user->id,
                 'total' => 0
             ];
-
         }
+
+        $contactsToBeReassigned = $request->get('contactsToBeReassigned');
 
         $user = $this->usersRepository->getUserById($request->get('user_id'));
 
-        $chuckedClients = array_chunk($user->userClients->toArray(), count($assignedUsers));
+        $chuckedClients = array_chunk($contactsToBeReassigned, count($assignedUsers));
 
         $userArray = $this->userClientsRepository->saveAssignedContacts($chuckedClients, $userArray);
 

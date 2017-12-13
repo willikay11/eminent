@@ -40,6 +40,7 @@
             <div class="block">
                 <el-pagination
                         layout="prev, pager, next"
+                        @current-change="handleCurrentChange"
                         :total="total">
                 </el-pagination>
             </div>
@@ -87,6 +88,7 @@
                     label: 'Inactive'
                 }],
                 total: 0,
+                loading: true,
                 dialogVisible: false,
                 designationId: null,
                 ruleForm: {
@@ -100,7 +102,7 @@
                     active : [
                         {required: true, message: 'Please active status', trigger: 'change'},
                     ]
-                }
+                },
             }
         },
         created: function () {
@@ -113,13 +115,24 @@
             handleClick() {
                 console.log('click');
             },
-            getDesignations()
+            getDesignations(page = null)
             {
                 let vm = this;
-                axios.get('/api/designations')
+
+                vm.loading = true;
+
+                let url = '/api/designations';
+
+                if (page != null)
+                {
+                    url = '/api/designations/?page='+page
+                }
+
+                axios.get(url)
                     .then(function (response) {
-                        vm.tableData = [].concat(response.data.data);
-                        vm.total = response.data.last_page;
+                        vm.tableData = response.data.data;
+                        vm.total = response.data.last_page * 10;
+                        vm.loading = false;
                     }).catch(function (error) {
                     console.log(error);
                 })
@@ -175,6 +188,7 @@
                     }
                 });
             },
+
             EditDesignation(designation)
             {
                 let vm = this;
@@ -185,8 +199,15 @@
 
                 vm.designationId = designation.id;
             },
+
             filterTag(value, row) {
                 return row.tag === value;
+            },
+
+            handleCurrentChange(val) {
+                let vm = this;
+
+                vm.getDesignations(val);
             }
         }
     }

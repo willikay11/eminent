@@ -8,6 +8,7 @@
         components: {Multiselect},
         data() {
             return {
+                tableLoading: true,
                 tableData: [],
                 genders: [],
                 titles: [],
@@ -19,6 +20,8 @@
                 statuses: [],
                 services: [],
                 selectedUser: [],
+                allUsers: [],
+                selectedUsersForReassign: [],
                 type: '1',
                 options: [{
                     value: '1',
@@ -36,6 +39,7 @@
                     endDate: '',
                     source: '',
                     status: '',
+                    user: ''
                 },
                 reassignForm: {
                     users: ''
@@ -140,6 +144,7 @@
             handleClick() {
                 console.log('click');
             },
+
             getInformation()
             {
                 let vm = this;
@@ -153,12 +158,14 @@
                         vm.religions = response.data.religions;
                         vm.professions = response.data.professions;
                         vm.users = response.data.users;
-                        vm.selectedUser = response.data.selectedUser
-                        vm.statuses = response.data.statuses
+                        vm.selectedUser = response.data.selectedUser;
+                        vm.statuses = response.data.statuses;
+                        vm.allUsers = response.data.allUsers;
                     }).catch(function (error) {
                     console.log(error);
                 })
             },
+
             getUserContacts()
             {
                 let vm = this;
@@ -168,6 +175,7 @@
                         {
                             vm.tableData = response.data.contacts.data;
                             vm.total = response.data.contacts.last_page;
+                            vm.tableLoading = false;
                         }
                         else
                         {
@@ -181,13 +189,16 @@
                     console.log(error);
                 })
             },
+
             showAddDialog()
             {
                 let vm = this;
 
                 vm.dialogVisible = true;
             },
-            handleClose(done) {
+
+            handleClose(done)
+            {
                 this.$confirm('Are you sure to close this dialog?')
                     .then(_ => {
                         done();
@@ -195,6 +206,7 @@
                     .catch(_ => {
                     });
             },
+
             add(formName)
             {
                 this.$refs[formName].validate((valid) => {
@@ -288,6 +300,13 @@
             {
                     let vm = this;
 
+                    let userId = vm.userId;
+
+                    if(vm.searchForm.user != '')
+                    {
+                        userId = vm.searchForm.user;
+                    }
+
                     vm.$message({
                         type: 'info',
                         message: 'Searching...'
@@ -298,7 +317,7 @@
                         endDate: vm.searchForm.endDate+"",
                         source: vm.searchForm.source,
                         status: vm.searchForm.status,
-                        userId: vm.userId,
+                        userId: userId,
                     })
                         .then(function (response) {
 
@@ -322,7 +341,8 @@
                     });
             },
 
-            filterTag(value, row) {
+            filterTag(value, row)
+            {
                 return row.tag === value;
             },
 
@@ -331,12 +351,14 @@
                 window.location.href = '/contact/details/' + user.id;
             },
 
-            customLabel (option) {
+            customLabel (option)
+            {
                 return `${option.label}`
             },
 
-            userLabel (option) {
-                return `${option.name}`
+            userLabel (option)
+            {
+                return `${option.label}`
             },
 
             showReassignContactsDialog()
@@ -397,17 +419,18 @@
                         axios.post('/contacts/reassign', {
                             user_id: vm.userId,
                             assigned: vm.reassignForm.users,
-                            contacts: vm.tableData.length
+                            contacts: vm.selectedUsersForReassign.length,
+                            contactsToBeReassigned: vm.selectedUsersForReassign
                         })
                             .then(function (response) {
-
-                                vm.getUserContacts();
 
                                 if (response.data.success) {
                                     vm.$message({
                                         type: 'success',
                                         message: response.data.message
                                     });
+
+                                    vm.selectedUsersForReassign = [];
 
                                     vm.reassignContactsDialogVisible = false;
 
@@ -426,6 +449,10 @@
                         return false;
                     }
                 });
+            },
+
+            handleSelectionChange(val) {
+                this.selectedUsersForReassign = val;
             }
         }
     }

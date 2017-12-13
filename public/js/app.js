@@ -84831,12 +84831,15 @@ Object.defineProperty(exports, "__esModule", {
 //
 //
 //
+//
+//
 
 exports.default = {
     data: function data() {
         return {
             tableData: [],
-            total: 0
+            total: 0,
+            loading: true
         };
     },
 
@@ -84851,13 +84854,30 @@ exports.default = {
             console.log('click');
         },
         getPermissions: function getPermissions() {
+            var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
             var vm = this;
-            axios.get('/api/permissions').then(function (response) {
-                vm.tableData = [].concat(response.data.data);
-                vm.total = response.data.last_page;
+
+            vm.loading = true;
+
+            var url = '/api/permissions';
+
+            if (page != null) {
+                url = '/api/permissions/?page=' + page;
+            }
+
+            axios.get(url).then(function (response) {
+                vm.tableData = response.data.data;
+                vm.total = response.data.last_page * 10;
+                vm.loading = false;
             }).catch(function (error) {
                 console.log(error);
             });
+        },
+        handleCurrentChange: function handleCurrentChange(val) {
+            var vm = this;
+
+            vm.getPermissions(val);
         }
     }
 };
@@ -84880,6 +84900,15 @@ var render = function() {
         _c(
           "el-table",
           {
+            directives: [
+              {
+                name: "loading",
+                rawName: "v-loading.body",
+                value: _vm.loading,
+                expression: "loading",
+                modifiers: { body: true }
+              }
+            ],
             staticStyle: { width: "100%" },
             attrs: { data: _vm.tableData, stripe: "" }
           },
@@ -84925,7 +84954,8 @@ var render = function() {
         { staticClass: "block" },
         [
           _c("el-pagination", {
-            attrs: { layout: "prev, pager, next", total: _vm.total }
+            attrs: { layout: "prev, pager, next", total: _vm.total },
+            on: { "current-change": _vm.handleCurrentChange }
           })
         ],
         1
@@ -85638,7 +85668,6 @@ exports.default = {
         getRoleMembers: function getRoleMembers() {
             var vm = this;
             axios.get('/api/role/' + vm.id + '/members').then(function (response) {
-                //                        console.log(response.data);
                 vm.memberTableData = response.data;
                 //                        vm.total = response.data.last_page;
             }).catch(function (error) {
@@ -86087,6 +86116,7 @@ Object.defineProperty(exports, "__esModule", {
 //
 //
 //
+//
 
 exports.default = {
     data: function data() {
@@ -86100,6 +86130,7 @@ exports.default = {
                 label: 'Inactive'
             }],
             total: 0,
+            loading: true,
             dialogVisible: false,
             designationId: null,
             ruleForm: {
@@ -86124,10 +86155,22 @@ exports.default = {
             console.log('click');
         },
         getDesignations: function getDesignations() {
+            var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
             var vm = this;
-            axios.get('/api/designations').then(function (response) {
-                vm.tableData = [].concat(response.data.data);
-                vm.total = response.data.last_page;
+
+            vm.loading = true;
+
+            var url = '/api/designations';
+
+            if (page != null) {
+                url = '/api/designations/?page=' + page;
+            }
+
+            axios.get(url).then(function (response) {
+                vm.tableData = response.data.data;
+                vm.total = response.data.last_page * 10;
+                vm.loading = false;
             }).catch(function (error) {
                 console.log(error);
             });
@@ -86187,6 +86230,11 @@ exports.default = {
         },
         filterTag: function filterTag(value, row) {
             return row.tag === value;
+        },
+        handleCurrentChange: function handleCurrentChange(val) {
+            var vm = this;
+
+            vm.getDesignations(val);
         }
     }
 };
@@ -86304,7 +86352,8 @@ var render = function() {
           { staticClass: "block" },
           [
             _c("el-pagination", {
-              attrs: { layout: "prev, pager, next", total: _vm.total }
+              attrs: { layout: "prev, pager, next", total: _vm.total },
+              on: { "current-change": _vm.handleCurrentChange }
             })
           ],
           1
@@ -90012,6 +90061,7 @@ exports.default = {
     components: { Multiselect: _vueMultiselect2.default },
     data: function data() {
         return {
+            tableLoading: true,
             tableData: [],
             genders: [],
             titles: [],
@@ -90023,6 +90073,8 @@ exports.default = {
             statuses: [],
             services: [],
             selectedUser: [],
+            allUsers: [],
+            selectedUsersForReassign: [],
             type: '1',
             options: [{
                 value: '1',
@@ -90039,7 +90091,8 @@ exports.default = {
                 startDate: '',
                 endDate: '',
                 source: '',
-                status: ''
+                status: '',
+                user: ''
             },
             reassignForm: {
                 users: ''
@@ -90118,6 +90171,7 @@ exports.default = {
                 vm.users = response.data.users;
                 vm.selectedUser = response.data.selectedUser;
                 vm.statuses = response.data.statuses;
+                vm.allUsers = response.data.allUsers;
             }).catch(function (error) {
                 console.log(error);
             });
@@ -90128,6 +90182,7 @@ exports.default = {
                 if (response.data.success) {
                     vm.tableData = response.data.contacts.data;
                     vm.total = response.data.contacts.last_page;
+                    vm.tableLoading = false;
                 } else {
                     vm.$message({
                         type: 'error',
@@ -90236,6 +90291,12 @@ exports.default = {
         searchContacts: function searchContacts() {
             var vm = this;
 
+            var userId = vm.userId;
+
+            if (vm.searchForm.user != '') {
+                userId = vm.searchForm.user;
+            }
+
             vm.$message({
                 type: 'info',
                 message: 'Searching...'
@@ -90246,7 +90307,7 @@ exports.default = {
                 endDate: vm.searchForm.endDate + "",
                 source: vm.searchForm.source,
                 status: vm.searchForm.status,
-                userId: vm.userId
+                userId: userId
             }).then(function (response) {
 
                 if (response.data.success) {
@@ -90277,7 +90338,7 @@ exports.default = {
             return '' + option.label;
         },
         userLabel: function userLabel(option) {
-            return '' + option.name;
+            return '' + option.label;
         },
         showReassignContactsDialog: function showReassignContactsDialog() {
             var vm = this;
@@ -90332,16 +90393,17 @@ exports.default = {
                     axios.post('/contacts/reassign', {
                         user_id: vm.userId,
                         assigned: vm.reassignForm.users,
-                        contacts: vm.tableData.length
+                        contacts: vm.selectedUsersForReassign.length,
+                        contactsToBeReassigned: vm.selectedUsersForReassign
                     }).then(function (response) {
-
-                        vm.getUserContacts();
 
                         if (response.data.success) {
                             vm.$message({
                                 type: 'success',
                                 message: response.data.message
                             });
+
+                            vm.selectedUsersForReassign = [];
 
                             vm.reassignContactsDialogVisible = false;
 
@@ -90359,6 +90421,9 @@ exports.default = {
                     return false;
                 }
             });
+        },
+        handleSelectionChange: function handleSelectionChange(val) {
+            this.selectedUsersForReassign = val;
         }
     }
 }; //

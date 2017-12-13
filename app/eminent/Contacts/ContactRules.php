@@ -75,6 +75,7 @@ trait ContactRules
             'user_id' => 'required',
             'assigned' => 'required',
             'contacts' => 'required',
+            'contactsToBeReassigned' => 'array'
         ];
 
         return $this->verdict($request, $rules);
