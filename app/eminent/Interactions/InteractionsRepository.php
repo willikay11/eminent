@@ -36,6 +36,10 @@ class InteractionsRepository
     public function getInteractionsByUserIdAndClientId($userId, $clientId)
     {
         return Interaction::where('user_id', $userId)->where('client_id', $clientId)->get();
+    }
 
+    public function getInteractionsByClientId($clientId)
+    {
+        return Interaction::where('client_id', $clientId)->get();
     }
 }

@@ -28,6 +28,10 @@ class NotesRepository
     public function getNotesByUserIdAndClientId($userId, $clientId)
     {
         return Note::where('user_id', $userId)->where('client_id', $clientId)->get();
+    }
 
+    public function getNotesByClientId($clientId)
+    {
+        return Note::where('client_id', $clientId)->get();
     }
 }

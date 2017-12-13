@@ -151,11 +151,12 @@
                         <el-tab-pane label="Interactions" name="first">
                             <ul style="list-style: none; padding-left:0px" v-for="interaction in interactionData">
                                 <li>
-                                    <div class="col-lg-6 col-md-6 col-sm-12">
+                                    <div class="col-lg-8 col-md-8 col-sm-12">
                                         <span>{{ interaction.remarks }}</span>
                                     </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-12" style="text-align: right">
-                                        <span> <i class="fa fa-clock-o" aria-hidden="true"></i> &nbsp; {{ interaction.date }}</span>
+                                    <div class="col-lg-4 col-md-4 col-sm-12" style="text-align: right">
+                                        <span> <i class="fa fa-clock-o" aria-hidden="true"></i> &nbsp; {{ interaction.date }}</span> &nbsp; &nbsp;
+                                        <span> <i class="fa fa-user" aria-hidden="true"></i> &nbsp; {{ interaction.user }}</span>
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-12">
                                         <span v-if="interaction.interactionTypeId == 1"> <i class="fa fa-meetup" aria-hidden="true"></i> &nbsp; Interacted over {{ interaction.interactionType }}</span>
@@ -172,11 +173,12 @@
                         <el-tab-pane label="Notes" name="second">
                             <ul v-if="noteData.length > 0" style="list-style: none; padding-left:0px" v-for="note in noteData">
                                 <li>
-                                    <div class="col-lg-6 col-md-6 col-sm-12">
+                                    <div class="col-lg-8 col-md-8 col-sm-12">
                                         <span>{{ note.note }}</span>
                                     </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-12" style="text-align: right">
-                                        <span> <i class="fa fa-clock-o" aria-hidden="true"></i> &nbsp; {{ note.date }}</span>
+                                    <div class="col-lg-4 col-md-4 col-sm-12" style="text-align: right">
+                                        <span> <i class="fa fa-clock-o" aria-hidden="true"></i> &nbsp; {{ note.date }}</span> &nbsp; &nbsp;
+                                        <span> <i class="fa fa-clock-o" aria-hidden="true"></i> &nbsp; {{ note.user }}</span>
                                     </div>
                                     <div class="col-lg-12">
                                         <hr>
@@ -467,6 +469,7 @@
                     console.log(error);
                 });
             },
+
             showInteraction()
             {
               let vm = this;

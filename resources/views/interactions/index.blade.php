@@ -70,6 +70,7 @@
 
                         <el-table
                                 :data="tableData"
+                                v-loading.body="loading"
                                 stripe
                                 style="width: 100%">
                             <el-table-column
@@ -97,6 +98,7 @@
                         <div class="block">
                             <el-pagination
                                     layout="prev, pager, next"
+                                    @current-change="handleCurrentChange"
                                     :total="total">
                             </el-pagination>
                         </div>

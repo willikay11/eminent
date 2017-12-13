@@ -7,6 +7,7 @@
         data() {
             return {
                 tableData: [],
+                loading: true,
                 total: 0,
                 searchForm: {
                     startDate: '',
@@ -32,13 +33,25 @@
             handleClick() {
                 console.log('click');
             },
-            getInteractions()
+
+            getInteractions(page = null)
             {
                 let vm = this;
-                axios.get('/api/interactions/'+vm.userId)
+
+                vm.loading = true;
+
+                let url = '/api/interactions/'+vm.userId;
+
+                if (page != null)
+                {
+                    url = '/api/interactions/'+vm.userId+'?page='+page
+                }
+
+                axios.get(url)
                     .then(function (response) {
                         vm.tableData = response.data.interactions.data;
-                        vm.total = response.data.interactions.last_page;
+                        vm.total = response.data.interactions.last_page * 10;
+                        vm.loading = false;
                     }).catch(function (error) {
                     console.log(error);
                 })
@@ -110,6 +123,11 @@
                     }).catch(function (error) {
                     console.log(error);
                 });
+            },
+            handleCurrentChange(val) {
+                let vm = this;
+
+                vm.getInteractions(val);
             }
         }
     }

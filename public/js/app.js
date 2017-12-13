@@ -91263,6 +91263,8 @@ Object.defineProperty(exports, "__esModule", {
 //
 //
 //
+//
+//
 
 exports.default = {
     props: ['userClientId'],
@@ -91997,7 +91999,7 @@ var render = function() {
                             _c("li", [
                               _c(
                                 "div",
-                                { staticClass: "col-lg-6 col-md-6 col-sm-12" },
+                                { staticClass: "col-lg-8 col-md-8 col-sm-12" },
                                 [
                                   _c("span", [
                                     _vm._v(_vm._s(interaction.remarks))
@@ -92008,7 +92010,7 @@ var render = function() {
                               _c(
                                 "div",
                                 {
-                                  staticClass: "col-lg-6 col-md-6 col-sm-12",
+                                  staticClass: "col-lg-4 col-md-4 col-sm-12",
                                   staticStyle: { "text-align": "right" }
                                 },
                                 [
@@ -92018,6 +92020,16 @@ var render = function() {
                                       attrs: { "aria-hidden": "true" }
                                     }),
                                     _vm._v("   " + _vm._s(interaction.date))
+                                  ]),
+                                  _vm._v(
+                                    "    \n                                    "
+                                  ),
+                                  _c("span", [
+                                    _c("i", {
+                                      staticClass: "fa fa-user",
+                                      attrs: { "aria-hidden": "true" }
+                                    }),
+                                    _vm._v("   " + _vm._s(interaction.user))
                                   ])
                                 ]
                               ),
@@ -92101,7 +92113,7 @@ var render = function() {
                                   _c(
                                     "div",
                                     {
-                                      staticClass: "col-lg-6 col-md-6 col-sm-12"
+                                      staticClass: "col-lg-8 col-md-8 col-sm-12"
                                     },
                                     [_c("span", [_vm._v(_vm._s(note.note))])]
                                   ),
@@ -92110,7 +92122,7 @@ var render = function() {
                                     "div",
                                     {
                                       staticClass:
-                                        "col-lg-6 col-md-6 col-sm-12",
+                                        "col-lg-4 col-md-4 col-sm-12",
                                       staticStyle: { "text-align": "right" }
                                     },
                                     [
@@ -92120,6 +92132,16 @@ var render = function() {
                                           attrs: { "aria-hidden": "true" }
                                         }),
                                         _vm._v("   " + _vm._s(note.date))
+                                      ]),
+                                      _vm._v(
+                                        "    \n                                    "
+                                      ),
+                                      _c("span", [
+                                        _c("i", {
+                                          staticClass: "fa fa-clock-o",
+                                          attrs: { "aria-hidden": "true" }
+                                        }),
+                                        _vm._v("   " + _vm._s(note.user))
                                       ])
                                     ]
                                   ),
@@ -93069,6 +93091,7 @@ exports.default = {
     data: function data() {
         return {
             tableData: [],
+            loading: true,
             total: 0,
             searchForm: {
                 startDate: '',
@@ -93092,10 +93115,22 @@ exports.default = {
             console.log('click');
         },
         getInteractions: function getInteractions() {
+            var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
             var vm = this;
-            axios.get('/api/interactions/' + vm.userId).then(function (response) {
+
+            vm.loading = true;
+
+            var url = '/api/interactions/' + vm.userId;
+
+            if (page != null) {
+                url = '/api/interactions/' + vm.userId + '?page=' + page;
+            }
+
+            axios.get(url).then(function (response) {
                 vm.tableData = response.data.interactions.data;
-                vm.total = response.data.interactions.last_page;
+                vm.total = response.data.interactions.last_page * 10;
+                vm.loading = false;
             }).catch(function (error) {
                 console.log(error);
             });
@@ -93160,6 +93195,11 @@ exports.default = {
             }).catch(function (error) {
                 console.log(error);
             });
+        },
+        handleCurrentChange: function handleCurrentChange(val) {
+            var vm = this;
+
+            vm.getInteractions(val);
         }
     }
 };

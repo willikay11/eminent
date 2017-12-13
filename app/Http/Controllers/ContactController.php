@@ -463,7 +463,7 @@ class ContactController extends Controller
             ];
         });
 
-        $interactions = $this->interactionsRepository->getInteractionsByUserIdAndClientId($userClient->user_id, $userClient->client_id);
+        $interactions = $this->interactionsRepository->getInteractionsByClientId($userClient->client_id);
 
         $interactions = $interactions->map(function ($interaction)
         {
@@ -473,10 +473,11 @@ class ContactController extends Controller
                 'interactionType' => $interaction->interactionType->name,
                 'interactionTypeId' => $interaction->interaction_type_id,
                 'date' => Carbon::parse($interaction->interaction_date)->format('jS F Y'),
+                'user' => $interaction->user->contact->present()->fullname
             ];
         });
 
-        $notes = $this->notesRepository->getNotesByUserIdAndClientId($userClient->user_id, $userClient->client_id);
+        $notes = $this->notesRepository->getNotesByClientId($userClient->client_id);
 
         $notes = $notes->map(function ($note)
         {
@@ -484,6 +485,7 @@ class ContactController extends Controller
                 'id' => $note->id,
                 'note' => $note->note,
                 'date' => Carbon::parse($note->created_at)->format('jS F Y'),
+                'user' => $note->user->contact->present()->fullname
             ];
         });
 
