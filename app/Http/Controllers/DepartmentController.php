@@ -10,6 +10,7 @@ namespace App\Http\Controllers;
 
 
 use eminent\API\SortFilterPaginate;
+use eminent\Authorization\Authorizer;
 use eminent\Departments\DepartmentsRepository;
 use eminent\Departments\DepartmentsRules;
 use eminent\Models\Department;
@@ -17,6 +18,7 @@ use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
 {
+    use Authorizer;
     use SortFilterPaginate;
     use DepartmentsRules;
 
@@ -43,11 +45,20 @@ class DepartmentController extends Controller
 
     public function index()
     {
+        $this->hasPermission('manageDepartments');
+
         return view('departments.index');
     }
 
     public function store(Request $request)
     {
+        $response = $this->hasPermission('manageDepartments', true);
+
+        if (is_array($response))
+        {
+            return self::toResponse(null, $response);
+        }
+
         if(is_null($request->get('departmentId')))
         {
             return $this->save($request);

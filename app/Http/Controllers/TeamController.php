@@ -10,6 +10,7 @@ namespace App\Http\Controllers;
 
 
 use eminent\API\SortFilterPaginate;
+use eminent\Authorization\Authorizer;
 use eminent\Models\Team;
 use eminent\Models\User;
 use eminent\team\TeamRepository;
@@ -18,6 +19,7 @@ use Illuminate\Http\Request;
 
 class TeamController extends Controller
 {
+    use Authorizer;
 
     use SortFilterPaginate;
 
@@ -69,11 +71,20 @@ class TeamController extends Controller
 
     public function index()
     {
+        $this->hasPermission('manageTeam');
+
         return view('team.index');
     }
 
     public function store(Request $request)
     {
+        $response = $this->hasPermission('manageTeam', true);
+
+        if (is_array($response))
+        {
+            return self::toResponse(null, $response);
+        }
+
         if(is_null($request->get('teamId')))
         {
             return $this->save($request);

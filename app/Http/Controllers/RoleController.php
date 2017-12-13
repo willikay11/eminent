@@ -9,6 +9,7 @@
 namespace App\Http\Controllers;
 
 use eminent\API\SortFilterPaginate;
+use eminent\Authorization\Authorizer;
 use eminent\Models\Permission;
 use eminent\Models\Role;
 use eminent\Models\RolePermission;
@@ -23,6 +24,8 @@ use Laracasts\Flash\Flash;
 
 class RoleController extends Controller
 {
+    use Authorizer;
+
     use RoleRules;
 
     use SortFilterPaginate;
@@ -75,16 +78,6 @@ class RoleController extends Controller
             ];
 
         }
-
-//        $users = $this->sortFilterPaginate(new User(), [$filter], function ($user)
-//        {
-//            return[
-//                'id' => $user->id,
-//                'name' => $user->contact->firstname.' '.$user->contact->lastname,
-//                'email' => $user->email,
-//            ];
-//        },null, null);
-
         return self::toResponse(null, $users);
         
     }
@@ -112,14 +105,17 @@ class RoleController extends Controller
 
     }
 
-
     public function index()
     {
+        $this->hasPermission('manageRoles');
+
         return view('roles.index');
     }
 
     public function store(Request $request)
     {
+        $this->hasPermission('manageRoles');
+
         $validation = $this->validateRoleCreate($request);
 
         if($validation){
@@ -154,6 +150,8 @@ class RoleController extends Controller
 
     public function details($roleId)
     {
+        $this->hasPermission('manageRoles');
+
         $role = $this->rolesRepository->getRoleById($roleId);
 
         return view('roles.details', [
@@ -163,6 +161,8 @@ class RoleController extends Controller
 
     public function permissions($id)
     {
+        $this->hasPermission('managePermissions');
+
         $role = $this->rolesRepository->getRoleById($id);
 
         $permissions = $role->permissions->pluck('permission_id');
@@ -178,6 +178,8 @@ class RoleController extends Controller
 
     public function updatePermissions(Request $request,$id)
     {
+        $this->hasPermission('managePermissions');
+
         $permissions = $request->except(['_token']);
 
         $role = $this->rolesRepository->getRoleById($id);
@@ -196,12 +198,36 @@ class RoleController extends Controller
 
     public function revoke($id)
     {
+        $response = $this->hasPermission('manageUsers', true);
+
+        if (is_array($response))
+        {
+            return self::toResponse(null, $response);
+        }
+
         $this->usersRepository->revoke($id);
+
+        return self::toResponse(null, [
+            'success' => true,
+            'message' => 'Role revoked from user'
+        ]);
     }
 
     public function permissionRevoke($role, $permission)
     {
+        $response = $this->hasPermission('managePermissions', true);
+
+        if (is_array($response))
+        {
+            return self::toResponse(null, $response);
+        }
+
         $this->rolesRepository->revokePermission($role, $permission);
+
+        return self::toResponse(null, [
+            'success' => true,
+            'message' => 'Permission revoked from role'
+        ]);
     }
 
     public function getUserRoles($userId)
@@ -241,6 +267,8 @@ class RoleController extends Controller
 
     public function userRoles($userId)
     {
+        $this->hasPermission('manageRoles');
+
         $user = $this->usersRepository->getUserById($userId);
 
         $roles = $this->rolesRepository->getAllRoles()->where('active', 1);
@@ -256,6 +284,8 @@ class RoleController extends Controller
 
     public function updateUserRoles($userId, Request $request)
     {
+        $this->hasPermission('manageRoles');
+
         $roles = $request->except(['_token']);
 
         $userRoles = $this->userHasRolesRepository->getUserRoleByUserId($userId);
@@ -272,6 +302,13 @@ class RoleController extends Controller
 
     public function revokeRoleFromUser($roleId, $userId)
     {
+        $response = $this->hasPermission('manageRoles', true);
+
+        if (is_array($response))
+        {
+            return self::toResponse(null, $response);
+        }
+
         $userHasRole = $this->userHasRolesRepository->deleteUserRole($userId, $roleId);
 
         if ($userHasRole)

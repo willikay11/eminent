@@ -75,9 +75,7 @@ class LoginController extends Controller
 
         if(! $user){
 
-            Flash::error('Email and/or password does not match');
-
-            return back();
+            return back()->with('error', 'Email and/or password does not match');
         }
 
         //Validate the user
@@ -99,17 +97,13 @@ class LoginController extends Controller
 
             $request->session()->flash('company_email', $loggedIn);
 
-            Flash::message('Enter the 6 digit pin you received in your email to confirm login');
-
             return view('login.confirm', [
                 'email' => $email
-            ]);
+            ])->with('success', 'Enter the 6 digit pin you received in your email to confirm login');
 
         }else{
 
-            Flash::error('Email and/or password does not match');
-
-            return back();
+            return back()->with('error', 'Email and/or password does not match');
         }
     }
 

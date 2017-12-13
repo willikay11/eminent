@@ -10,6 +10,7 @@ namespace App\Http\Controllers;
 
 
 use eminent\API\SortFilterPaginate;
+use eminent\Authorization\Authorizer;
 use eminent\Models\Sources;
 use eminent\Sources\SourcesRepository;
 use eminent\Sources\SourcesRules;
@@ -17,6 +18,8 @@ use Illuminate\Http\Request;
 
 class SourceController extends Controller
 {
+    use Authorizer;
+
     use SourcesRules;
 
     use SortFilterPaginate;
@@ -44,11 +47,20 @@ class SourceController extends Controller
 
     public function index()
     {
+        $this->hasPermission('manageSources');
+
         return view('sources.index');
     }
 
     public function storeSource(Request $request)
     {
+        $response = $this->hasPermission('manageSources', true);
+
+        if (is_array($response))
+        {
+            return self::toResponse(null, $response);
+        }
+
         if(is_null($request->get('sourceId')))
         {
             return $this->save($request);

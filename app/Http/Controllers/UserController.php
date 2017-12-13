@@ -176,7 +176,7 @@ class UserController extends Controller
 
     public function storeUser(Request $request)
     {
-        $this->hasPermission('manageUsers');
+        $this->hasPermission('manageUsers', true);
 
         list($user, $domain) = explode('@', $request->get('email'));
 

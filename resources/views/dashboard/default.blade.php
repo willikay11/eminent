@@ -27,36 +27,60 @@
                         Interactions
                     </a>
                 </li>
-                <li>
-                    <a href="#">
-                        <i class="glyphicon glyphicon-link"></i>
-                        Reports
-                    </a>
-                </li>
+                {{--<li>--}}
+                    {{--<a href="#">--}}
+                        {{--<i class="glyphicon glyphicon-link"></i>--}}
+                        {{--Reports--}}
+                    {{--</a>--}}
+                {{--</li>--}}
                 <li>
                     <a href="/activities">
                         <i class="glyphicon glyphicon-paperclip"></i>
                         Activities
                     </a>
                 </li>
-                <li>
-                    <a href="#adminSubMenu" data-toggle="collapse" aria-expanded="false">
-                        <i class="glyphicon glyphicon-duplicate"></i>
-                        Admin
-                    </a>
-                    <ul class="collapse list-unstyled" id="adminSubMenu">
-                        <li><a href="/users">Users</a></li>
-                        <li><a href="/roles">Roles</a></li>
-                        <li><a href="/permissions">Permissions</a></li>
-                        <li><a href="/sources">Sources</a></li>
-                        <li><a href="/services">Services</a></li>
-                        <li><a href="/team">Teams</a></li>
-                        <li><a href="/departments">Departments</a></li>
-                        <li><a href="/designations">Designations</a></li>
-                        <li><a href="/professions">Professions</a></li>
-                        <li><a href="/contacts">All Contacts</a></li>
-                    </ul>
-                </li>
+                @if(!empty(array_intersect([1, 5, 15, 16, 17, 18, 19, 20, 21, 22], getPermissions())))
+                    <li>
+                        <a href="#adminSubMenu" data-toggle="collapse" aria-expanded="false">
+                            <i class="glyphicon glyphicon-duplicate"></i>
+                            Admin
+                        </a>
+                        <ul class="collapse list-unstyled" id="adminSubMenu">
+                            @if(in_array(1, getPermissions()))
+                                <li><a href="/users">Users</a></li>
+                            @endif
+
+                            @if(in_array(15, getPermissions()))
+                                <li><a href="/roles">Roles</a></li>
+                            @endif
+
+                            @if(in_array(16, getPermissions()))
+                                <li><a href="/permissions">Permissions</a></li>
+                            @endif
+                            @if(in_array(17, getPermissions()))
+                                <li><a href="/sources">Sources</a></li>
+                            @endif
+                            @if(in_array(18, getPermissions()))
+                                <li><a href="/services">Services</a></li>
+                            @endif
+                            @if(in_array(19, getPermissions()))
+                                <li><a href="/team">Teams</a></li>
+                            @endif
+                            @if(in_array(20, getPermissions()))
+                                <li><a href="/departments">Departments</a></li>
+                            @endif
+                            @if(in_array(21, getPermissions()))
+                                <li><a href="/designations">Designations</a></li>
+                            @endif
+                            @if(in_array(22, getPermissions()))
+                                <li><a href="/professions">Professions</a></li>
+                            @endif
+                            @if(in_array(5, getPermissions()))
+                                <li><a href="/contacts">All Contacts</a></li>
+                            @endif
+                        </ul>
+                    </li>
+                @endif
             </ul>
         </nav>
 

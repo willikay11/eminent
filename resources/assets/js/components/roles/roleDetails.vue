@@ -152,12 +152,24 @@
                 axios.get('/roles/revoke/'+row.id)
                     .then(function (response) {
 
-                        vm.$message({
-                            type: 'success',
-                            message: 'Role revoked from user'
-                        });
+                        if (response.data.success)
+                        {
+                            vm.$message({
+                                type: 'success',
+                                message: 'Role revoked from user'
+                            });
 
-                        vm.getRoleMembers();
+                            vm.getRoleMembers();
+                        }
+                        else
+                        {
+                            vm.$message({
+                                type: 'error',
+                                message: response.data.message
+                            });
+
+                            vm.getRoleMembers();
+                        }
                     }).catch(function (error) {
                     console.log(error);
                 })
@@ -174,12 +186,24 @@
                 axios.get('/permission/revoke/role/'+ vm.id +'/'+row.id)
                     .then(function (response) {
 
-                        vm.$message({
-                            type: 'success',
-                            message: 'Permission revoked from role'
-                        });
+                        if (response.data.success)
+                        {
+                            vm.$message({
+                                type: 'success',
+                                message: 'Permission revoked from role'
+                            });
 
-                        vm.getRolePermissions();
+                            vm.getRolePermissions();
+                        }
+                        else
+                        {
+                            vm.$message({
+                                type: 'error',
+                                message: response.data.message
+                            });
+
+                            vm.getRolePermissions();
+                        }
                     }).catch(function (error) {
                     console.log(error);
                 })

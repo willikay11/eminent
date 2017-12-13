@@ -15272,7 +15272,7 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(38);
-module.exports = __webpack_require__(213);
+module.exports = __webpack_require__(216);
 
 
 /***/ }),
@@ -84653,7 +84653,7 @@ Vue.component('teamTable', __webpack_require__(201));
 
 Vue.component('teamMemberTable', __webpack_require__(206));
 
-Vue.component('flash-message', __webpack_require__(221));
+Vue.component('flash-message', __webpack_require__(213));
 
 /***/ }),
 /* 115 */
@@ -85700,12 +85700,21 @@ exports.default = {
 
             axios.get('/roles/revoke/' + row.id).then(function (response) {
 
-                vm.$message({
-                    type: 'success',
-                    message: 'Role revoked from user'
-                });
+                if (response.data.success) {
+                    vm.$message({
+                        type: 'success',
+                        message: 'Role revoked from user'
+                    });
 
-                vm.getRoleMembers();
+                    vm.getRoleMembers();
+                } else {
+                    vm.$message({
+                        type: 'error',
+                        message: response.data.message
+                    });
+
+                    vm.getRoleMembers();
+                }
             }).catch(function (error) {
                 console.log(error);
             });
@@ -85720,12 +85729,21 @@ exports.default = {
 
             axios.get('/permission/revoke/role/' + vm.id + '/' + row.id).then(function (response) {
 
-                vm.$message({
-                    type: 'success',
-                    message: 'Permission revoked from role'
-                });
+                if (response.data.success) {
+                    vm.$message({
+                        type: 'success',
+                        message: 'Permission revoked from role'
+                    });
 
-                vm.getRolePermissions();
+                    vm.getRolePermissions();
+                } else {
+                    vm.$message({
+                        type: 'error',
+                        message: response.data.message
+                    });
+
+                    vm.getRolePermissions();
+                }
             }).catch(function (error) {
                 console.log(error);
             });
@@ -93991,7 +94009,13 @@ exports.default = {
         revokePermissionFromUser: function revokePermissionFromUser(role) {
             var vm = this;
 
+            vm.$message({
+                type: 'info',
+                message: 'Revoking role from user'
+            });
+
             axios.get('/role/' + role.id + '/user/' + vm.userId + '/revoke').then(function (response) {
+
                 if (response.data.success) {
                     vm.getUserRoles();
 
@@ -95315,27 +95339,14 @@ if (false) {
 
 /***/ }),
 /* 213 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 214 */,
-/* 215 */,
-/* 216 */,
-/* 217 */,
-/* 218 */,
-/* 219 */,
-/* 220 */,
-/* 221 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(3)
 /* script */
-var __vue_script__ = __webpack_require__(222)
+var __vue_script__ = __webpack_require__(214)
 /* template */
-var __vue_template__ = __webpack_require__(223)
+var __vue_template__ = __webpack_require__(215)
 /* template functional */
   var __vue_template_functional__ = false
 /* styles */
@@ -95375,7 +95386,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 222 */
+/* 214 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -95429,7 +95440,7 @@ exports.default = {
 };
 
 /***/ }),
-/* 223 */
+/* 215 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -95463,6 +95474,12 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-2a8f8856", module.exports)
   }
 }
+
+/***/ }),
+/* 216 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);

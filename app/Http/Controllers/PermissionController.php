@@ -9,10 +9,12 @@
 namespace App\Http\Controllers;
 
 use eminent\API\SortFilterPaginate;
+use eminent\Authorization\Authorizer;
 use eminent\Models\Permission;
 
 class PermissionController extends Controller
 {
+    use Authorizer;
 
     use SortFilterPaginate;
 
@@ -37,6 +39,8 @@ class PermissionController extends Controller
 
     public function index()
     {
+        $this->hasPermission('managePermissions');
+
         return view('permission.index');
     }
 

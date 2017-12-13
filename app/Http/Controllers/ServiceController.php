@@ -10,6 +10,7 @@ namespace App\Http\Controllers;
 
 
 use eminent\API\SortFilterPaginate;
+use eminent\Authorization\Authorizer;
 use eminent\Models\Service;
 use eminent\Services\ServicesRepository;
 use eminent\Services\ServicesRules;
@@ -17,6 +18,8 @@ use Illuminate\Http\Request;
 
 class ServiceController extends Controller
 {
+    use Authorizer;
+
     use SortFilterPaginate;
 
     use ServicesRules;
@@ -45,11 +48,20 @@ class ServiceController extends Controller
 
     public function index()
     {
+        $this->hasPermission('manageServices');
+
         return view('services.index');
     }
 
     public function store(Request $request)
     {
+        $response = $this->hasPermission('manageServices', true);
+
+        if (is_array($response))
+        {
+            return self::toResponse(null, $response);
+        }
+
         if(is_null($request->get('serviceId')))
         {
             return $this->save($request);

@@ -78,8 +78,14 @@
             {
                 let vm = this;
 
+                vm.$message({
+                    type: 'info',
+                    message: 'Revoking role from user'
+                });
+
                 axios.get('/role/'+role.id+'/user/'+vm.userId+'/revoke')
                     .then(function (response) {
+
                         if (response.data.success)
                         {
                             vm.getUserRoles();

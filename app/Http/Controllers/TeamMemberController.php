@@ -10,6 +10,7 @@ namespace App\Http\Controllers;
 
 
 use eminent\API\SortFilterPaginate;
+use eminent\Authorization\Authorizer;
 use eminent\Models\TeamMember;
 use eminent\team\TeamRepository;
 use eminent\TeamMembers\TeamMemberRepository;
@@ -17,6 +18,7 @@ use Illuminate\Http\Request;
 
 class TeamMemberController extends Controller
 {
+    use Authorizer;
 
     use SortFilterPaginate;
     /**
@@ -38,6 +40,8 @@ class TeamMemberController extends Controller
 
     public function index($id)
     {
+        $this->hasPermission('manageTeam');
+
         $team = $this->teamRepository->getTeamById($id);
 
         return view('team.member', [
@@ -47,6 +51,13 @@ class TeamMemberController extends Controller
 
     public function store(Request $request)
     {
+        $response = $this->hasPermission('manageTeam', true);
+
+        if (is_array($response))
+        {
+            return self::toResponse(null, $response);
+        }
+
         $teamId = $request->get('teamId');
 
         $users = $request->get('users');
@@ -85,6 +96,13 @@ class TeamMemberController extends Controller
 
     public function remove($teamId, $userId)
     {
+        $response = $this->hasPermission('manageTeam', true);
+
+        if (is_array($response))
+        {
+            return self::toResponse(null, $response);
+        }
+
         $teamMember = $this->teamMemberRepository->removeTeamMember($userId, $teamId);
 
         if($teamMember)

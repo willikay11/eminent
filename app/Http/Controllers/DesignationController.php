@@ -10,6 +10,7 @@ namespace App\Http\Controllers;
 
 
 use eminent\API\SortFilterPaginate;
+use eminent\Authorization\Authorizer;
 use eminent\Designations\DesignationsRepository;
 use eminent\Models\Designation;
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ use eminent\Designations\DesignationRules;
 
 class DesignationController extends Controller
 {
-
+    use Authorizer;
     use SortFilterPaginate;
     use DesignationRules;
 
@@ -44,11 +45,20 @@ class DesignationController extends Controller
 
     public function index()
     {
+        $this->hasPermission('manageDesignation');
+
         return view('designation.index');
     }
 
     public function storeDesignation(Request $request)
     {
+        $this->hasPermission('manageDesignation', true);
+
+        if (is_array($response))
+        {
+            return self::toResponse(null, $response);
+        }
+
         if(is_null($request->get('designationId')))
         {
             return $this->save($request);

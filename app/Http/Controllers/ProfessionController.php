@@ -10,6 +10,7 @@ namespace App\Http\Controllers;
 
 
 use eminent\API\SortFilterPaginate;
+use eminent\Authorization\Authorizer;
 use eminent\Models\Profession;
 use eminent\Professions\ProfessionRepository;
 use eminent\Professions\ProfessionRules;
@@ -17,7 +18,7 @@ use Illuminate\Http\Request;
 
 class ProfessionController extends Controller
 {
-
+    use Authorizer;
     use SortFilterPaginate;
     use ProfessionRules;
 
@@ -44,11 +45,20 @@ class ProfessionController extends Controller
 
     public function index()
     {
+        $this->hasPermission('manageProfessions');
+
         return view('professions.index');
     }
 
     public function storeProfession(Request $request)
     {
+        $response = $this->hasPermission('manageProfessions', true);
+
+        if (is_array($response))
+        {
+            return self::toResponse(null, $response);
+        }
+
         if(is_null($request->get('professionId')))
         {
             return $this->save($request);
