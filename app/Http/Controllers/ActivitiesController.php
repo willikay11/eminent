@@ -160,6 +160,8 @@ class ActivitiesController extends Controller
 
     public function save(Request $request)
     {
+        return var_dump(Carbon::parse($request->get('due_date'))->toDateString());
+
         $input = [
             'name' => $request->get('name'),
             'description' => $request->get('description'),

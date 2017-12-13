@@ -443,7 +443,8 @@ class ContactController extends Controller
             'phone' => $contact->phone,
             'interactionDate' => $userClient->next_interaction_date,
             'user' => $userClient->user->contact->present()->fullName,
-            'status' => $userClient->client->status_id
+            'status' => $userClient->client->status_id,
+            'clientId' => $userClient->client_id
         ];
 
         $statuses = Status::all()->map(function ($status)
@@ -597,6 +598,29 @@ class ContactController extends Controller
         }
     }
 
+    public function changeStatus(Request $request)
+    {
+        $clientId = $request->get('clientId');
+
+        $input = [
+            'status_id' => $status = $request->get('contactStatus')
+        ];
+
+        $client = $this->clientsRepository->updateClient($clientId, $input);
+
+        if ($client)
+        {
+            return self::toResponse(null, [
+                'success' => true,
+                'message' => 'Client Status changed successfully'
+            ]);
+        }
+
+        return self::toResponse(null, [
+            'success' => false,
+            'message' => 'Oops! An error occurred'
+        ]);
+    }
     public function details($id)
     {
         return view('contacts.details', [

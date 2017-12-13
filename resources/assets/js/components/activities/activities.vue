@@ -273,6 +273,13 @@
                     if (valid) {
                         let vm = this;
 
+                        let user = vm.userId;
+
+                        if(vm.ruleForm.user != '')
+                        {
+                            user = vm.ruleForm.user
+                        }
+
                         vm.$message({
                             type: 'info',
                             message: 'Saving Task'
@@ -282,7 +289,7 @@
                             type: 1,
                             name: vm.ruleForm.name,
                             description: vm.ruleForm.description,
-                            user_id: vm.ruleForm.user,
+                            user_id: user,
                             priority_type_id: vm.ruleForm.priority,
                             due_date: vm.ruleForm.dueDate + '',
                             activity_status_id: 1,
@@ -291,9 +298,10 @@
                             user_client_id: vm.ruleForm.source
                         })
                             .then(function (response) {
-                                vm.taskDialogVisible = false;
 
                                 if (response.data.success) {
+                                    vm.taskDialogVisible = false;
+
                                     vm.$message({
                                         type: 'success',
                                         message: response.data.message

@@ -366,24 +366,26 @@
                                     </el-col>
                                 </el-row>
 
-                                <el-row :span="24" :gutter="20">
-                                    <el-col :span="4">
-                                        <span>Assign To: </span>
-                                    </el-col>
+                                @if(in_array(12, getPermissions()))
+                                    <el-row :span="24" :gutter="20">
+                                        <el-col :span="4">
+                                            <span>Assign To: </span>
+                                        </el-col>
 
-                                    <el-col :span="20">
-                                        <el-form-item prop="user">
-                                            <el-select v-model="ruleForm.user" placeholder="Select User">
-                                                <el-option
-                                                        v-for="item in users"
-                                                        :key="item.value"
-                                                        :label="item.label"
-                                                        :value="item.value">
-                                                </el-option>
-                                            </el-select>
-                                        </el-form-item>
-                                    </el-col>
-                                </el-row>
+                                        <el-col :span="20">
+                                            <el-form-item prop="user">
+                                                <el-select v-model="ruleForm.user" placeholder="Select User">
+                                                    <el-option
+                                                            v-for="item in users"
+                                                            :key="item.value"
+                                                            :label="item.label"
+                                                            :value="item.value">
+                                                    </el-option>
+                                                </el-select>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                @endif
 
                                 <el-row :span="24" :gutter="20">
                                     <el-col :span="4">
@@ -414,6 +416,7 @@
                                             <el-date-picker
                                                     v-model="ruleForm.dueDate"
                                                     type="date"
+                                                    format="dd-MM-yyyy"
                                                     placeholder="Due Date">
                                             </el-date-picker>
                                         </el-form-item>

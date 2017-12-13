@@ -46,13 +46,12 @@
                         <el-row :gutter="20">
                             <el-col :span="24" class="contact-row">
                                 <el-col :span="5">
-                                    <el-select v-model="statusValue" placeholder="Select">
+                                    <el-select v-model="statusValue" placeholder="Select" @change="changeStatus">
                                         <el-option
                                                 v-for="item in statuses"
                                                 :key="item.value"
                                                 :label="item.label"
-                                                :value="item.value"
-                                                change="changeStatus()">
+                                                :value="item.value">
                                         </el-option>
                                     </el-select>
                                 </el-col>
@@ -259,6 +258,7 @@
                     value: 'Option5',
                     label: 'Option5'
                 }],
+                firstload: true,
                 interactionDialogVisible: false,
                 clientNoteDialogVisible: false,
                 value: '',
@@ -404,51 +404,52 @@
 
             addInteraction(formName)
             {
-                this.$refs[formName].validate((valid) => {
-                    if (valid) {
-
-                        let vm = this;
-
-                        vm.$message({
-                            type: 'info',
-                            message: 'Saving Interaction'
-                        });
-
-                        axios.post('/interaction/save', {
-                            remarks: vm.ruleForm.interactionRemarks,
-                            interaction_type_id: vm.ruleForm.interaction,
-                            interaction_date: vm.ruleForm.interactionDate+'',
-                            next_interaction_date: vm.ruleForm.nextInteractionDate+'',
-                            feedback: vm.ruleForm.feedback,
-                            userClientId: vm.userClientId
-                        })
-                            .then(function (response) {
-                                if (response.data.success) {
-                                    vm.$message({
-                                        type: 'success',
-                                        message: response.data.message
-                                    });
-
-                                    vm.$refs[formName].resetFields();
-                                }
-                                else {
-                                    vm.$message({
-                                        type: 'error',
-                                        message: response.data.message
-                                    });
-                                }
-                            }).catch(function (error) {
-                            console.log(error);
-                        });
-                    } else {
-                        return false;
-                    }
-                });
+//                this.$refs[formName].validate((valid) => {
+//                    if (valid) {
+//
+//                        let vm = this;
+//
+//                        vm.$message({
+//                            type: 'info',
+//                            message: 'Saving Interaction'
+//                        });
+//
+//                        axios.post('/interaction/save', {
+//                            remarks: vm.ruleForm.interactionRemarks,
+//                            interaction_type_id: vm.ruleForm.interaction,
+//                            interaction_date: vm.ruleForm.interactionDate+'',
+//                            next_interaction_date: vm.ruleForm.nextInteractionDate+'',
+//                            feedback: vm.ruleForm.feedback,
+//                            userClientId: vm.userClientId
+//                        })
+//                            .then(function (response) {
+//                                if (response.data.success) {
+//                                    vm.$message({
+//                                        type: 'success',
+//                                        message: response.data.message
+//                                    });
+//
+//                                    vm.$refs[formName].resetFields();
+//                                }
+//                                else {
+//                                    vm.$message({
+//                                        type: 'error',
+//                                        message: response.data.message
+//                                    });
+//                                }
+//                            }).catch(function (error) {
+//                            console.log(error);
+//                        });
+//                    } else {
+//                        return false;
+//                    }
+//                });
             },
 
             getContactInfo()
             {
                 let vm = this;
+
                 axios.get('/api/contact/details/'+vm.userClientId)
                     .then(function (response) {
                         vm.statuses = response.data.statuses;
@@ -457,9 +458,10 @@
                         vm.statusValue = vm.contact.status;
                         vm.interactionData = response.data.interactions;
                         vm.noteData = response.data.notes;
+                        vm.firstload = false;
                     }).catch(function (error) {
                     console.log(error);
-                })
+                });
             },
             showInteraction()
             {
@@ -474,9 +476,39 @@
 
               vm.clientNoteDialogVisible = true;
             },
+
             changeStatus()
             {
-                console.log("Changing");
+                let vm = this;
+
+                if (vm.firstload == false)
+                {
+                    vm.$message({
+                        type: 'info',
+                        message: 'Changing contact status'
+                    });
+
+                    axios.post('/change/contact/status', {
+                        contactStatus: vm.statusValue,
+                        clientId: vm.contact.clientId
+                    })
+                        .then(function (response) {
+                            if (response.data.success) {
+                                vm.$message({
+                                    type: 'success',
+                                    message: response.data.message
+                                });
+                            }
+                            else {
+                                vm.$message({
+                                    type: 'error',
+                                    message: response.data.message
+                                });
+                            }
+                        }).catch(function (error) {
+                        console.log(error);
+                    })
+                }
             }
         }
     }

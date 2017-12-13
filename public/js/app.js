@@ -91243,7 +91243,6 @@ Object.defineProperty(exports, "__esModule", {
 //
 //
 //
-//
 
 exports.default = {
     props: ['userClientId'],
@@ -91270,6 +91269,7 @@ exports.default = {
                 value: 'Option5',
                 label: 'Option5'
             }],
+            firstload: true,
             interactionDialogVisible: false,
             clientNoteDialogVisible: false,
             value: '',
@@ -91395,49 +91395,50 @@ exports.default = {
             });
         },
         addInteraction: function addInteraction(formName) {
-            var _this3 = this;
-
-            this.$refs[formName].validate(function (valid) {
-                if (valid) {
-
-                    var vm = _this3;
-
-                    vm.$message({
-                        type: 'info',
-                        message: 'Saving Interaction'
-                    });
-
-                    axios.post('/interaction/save', {
-                        remarks: vm.ruleForm.interactionRemarks,
-                        interaction_type_id: vm.ruleForm.interaction,
-                        interaction_date: vm.ruleForm.interactionDate + '',
-                        next_interaction_date: vm.ruleForm.nextInteractionDate + '',
-                        feedback: vm.ruleForm.feedback,
-                        userClientId: vm.userClientId
-                    }).then(function (response) {
-                        if (response.data.success) {
-                            vm.$message({
-                                type: 'success',
-                                message: response.data.message
-                            });
-
-                            vm.$refs[formName].resetFields();
-                        } else {
-                            vm.$message({
-                                type: 'error',
-                                message: response.data.message
-                            });
-                        }
-                    }).catch(function (error) {
-                        console.log(error);
-                    });
-                } else {
-                    return false;
-                }
-            });
+            //                this.$refs[formName].validate((valid) => {
+            //                    if (valid) {
+            //
+            //                        let vm = this;
+            //
+            //                        vm.$message({
+            //                            type: 'info',
+            //                            message: 'Saving Interaction'
+            //                        });
+            //
+            //                        axios.post('/interaction/save', {
+            //                            remarks: vm.ruleForm.interactionRemarks,
+            //                            interaction_type_id: vm.ruleForm.interaction,
+            //                            interaction_date: vm.ruleForm.interactionDate+'',
+            //                            next_interaction_date: vm.ruleForm.nextInteractionDate+'',
+            //                            feedback: vm.ruleForm.feedback,
+            //                            userClientId: vm.userClientId
+            //                        })
+            //                            .then(function (response) {
+            //                                if (response.data.success) {
+            //                                    vm.$message({
+            //                                        type: 'success',
+            //                                        message: response.data.message
+            //                                    });
+            //
+            //                                    vm.$refs[formName].resetFields();
+            //                                }
+            //                                else {
+            //                                    vm.$message({
+            //                                        type: 'error',
+            //                                        message: response.data.message
+            //                                    });
+            //                                }
+            //                            }).catch(function (error) {
+            //                            console.log(error);
+            //                        });
+            //                    } else {
+            //                        return false;
+            //                    }
+            //                });
         },
         getContactInfo: function getContactInfo() {
             var vm = this;
+
             axios.get('/api/contact/details/' + vm.userClientId).then(function (response) {
                 vm.statuses = response.data.statuses;
                 vm.interactionTypes = response.data.interactionTypes;
@@ -91445,6 +91446,7 @@ exports.default = {
                 vm.statusValue = vm.contact.status;
                 vm.interactionData = response.data.interactions;
                 vm.noteData = response.data.notes;
+                vm.firstload = false;
             }).catch(function (error) {
                 console.log(error);
             });
@@ -91460,7 +91462,33 @@ exports.default = {
             vm.clientNoteDialogVisible = true;
         },
         changeStatus: function changeStatus() {
-            console.log("Changing");
+            var vm = this;
+
+            if (vm.firstload == false) {
+                vm.$message({
+                    type: 'info',
+                    message: 'Changing contact status'
+                });
+
+                axios.post('/change/contact/status', {
+                    contactStatus: vm.statusValue,
+                    clientId: vm.contact.clientId
+                }).then(function (response) {
+                    if (response.data.success) {
+                        vm.$message({
+                            type: 'success',
+                            message: response.data.message
+                        });
+                    } else {
+                        vm.$message({
+                            type: 'error',
+                            message: response.data.message
+                        });
+                    }
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            }
         }
     }
 };
@@ -91610,6 +91638,7 @@ var render = function() {
                                 "el-select",
                                 {
                                   attrs: { placeholder: "Select" },
+                                  on: { change: _vm.changeStatus },
                                   model: {
                                     value: _vm.statusValue,
                                     callback: function($$v) {
@@ -91623,8 +91652,7 @@ var render = function() {
                                     key: item.value,
                                     attrs: {
                                       label: item.label,
-                                      value: item.value,
-                                      change: "changeStatus()"
+                                      value: item.value
                                     }
                                   })
                                 })
@@ -93461,6 +93489,12 @@ exports.default = {
                 if (valid) {
                     var vm = _this;
 
+                    var user = vm.userId;
+
+                    if (vm.ruleForm.user != '') {
+                        user = vm.ruleForm.user;
+                    }
+
                     vm.$message({
                         type: 'info',
                         message: 'Saving Task'
@@ -93470,7 +93504,7 @@ exports.default = {
                         type: 1,
                         name: vm.ruleForm.name,
                         description: vm.ruleForm.description,
-                        user_id: vm.ruleForm.user,
+                        user_id: user,
                         priority_type_id: vm.ruleForm.priority,
                         due_date: vm.ruleForm.dueDate + '',
                         activity_status_id: 1,
@@ -93478,9 +93512,10 @@ exports.default = {
                         projected_revenue: vm.ruleForm.projectedRevenue,
                         user_client_id: vm.ruleForm.source
                     }).then(function (response) {
-                        vm.taskDialogVisible = false;
 
                         if (response.data.success) {
+                            vm.taskDialogVisible = false;
+
                             vm.$message({
                                 type: 'success',
                                 message: response.data.message

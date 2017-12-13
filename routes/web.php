@@ -234,6 +234,10 @@ Route::group(['middleware' => 'auth'], function (){
         'uses' => 'ContactController@getDetails'
     ]);
 
+    Route::post('/change/contact/status', [
+        'uses' => 'ContactController@changeStatus'
+    ]);
+
     Route::post('/contacts/reassign', [
         'uses' => 'ContactController@reassignContacts'
     ]);

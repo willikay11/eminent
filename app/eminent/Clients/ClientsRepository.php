@@ -39,4 +39,16 @@ class ClientsRepository
             return $client;
         }
     }
+
+    public function getClientById($id)
+    {
+        return Client::find($id);
+    }
+
+    public function updateClient($clientId, $input)
+    {
+        $client = $this->getClientById($clientId);
+
+        return $client->update($input);
+    }
 }
