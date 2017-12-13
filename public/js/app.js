@@ -90177,11 +90177,22 @@ exports.default = {
             });
         },
         getUserContacts: function getUserContacts() {
+            var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
             var vm = this;
-            axios.get('/api/contacts/user/' + vm.userId).then(function (response) {
+
+            vm.tableLoading = true;
+
+            var url = '/api/contacts/user/' + vm.userId;
+
+            if (page != null) {
+                url = '/api/contacts/user/' + vm.userId + '/?page=' + page;
+            }
+
+            axios.get(url).then(function (response) {
                 if (response.data.success) {
                     vm.tableData = response.data.contacts.data;
-                    vm.total = response.data.contacts.last_page;
+                    vm.total = response.data.contacts.last_page * 10;
                     vm.tableLoading = false;
                 } else {
                     vm.$message({
@@ -90232,15 +90243,19 @@ exports.default = {
                         contactId: vm.contactId,
                         organization: vm.ruleForm.organization
                     }).then(function (response) {
-                        vm.dialogVisible = false;
-
-                        vm.getUserContacts();
 
                         if (response.data.success) {
+
+                            vm.dialogVisible = false;
+
+                            vm.getUserContacts();
+
                             vm.$message({
                                 type: 'success',
                                 message: response.data.message
                             });
+
+                            vm.ruleForm.service = '';
 
                             vm.$refs[formName].resetFields();
                         } else {
@@ -90424,6 +90439,11 @@ exports.default = {
         },
         handleSelectionChange: function handleSelectionChange(val) {
             this.selectedUsersForReassign = val;
+        },
+        handleCurrentChange: function handleCurrentChange(val) {
+            var vm = this;
+
+            vm.getUserContacts(val);
         }
     }
 }; //
@@ -91328,9 +91348,11 @@ exports.default = {
                         note: vm.noteForm.note,
                         userClientId: vm.userClientId
                     }).then(function (response) {
-                        vm.clientNoteDialogVisible = false;
 
                         if (response.data.success) {
+
+                            vm.clientNoteDialogVisible = false;
+
                             vm.$message({
                                 type: 'success',
                                 message: response.data.message
@@ -91395,46 +91417,48 @@ exports.default = {
             });
         },
         addInteraction: function addInteraction(formName) {
-            //                this.$refs[formName].validate((valid) => {
-            //                    if (valid) {
-            //
-            //                        let vm = this;
-            //
-            //                        vm.$message({
-            //                            type: 'info',
-            //                            message: 'Saving Interaction'
-            //                        });
-            //
-            //                        axios.post('/interaction/save', {
-            //                            remarks: vm.ruleForm.interactionRemarks,
-            //                            interaction_type_id: vm.ruleForm.interaction,
-            //                            interaction_date: vm.ruleForm.interactionDate+'',
-            //                            next_interaction_date: vm.ruleForm.nextInteractionDate+'',
-            //                            feedback: vm.ruleForm.feedback,
-            //                            userClientId: vm.userClientId
-            //                        })
-            //                            .then(function (response) {
-            //                                if (response.data.success) {
-            //                                    vm.$message({
-            //                                        type: 'success',
-            //                                        message: response.data.message
-            //                                    });
-            //
-            //                                    vm.$refs[formName].resetFields();
-            //                                }
-            //                                else {
-            //                                    vm.$message({
-            //                                        type: 'error',
-            //                                        message: response.data.message
-            //                                    });
-            //                                }
-            //                            }).catch(function (error) {
-            //                            console.log(error);
-            //                        });
-            //                    } else {
-            //                        return false;
-            //                    }
-            //                });
+            var _this3 = this;
+
+            this.$refs[formName].validate(function (valid) {
+                if (valid) {
+
+                    var vm = _this3;
+
+                    vm.$message({
+                        type: 'info',
+                        message: 'Saving Interaction'
+                    });
+
+                    axios.post('/interaction/save', {
+                        remarks: vm.ruleForm.interactionRemarks,
+                        interaction_type_id: vm.ruleForm.interaction,
+                        interaction_date: vm.ruleForm.interactionDate + '',
+                        next_interaction_date: vm.ruleForm.nextInteractionDate + '',
+                        feedback: vm.ruleForm.feedback,
+                        userClientId: vm.userClientId
+                    }).then(function (response) {
+                        if (response.data.success) {
+                            vm.$message({
+                                type: 'success',
+                                message: response.data.message
+                            });
+
+                            vm.getContactInfo();
+
+                            vm.$refs[formName].resetFields();
+                        } else {
+                            vm.$message({
+                                type: 'error',
+                                message: response.data.message
+                            });
+                        }
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+                } else {
+                    return false;
+                }
+            });
         },
         getContactInfo: function getContactInfo() {
             var vm = this;
@@ -91910,20 +91934,26 @@ var render = function() {
                         _c("hr", { staticClass: "interaction-hr" })
                       ]),
                       _vm._v(" "),
-                      _c("el-col", { attrs: { span: 6 } }, [
-                        _c(
-                          "button",
-                          {
-                            staticClass: "btn ebg-button",
-                            on: {
-                              click: function($event) {
-                                _vm.addInteraction("ruleForm")
+                      _c(
+                        "el-col",
+                        { attrs: { span: 6 } },
+                        [
+                          _c(
+                            "el-button",
+                            {
+                              staticClass: "btn ebg-button",
+                              attrs: { size: "" },
+                              on: {
+                                click: function($event) {
+                                  _vm.addInteraction("ruleForm")
+                                }
                               }
-                            }
-                          },
-                          [_vm._v("Save this Interaction")]
-                        )
-                      ])
+                            },
+                            [_vm._v("Save this Interaction")]
+                          )
+                        ],
+                        1
+                      )
                     ],
                     1
                   )

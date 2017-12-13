@@ -166,15 +166,25 @@
                 })
             },
 
-            getUserContacts()
+            getUserContacts(page = null)
             {
                 let vm = this;
-                axios.get('/api/contacts/user/'+vm.userId)
+
+                vm.tableLoading = true;
+
+                let url = '/api/contacts/user/'+vm.userId;
+
+                if (page != null)
+                {
+                    url = '/api/contacts/user/'+vm.userId+'/?page='+page
+                }
+
+                axios.get(url)
                     .then(function (response) {
                         if(response.data.success)
                         {
                             vm.tableData = response.data.contacts.data;
-                            vm.total = response.data.contacts.last_page;
+                            vm.total = response.data.contacts.last_page * 10;
                             vm.tableLoading = false;
                         }
                         else
@@ -236,15 +246,19 @@
                             organization: vm.ruleForm.organization,
                         })
                             .then(function (response) {
-                                vm.dialogVisible = false;
-
-                                vm.getUserContacts();
 
                                 if (response.data.success) {
+
+                                    vm.dialogVisible = false;
+
+                                    vm.getUserContacts();
+
                                     vm.$message({
                                         type: 'success',
                                         message: response.data.message
                                     });
+
+                                    vm.ruleForm.service = '';
 
                                     vm.$refs[formName].resetFields();
                                 }
@@ -453,6 +467,12 @@
 
             handleSelectionChange(val) {
                 this.selectedUsersForReassign = val;
+            },
+
+            handleCurrentChange(val) {
+                let vm = this;
+
+                vm.getUserContacts(val);
             }
         }
     }

@@ -139,7 +139,7 @@
                             </el-col>
 
                             <el-col :span="6">
-                                <button class="btn ebg-button" @click="addInteraction('ruleForm')">Save this Interaction</button>
+                                <el-button size="" class="btn ebg-button" @click="addInteraction('ruleForm')">Save this Interaction</el-button>
                             </el-col>
                         </el-row>
                     </el-form>
@@ -332,9 +332,11 @@
                         userClientId: vm.userClientId
                     })
                         .then(function (response) {
-                            vm.clientNoteDialogVisible = false;
 
                             if (response.data.success) {
+
+                                vm.clientNoteDialogVisible = false;
+
                                 vm.$message({
                                     type: 'success',
                                     message: response.data.message
@@ -404,46 +406,48 @@
 
             addInteraction(formName)
             {
-//                this.$refs[formName].validate((valid) => {
-//                    if (valid) {
-//
-//                        let vm = this;
-//
-//                        vm.$message({
-//                            type: 'info',
-//                            message: 'Saving Interaction'
-//                        });
-//
-//                        axios.post('/interaction/save', {
-//                            remarks: vm.ruleForm.interactionRemarks,
-//                            interaction_type_id: vm.ruleForm.interaction,
-//                            interaction_date: vm.ruleForm.interactionDate+'',
-//                            next_interaction_date: vm.ruleForm.nextInteractionDate+'',
-//                            feedback: vm.ruleForm.feedback,
-//                            userClientId: vm.userClientId
-//                        })
-//                            .then(function (response) {
-//                                if (response.data.success) {
-//                                    vm.$message({
-//                                        type: 'success',
-//                                        message: response.data.message
-//                                    });
-//
-//                                    vm.$refs[formName].resetFields();
-//                                }
-//                                else {
-//                                    vm.$message({
-//                                        type: 'error',
-//                                        message: response.data.message
-//                                    });
-//                                }
-//                            }).catch(function (error) {
-//                            console.log(error);
-//                        });
-//                    } else {
-//                        return false;
-//                    }
-//                });
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+
+                        let vm = this;
+
+                        vm.$message({
+                            type: 'info',
+                            message: 'Saving Interaction'
+                        });
+
+                        axios.post('/interaction/save', {
+                            remarks: vm.ruleForm.interactionRemarks,
+                            interaction_type_id: vm.ruleForm.interaction,
+                            interaction_date: vm.ruleForm.interactionDate+'',
+                            next_interaction_date: vm.ruleForm.nextInteractionDate+'',
+                            feedback: vm.ruleForm.feedback,
+                            userClientId: vm.userClientId
+                        })
+                            .then(function (response) {
+                                if (response.data.success) {
+                                    vm.$message({
+                                        type: 'success',
+                                        message: response.data.message
+                                    });
+
+                                    vm.getContactInfo();
+
+                                    vm.$refs[formName].resetFields();
+                                }
+                                else {
+                                    vm.$message({
+                                        type: 'error',
+                                        message: response.data.message
+                                    });
+                                }
+                            }).catch(function (error) {
+                            console.log(error);
+                        });
+                    } else {
+                        return false;
+                    }
+                });
             },
 
             getContactInfo()

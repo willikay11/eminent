@@ -20,7 +20,7 @@ class ClientsRepository
             $input = [
                 'contact_id' => $contact->id,
                 'source_id' => $source,
-                'status_id' => 1
+                'status_id' => 2
             ];
 
             return Client::create($input);

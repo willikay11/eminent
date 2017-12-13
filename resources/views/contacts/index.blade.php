@@ -13,15 +13,16 @@
                         </el-col>
                         <el-col :xs="12" :sm="12" :md="12" :lg="12" style="text-align: right; padding-right: 40px">
                             <el-col :xs="12" :sm="12" :md="12" :lg="12">
+                                @if(in_array(6, getPermissions()))
+                                    <button class="btn ebg-button" v-on:click="showAddDialog()">Add Contact</button>
+                                @endif
+                            </el-col>
+
+                            <el-col :xs="12" :sm="12" :md="12" :lg="12">
                                 @if(in_array(7, getPermissions()))
                                     <button class="btn ebg-button" v-if="selectedUsersForReassign.length != 0" v-on:click="showReassignContactsDialog()" style="margin-right: 20px">
                                         Reassign Contact
                                     </button>
-                                @endif
-                            </el-col>
-                            <el-col :xs="12" :sm="12" :md="12" :lg="12">
-                                @if(in_array(6, getPermissions()))
-                                    <button class="btn ebg-button" v-on:click="showAddDialog()">Add Contact</button>
                                 @endif
                             </el-col>
                         </el-col>
@@ -129,10 +130,12 @@
                                 stripe
                                 style="width: 100%"
                                 @selection-change="handleSelectionChange">
-                            <el-table-column
-                                    type="selection"
-                                    width="55">
-                            </el-table-column>
+                            @if(in_array(7, getPermissions()))
+                                <el-table-column
+                                        type="selection"
+                                        width="55">
+                                </el-table-column>
+                            @endif
                             <el-table-column
                                     prop="name"
                                     label="Name">
@@ -446,6 +449,7 @@
                             <div class="block">
                                 <el-pagination
                                         layout="prev, pager, next"
+                                        @current-change="handleCurrentChange"
                                         :total="total">
                                 </el-pagination>
                             </div>
