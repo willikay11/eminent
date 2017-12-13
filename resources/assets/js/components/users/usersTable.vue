@@ -22,10 +22,6 @@
                         label="Email">
                 </el-table-column>
                 <el-table-column
-                        prop="role"
-                        label="Role">
-                </el-table-column>
-                <el-table-column
                         prop="phone"
                         label="Phone Number">
                 </el-table-column>
@@ -169,18 +165,6 @@
                     </el-form-item>
 
                     <el-form-item label="Employment Date" required>
-                        <!--<el-col :span="3" class="right-margin">-->
-                            <!--<el-form-item prop="role">-->
-                                <!--<el-select v-model="ruleForm.role" placeholder="Select Role">-->
-                                    <!--<el-option-->
-                                            <!--v-for="item in roles"-->
-                                            <!--:key="item.value"-->
-                                            <!--:label="item.label"-->
-                                            <!--:value="item.value">-->
-                                    <!--</el-option>-->
-                                <!--</el-select>-->
-                            <!--</el-form-item>-->
-                        <!--</el-col>-->
                         <el-col :span="7">
                             <el-form-item prop="employmentDate">
                                 <el-date-picker
@@ -242,6 +226,7 @@
                 errors: [],
                 roles: [],
                 total: 0,
+                loading: false,
                 dialogVisible: false,
                 userId: null,
                 contactId: null,
@@ -311,13 +296,24 @@
             handleClick() {
                 console.log('click');
             },
-            getUsers()
+            getUsers(page = null)
             {
                 let vm = this;
-                axios.get('/api/users')
+
+                vm.loading = true;
+
+                let url = '/api/users';
+
+                if (page != null)
+                {
+                    url = '/api/users/?page='+page
+                }
+
+                axios.get(url)
                     .then(function (response) {
-                        vm.tableData = [].concat(response.data.data);
-                        vm.total = response.data.last_page;
+                        vm.tableData = response.data.data;
+                        vm.total = response.data.last_page * 10;
+                        vm.loading = false;
                     }).catch(function (error) {
                     console.log(error);
                 })
@@ -381,10 +377,6 @@
                         })
                             .then(function (response)
                             {
-                                vm.dialogVisible = false;
-
-                                vm.getUsers();
-
                                 if(response.data.success)
                                 {
                                     vm.$message({
@@ -392,20 +384,22 @@
                                         message: response.data.message
                                     });
 
-                                    vm.ruleForm.role = '';
+                                    vm.dialogVisible = false;
+
+                                    vm.getUsers();
 
                                     vm.$refs[formName].resetFields();
+
+                                    vm.ruleForm.role = '';
                                 }
                                 else
                                 {
                                     vm.errors = response.data.errors;
 
-                                    vm.showErrors();
-
-//                                    vm.$message({
-//                                        type: 'error',
-//                                        message: response.data.message
-//                                    });
+                                    vm.$message({
+                                        type: 'error',
+                                        message: response.data.message
+                                    });
                                 }
                             }).catch(function (error) {
                             console.log(error);
@@ -415,6 +409,7 @@
                     }
                 });
             },
+
             EditUser(user)
             {
                 let vm = this;
@@ -438,17 +433,24 @@
                 vm.ruleForm.role = user.roles,
                 vm.userId = user.id
             },
+
             UserRole(user)
             {
                 window.location.href = '/user/'+user.id+'/role';
             },
-            filterTag(value, row) {
+
+            filterTag(value, row)
+            {
                 return row.tag === value;
             },
-            userRole (option) {
+
+            userRole (option)
+            {
                 return `${option.label}`
             },
-            showErrors(){
+
+            showErrors()
+            {
                 let vm = this;
 
                 vm.errors.forEach(error => {
@@ -459,6 +461,7 @@
                     });
                 });
             },
+
             resendActivationLink(user)
             {
                 let vm = this;
@@ -471,7 +474,6 @@
                                 message: response.data.message
                             });
 
-                            vm.getUsers();
                         }else
                         {
                             vm.$message({
@@ -482,6 +484,13 @@
                     }).catch(function (error) {
                     console.log(error);
                 })
+            },
+
+            handleCurrentChange(val)
+            {
+                let vm = this;
+
+                vm.getUsers(val);
             }
         }
     }

@@ -88850,6 +88850,7 @@ exports.default = {
             errors: [],
             roles: [],
             total: 0,
+            loading: false,
             dialogVisible: false,
             userId: null,
             contactId: null,
@@ -88897,10 +88898,22 @@ exports.default = {
             console.log('click');
         },
         getUsers: function getUsers() {
+            var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
             var vm = this;
-            axios.get('/api/users').then(function (response) {
-                vm.tableData = [].concat(response.data.data);
-                vm.total = response.data.last_page;
+
+            vm.loading = true;
+
+            var url = '/api/users';
+
+            if (page != null) {
+                url = '/api/users/?page=' + page;
+            }
+
+            axios.get(url).then(function (response) {
+                vm.tableData = response.data.data;
+                vm.total = response.data.last_page * 10;
+                vm.loading = false;
             }).catch(function (error) {
                 console.log(error);
             });
@@ -88958,28 +88971,26 @@ exports.default = {
                         employment_date: vm.ruleForm.employmentDate + "",
                         contactId: vm.contactId
                     }).then(function (response) {
-                        vm.dialogVisible = false;
-
-                        vm.getUsers();
-
                         if (response.data.success) {
                             vm.$message({
                                 type: 'success',
                                 message: response.data.message
                             });
 
-                            vm.ruleForm.role = '';
+                            vm.dialogVisible = false;
+
+                            vm.getUsers();
 
                             vm.$refs[formName].resetFields();
+
+                            vm.ruleForm.role = '';
                         } else {
                             vm.errors = response.data.errors;
 
-                            vm.showErrors();
-
-                            //                                    vm.$message({
-                            //                                        type: 'error',
-                            //                                        message: response.data.message
-                            //                                    });
+                            vm.$message({
+                                type: 'error',
+                                message: response.data.message
+                            });
                         }
                     }).catch(function (error) {
                         console.log(error);
@@ -89037,8 +89048,6 @@ exports.default = {
                         type: 'success',
                         message: response.data.message
                     });
-
-                    vm.getUsers();
                 } else {
                     vm.$message({
                         type: 'error',
@@ -89048,25 +89057,14 @@ exports.default = {
             }).catch(function (error) {
                 console.log(error);
             });
+        },
+        handleCurrentChange: function handleCurrentChange(val) {
+            var vm = this;
+
+            vm.getUsers(val);
         }
     }
 }; //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -89323,8 +89321,6 @@ var render = function() {
               _c("el-table-column", {
                 attrs: { prop: "email", label: "Email" }
               }),
-              _vm._v(" "),
-              _c("el-table-column", { attrs: { prop: "role", label: "Role" } }),
               _vm._v(" "),
               _c("el-table-column", {
                 attrs: { prop: "phone", label: "Phone Number" }

@@ -20,6 +20,7 @@
                     <div class="panel-body">
                         <el-table
                                 :data="tableData"
+                                v-loading.body="loading"
                                 stripe
                                 style="width: 100%">
                             <el-table-column
@@ -31,16 +32,13 @@
                                     label="Email">
                             </el-table-column>
                             <el-table-column
-                                    prop="role"
-                                    label="Role">
-                            </el-table-column>
-                            <el-table-column
                                     prop="phone"
                                     label="Phone Number">
                             </el-table-column>
                             <el-table-column
                                     prop="tag"
-                                    label="Active">
+                                    label="Active"
+                                    width="100">
                                 <template slot-scope="scope">
                                     <el-tag
                                             :type="scope.row.active === 'Active' ? 'success' : 'danger'"
@@ -53,7 +51,7 @@
                                     <template slot-scope="scope">
                                         <el-button @click="EditUser(scope.row)" size="small">Edit</el-button>
                                         <el-button @click="UserRole(scope.row)" size="small">Roles</el-button>
-                                        {{--<el-button @click="resendActivationLink(scope.row)" size="small">Resend Activation Link</el-button>--}}
+                                        <el-button v-if="scope.row.active != 'Active'" @click="resendActivationLink(scope.row)" size="small">Resend Activation Link</el-button>
                                     </template>
                                 </el-table-column>
                             @endif
@@ -64,6 +62,7 @@
                         <div class="block">
                             <el-pagination
                                     layout="prev, pager, next"
+                                    @current-change="handleCurrentChange"
                                     :total="total">
                             </el-pagination>
                         </div>
