@@ -35,3 +35,5 @@ Vue.component('userRoles', require('./users/userRoles.vue'));
 Vue.component('teamTable', require('./team/teamTable.vue'));
 
 Vue.component('teamMemberTable', require('./team/teamMembersTable.vue'));
+
+Vue.component('flash-message', require('./general/flashMessage.vue'));

@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use eminent\Exceptions\AuthorizationFailedException;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
@@ -48,6 +49,16 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        switch ($exception) {
+
+            case($exception instanceof AuthorizationFailedException): {
+
+                return back()->with('error',$exception->getMessage());
+
+                break;
+            }
+        }
+
         return parent::render($request, $exception);
     }
 }

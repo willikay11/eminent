@@ -16,6 +16,10 @@
 
     @yield('content')
 
+    <flash-message message="{!! session('success') !!}" type="success"></flash-message>
+
+    <flash-message message="{!! session('error') !!}" type="error"></flash-message>
+
 </div>
 
 

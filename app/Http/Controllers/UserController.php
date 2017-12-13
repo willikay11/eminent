@@ -169,11 +169,15 @@ class UserController extends Controller
 
     public function index()
     {
+        $this->hasPermission('manageUsers');
+
         return view('users.index');
     }
 
     public function storeUser(Request $request)
     {
+        $this->hasPermission('manageUsers');
+
         list($user, $domain) = explode('@', $request->get('email'));
 
         if ((strtolower($domain) != 'eminent.co.ke') && (strtolower($domain != 'sterlingq.com')))
@@ -295,27 +299,27 @@ class UserController extends Controller
             {
                 if(! $this->usersRepository->checkActivationKeyExpiry( $user->activation_key_created_at ))
                 {
-                    Flash('Activation Key has expired, please request a new one from the administrator')->error();
+//                    Flash('Activation Key has expired, please request a new one from the administrator')->error();
 
-                    return redirect('/login');
+                    return redirect('/login')->with('error', 'Activation Key has expired, please request a new one from the administrator');
                 }
 
-                Flash('Account activated successfully. Now create a new password for your account')->success();
+//                Flash('Account activated successfully. Now create a new password for your account')->success();
 
-                return redirect('/users/create_password/'. $code);
+                return redirect('/users/create_password/'. $code)->with('success', 'Account activated successfully. Now create a new password for your account');
             }
             else
             {
-                Flash('Could not activate that user, check that the activation link is correct or contact the administrator')->error();
+//                Flash('Could not activate that user, check that the activation link is correct or contact the administrator')->error();
 
-                return redirect('/login');
+                return redirect('/login')->with('error', 'Could not activate that user, check that the activation link is correct or contact the administrator');
             }
         }
         else
         {
-            Flash('Could not activate account, check that the activation link is correct or whether account is already activated or contact the administrator')->error();
+//            Flash('Could not activate account, check that the activation link is correct or whether account is already activated or contact the administrator')->error();
 
-            return redirect('/login');
+            return redirect('/login')->with('error', 'Could not activate account, check that the activation link is correct or whether account is already activated or contact the administrator');
         }
     }
 
@@ -341,27 +345,29 @@ class UserController extends Controller
         {
             if(! $this->usersRepository->checkActivationKeyExpiry( $user->activation_key_created_at ))
             {
-                Flash::error('Activation Key has expired, please request a new one');
+//                Flash::error('Activation Key has expired, please request a new one');
 
-                return redirect('/');
+                return redirect('/')->with('error', 'Activation Key has expired, please request a new one');
             }
 
             $this->usersRepository->activate($user, $request->all());
 
-            Flash::success('Password created successfully. You can now login');
+//            Flash::success('Password created successfully. You can now login');
 
-            return redirect('/');
+            return redirect('/')->with('success', 'Password created successfully. You can now login');
         }
         else
         {
-            Flash::error('Could not activate that user, check that the activation link is correct.');
+//            Flash::error('Could not activate that user, check that the activation link is correct.');
 
-            return redirect('/');
+            return redirect('/')->with('error', 'Could not activate that user, check that the activation link is correct.');
         }
     }
 
     public function userRoles($id)
     {
+        $this->hasPermission('manageUsers');
+
         return view('users.roles', [
             'userId' => $id
         ]);
