@@ -40,37 +40,37 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $exception)
     {
-        if(getenv('APP_ENV') !== 'local' and $this->shouldReport($exception))
-        {
-            if(Auth::user())
-            {
-                $user = [
-                    'id' => Auth::id(),
-                    'email' => Auth::user()->email
-                ];
-            }
-            else
-            {
-                $user = [
-                    'id' => 'guest',
-                    'email' => 'guest'
-                ];
-            }
-
-            $config = array(
-                // required
-                'access_token' => getenv('ROLLBAR_TOKEN'),
-                // optional - environment name. any string will do.
-                'environment' => getenv('APP_ENV'),
-                // optional - path to directory your code is in. used for linking stack traces.
-                'root' => base_path(),
-
-                'person' => $user
-            );
-
-            Rollbar::init($config);
-            Rollbar::report_exception($exception);
-        }
+//        if(getenv('APP_ENV') !== 'local' and $this->shouldReport($exception))
+//        {
+//            if(Auth::user())
+//            {
+//                $user = [
+//                    'id' => Auth::id(),
+//                    'email' => Auth::user()->email
+//                ];
+//            }
+//            else
+//            {
+//                $user = [
+//                    'id' => 'guest',
+//                    'email' => 'guest'
+//                ];
+//            }
+//
+//            $config = array(
+//                // required
+//                'access_token' => getenv('ROLLBAR_TOKEN'),
+//                // optional - environment name. any string will do.
+//                'environment' => getenv('APP_ENV'),
+//                // optional - path to directory your code is in. used for linking stack traces.
+//                'root' => base_path(),
+//
+//                'person' => $user
+//            );
+//
+//            Rollbar::init($config);
+//            Rollbar::report_exception($exception);
+//        }
 
         parent::report($exception);
     }
