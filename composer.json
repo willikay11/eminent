@@ -14,7 +14,7 @@
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "^5.4.0",
         "maatwebsite/excel": "~2.1.0",
-        "rollbar/rollbar": "~1.1",
+        "rollbar/rollbar-laravel": "^2.2",
         "webpatser/laravel-countries": "dev-master"
     },
     "require-dev": {
@@ -42,6 +42,7 @@
     "extra": {
         "laravel": {
             "dont-discover": [
+                "rollbar/rollbar-laravel"
             ]
         }
     },
