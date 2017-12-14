@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use eminent\Exceptions\AuthorizationFailedException;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\Auth;
 use Rollbar\Rollbar;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
@@ -41,11 +42,11 @@ class Handler extends ExceptionHandler
     {
         if(getenv('APP_ENV') !== 'local' and $this->shouldReport($exception))
         {
-            if(\Auth::user())
+            if(Auth::user())
             {
                 $user = [
-                    'id' => \Auth::user()->id,
-                    'email' => \Auth::user()->email
+                    'id' => Auth::id(),
+                    'email' => Auth::user()->email
                 ];
             }
             else
