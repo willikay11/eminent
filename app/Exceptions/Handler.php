@@ -5,6 +5,8 @@ namespace App\Exceptions;
 use eminent\Exceptions\AuthorizationFailedException;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Rollbar\Rollbar;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -14,7 +16,7 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        AuthorizationFailedException::class
+        AuthorizationFailedException::class,
     ];
 
     /**
@@ -37,6 +39,38 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $exception)
     {
+        if(getenv('APP_ENV') !== 'local' and $this->shouldReport($exception))
+        {
+            if(\Auth::user())
+            {
+                $user = [
+                    'id' => \Auth::user()->id,
+                    'email' => \Auth::user()->email
+                ];
+            }
+            else
+            {
+                $user = [
+                    'id' => 'guest',
+                    'email' => 'guest'
+                ];
+            }
+
+            $config = array(
+                // required
+                'access_token' => getenv('ROLLBAR_TOKEN'),
+                // optional - environment name. any string will do.
+                'environment' => getenv('APP_ENV'),
+                // optional - path to directory your code is in. used for linking stack traces.
+                'root' => base_path(),
+
+                'person' => $user
+            );
+
+            Rollbar::init($config);
+            Rollbar::report_exception($exception);
+        }
+
         parent::report($exception);
     }
 
