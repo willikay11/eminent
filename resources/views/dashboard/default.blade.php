@@ -87,23 +87,7 @@
         <!-- Page Content Holder -->
         <div id="content">
 
-            <!-- Fixed navbar -->
-            <div id="fixedNav" class="navbar navbar-fixed-top active" role="navigation">
-                    <div class="navbar-header">
-                        <div class="navbar-left">
-                            {{--<button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">--}}
-                                {{--<i class="glyphicon glyphicon-align-left"></i>--}}
-                                {{--<span></span>--}}
-                            {{--</button>--}}
-                        </div>
-                    </div>
-                    <div class="navbar-right" style="margin-right: 40px">
-                        <a href="/logout">
-                            <span style="margin-right: 10px; margin-top: 7px;margin-bottom: 7px;">{{ \Illuminate\Support\Facades\Auth::user()->contact->present()->fullName }}</span>
-                            <i class="glyphicon glyphicon-log-in"></i>
-                        </a>
-                    </div>
-            </div>
+            <account user-name="{{ \Illuminate\Support\Facades\Auth::user()->contact->present()->fullName }}"></account>
 
             <div class="row content-container">
 

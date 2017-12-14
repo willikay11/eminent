@@ -377,6 +377,13 @@ Route::group(['middleware' => 'auth'], function (){
     Route::get('/api/team/{teamId}/member/{userId}/remove', [
         'uses' => 'TeamMemberController@remove'
     ]);
+
+    /*
+     * Feedback
+     */
+    Route::post('/post/feedback', [
+        'uses' => 'FeedBackController@store'
+    ]);
 });
 
 
