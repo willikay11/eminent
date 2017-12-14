@@ -5,6 +5,8 @@
 
     import draggable from 'vuedraggable';
 
+    import moment from 'moment'
+
     export default{
         components: {draggable},
         props: ['userId'],
@@ -291,7 +293,7 @@
                             description: vm.ruleForm.description,
                             user_id: user,
                             priority_type_id: vm.ruleForm.priority,
-                            due_date: vm.ruleForm.dueDate + '',
+                            due_date: moment(vm.ruleForm.dueDate ).format("YYYY-MM-DD"),
                             activity_status_id: 1,
                             activity_type_id: vm.ruleForm.activityType,
                             projected_revenue: vm.ruleForm.projectedRevenue,
