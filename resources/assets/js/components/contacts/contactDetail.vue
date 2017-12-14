@@ -235,6 +235,8 @@
 </template>
 
 <script>
+    import moment from 'moment';
+
     export default {
         props:['userClientId'],
         data() {
@@ -303,7 +305,7 @@
                         {required: true, message: 'Please input interaction date', trigger: 'blur', type: 'date'},
                     ],
                     nextInteractionDate: [
-                        {required: false, message: 'Please input interaction date', trigger: 'blur', type: 'date'},
+                        {required: false, message: 'Please input next interaction date', trigger: 'blur', type: 'date'},
                     ],
                 },
                 activeName: 'first'
@@ -376,7 +378,7 @@
                         });
 
                         axios.post('/interactionSchedule/save', {
-                            next_interaction_date: vm.scheduleForm.nextInteractionDate+'',
+                            next_interaction_date: moment(vm.scheduleForm.nextInteractionDate).format("YYYY-MM-DD"),
                             userClientId: vm.userClientId
                         })
                             .then(function (response) {
@@ -421,8 +423,8 @@
                         axios.post('/interaction/save', {
                             remarks: vm.ruleForm.interactionRemarks,
                             interaction_type_id: vm.ruleForm.interaction,
-                            interaction_date: vm.ruleForm.interactionDate+'',
-                            next_interaction_date: vm.ruleForm.nextInteractionDate+'',
+                            interaction_date: moment(vm.ruleForm.interactionDate).format("YYYY-MM-DD"),
+                            next_interaction_date: moment(vm.ruleForm.nextInteractionDate).format("YYYY-MM-DD"),
                             feedback: vm.ruleForm.feedback,
                             userClientId: vm.userClientId
                         })

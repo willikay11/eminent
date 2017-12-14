@@ -5,7 +5,7 @@
 
     import draggable from 'vuedraggable';
 
-    import moment from 'moment'
+    import moment from 'moment';
 
     export default{
         components: {draggable},
@@ -28,6 +28,7 @@
                 selectedTask: {
                     'comments': []
                 },
+                loading: true,
                 selectedProgressUpdateFiles : '',
                 todo: [],
                 inProgress: [],
@@ -264,6 +265,7 @@
                         vm.inProgress = (response.data.progress == undefined) ? [] : response.data.progress;
                         vm.inReview = (response.data.review == undefined) ? [] : response.data.review;
                         vm.done = (response.data.done == undefined) ? [] : response.data.done;
+                        vm.loading = false;
                     }).catch(function (error) {
                     console.log(error);
                 });
@@ -534,6 +536,8 @@
             {
                 let vm = this;
 
+                vm.loading = true;
+
                 vm.$message({
                     type: 'info',
                     message: 'Searching...'
@@ -553,6 +557,8 @@
                     userId: user,
                 })
                     .then(function (response) {
+
+                        vm.loading = false;
 
                         if (response.data.success) {
                             vm.$message({

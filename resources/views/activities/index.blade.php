@@ -74,7 +74,7 @@
 
                     <el-row :span="24" :gutter="20">
                         <el-col :span="6">
-                            <div class="panel panel-primary to-do-panel">
+                            <div class="panel panel-primary to-do-panel" v-loading.body="loading">
                                 <div class="panel-heading">
                                     <h3 class="panel-title">To Do</h3>
                                 </div>
@@ -107,13 +107,13 @@
                                         <el-row :span="24" :gutter="20">
                                             <el-col :span="4">
                                                 <el-badge :value="element.comments.length" class="item">
-                                                    <button class="btn" @click="getSelectedTask(element)"><i
+                                                    <button class="btn comments-btn" @click="getSelectedTask(element)"><i
                                                             class="fa fa-comment font-icon" aria-hidden="true"></i></button>
                                                 </el-badge>
                                             </el-col>
                                             <el-col :span="4">
                                                 <el-badge :value="element.countProgressUpdates" class="item">
-                                                    <button class="btn" @click="showTaskProgress(element)"><i class="fa fa-tasks font-icon" aria-hidden="true"></i></button>
+                                                    <button class="btn comments-btn" @click="showTaskProgress(element)"><i class="fa fa-tasks font-icon" aria-hidden="true"></i></button>
                                                 </el-badge>
                                             </el-col>
                                         </el-row>
@@ -127,7 +127,7 @@
                         </el-col>
 
                         <el-col :span="6">
-                            <div class="panel panel-warning in-progress-panel">
+                            <div class="panel panel-warning in-progress-panel" v-loading.body="loading">
                                 <div class="panel-heading">
                                     <h3 class="panel-title">In Progress</h3>
                                 </div>
@@ -160,13 +160,13 @@
                                         <el-row :span="24" :gutter="20">
                                             <el-col :span="4">
                                                 <el-badge :value="element.comments.length" class="item">
-                                                    <button class="btn" @click="getSelectedTask(element)"><i
+                                                    <button class="btn comments-btn" @click="getSelectedTask(element)"><i
                                                             class="fa fa-comment font-icon" aria-hidden="true"></i></button>
                                                 </el-badge>
                                             </el-col>
                                             <el-col :span="4">
                                                 <el-badge :value="element.countProgressUpdates" class="item">
-                                                    <button class="btn" @click="showTaskProgress(element)"><i class="fa fa-tasks font-icon" aria-hidden="true"></i></button>
+                                                    <button class="btn comments-btn" @click="showTaskProgress(element)"><i class="fa fa-tasks font-icon" aria-hidden="true"></i></button>
                                                 </el-badge>
                                             </el-col>
                                         </el-row>
@@ -177,7 +177,7 @@
                         </el-col>
 
                         <el-col :span="6">
-                            <div class="panel panel-info in-review-panel">
+                            <div class="panel panel-info in-review-panel" v-loading.body="loading">
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Review</h3>
                                 </div>
@@ -210,13 +210,13 @@
                                         <el-row :span="24" :gutter="20">
                                             <el-col :span="4">
                                                 <el-badge :value="element.comments.length" class="item">
-                                                    <button class="btn" @click="getSelectedTask(element)"><i
+                                                    <button class="btn comments-btn" @click="getSelectedTask(element)"><i
                                                             class="fa fa-comment font-icon" aria-hidden="true"></i></button>
                                                 </el-badge>
                                             </el-col>
                                             <el-col :span="4">
                                                 <el-badge :value="element.countProgressUpdates" class="item">
-                                                    <button class="btn" @click="showTaskProgress(element)"><i class="fa fa-tasks font-icon" aria-hidden="true"></i></button>
+                                                    <button class="btn comments-btn" @click="showTaskProgress(element)"><i class="fa fa-tasks font-icon" aria-hidden="true"></i></button>
                                                 </el-badge>
                                             </el-col>
                                         </el-row>
@@ -227,7 +227,7 @@
                         </el-col>
 
                         <el-col :span="6">
-                            <div class="panel panel-success done-panel">
+                            <div class="panel panel-success done-panel" v-loading.body="loading">
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Complete</h3>
                                 </div>
@@ -254,13 +254,13 @@
                                         <el-row :span="24" :gutter="20">
                                             <el-col :span="4">
                                                 <el-badge :value="element.comments.length" class="item">
-                                                    <button class="btn" @click="getSelectedTask(element)"><i
+                                                    <button class="btn comments-btn" @click="getSelectedTask(element)"><i
                                                             class="fa fa-comment font-icon" aria-hidden="true"></i></button>
                                                 </el-badge>
                                             </el-col>
                                             <el-col :span="4">
                                                 <el-badge :value="element.countProgressUpdates" class="item">
-                                                    <button class="btn" @click="showTaskProgress(element)"><i class="fa fa-tasks font-icon" aria-hidden="true"></i></button>
+                                                    <button class="btn comments-btn" @click="showTaskProgress(element)"><i class="fa fa-tasks font-icon" aria-hidden="true"></i></button>
                                                 </el-badge>
                                             </el-col>
                                         </el-row>

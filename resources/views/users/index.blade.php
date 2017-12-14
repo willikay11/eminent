@@ -155,7 +155,7 @@
                             <div class="form-item-container">
                                 <el-form-item label="Department" required>
                                     <el-form-item prop="department">
-                                        <el-select v-model="ruleForm.department" placeholder="Select Department">
+                                        <el-select v-model="ruleForm.department" filterable placeholder="Select Department">
                                             <el-option
                                                     v-for="item in departments"
                                                     :key="item.value"
@@ -169,13 +169,14 @@
                                 <el-form-item prop="roles"
                                               label="Role">
                                     <el-col :span="6">
-                                        <multiselect
-                                                v-model="ruleForm.role"
-                                                :options="roles"
-                                                :multiple="true"
-                                                track-by="value"
-                                                :custom-label="userRole">
-                                        </multiselect>
+                                        <el-select v-model="ruleForm.role" multiple placeholder="Select">
+                                            <el-option
+                                                    v-for="item in roles"
+                                                    :key="item.value"
+                                                    :label="item.label"
+                                                    :value="item.value">
+                                            </el-option>
+                                        </el-select>
                                     </el-col>
                                 </el-form-item>
 
@@ -193,7 +194,7 @@
 
                                 <el-form-item label="Designation" required>
                                     <el-form-item prop="designation">
-                                        <el-select v-model="ruleForm.designation" placeholder="Select Designation">
+                                        <el-select v-model="ruleForm.designation" filterable placeholder="Select Designation">
                                             <el-option
                                                     v-for="item in designations"
                                                     :key="item.value"

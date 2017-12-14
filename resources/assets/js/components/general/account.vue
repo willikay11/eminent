@@ -17,12 +17,12 @@
                         placement="bottom"
                         width="150"
                         trigger="hover">
-                    <ul style="list-style: none">
+                    <ul class="profile-dropdown">
                         <li><a @click="showFeedbackDialog">Feedback</a> &nbsp;<i class="fa fa-comments-o" aria-hidden="true"></i></li>
                         <li><a @click="logout">Logout</a> &nbsp;<i class="glyphicon glyphicon-log-in"></i></li>
                     </ul>
                 </el-popover>
-                <span style="margin-right: 10px; margin-top: 7px;margin-bottom: 7px;" v-popover:popover2>{{ userName }}</span>
+                <span class="username" v-popover:popover2>{{ userName }}</span>
             </div>
         </div>
 

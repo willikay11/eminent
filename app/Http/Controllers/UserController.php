@@ -83,13 +83,21 @@ class UserController extends Controller
     {
         $userHasRoles = $user->userHasRoles;
 
-        return $userHasRoles->map(function ($userHasRole)
+        $rolesArray = array();
+
+        foreach ($userHasRoles as $userHasRole)
         {
-            return [
-                'value' => $userHasRole->role->id,
-                'label' => $userHasRole->role->name
-            ];
-        });
+            $rolesArray[] = $userHasRole->role->id;
+        }
+
+        return $rolesArray;
+//        return $userHasRoles->map(function ($userHasRole)
+//        {
+//            return [
+//                'value' => $userHasRole->role->id,
+//                'label' => $userHasRole->role->name
+//            ];
+//        });
     }
 
     public function getInformation()
@@ -256,7 +264,7 @@ class UserController extends Controller
         {
             $input = [
                 'user_id' => $user->id,
-                'role_id' => $role['value']
+                'role_id' => $role
             ];
 
             $this->userHasRolesRepository->create($input);

@@ -3,6 +3,8 @@
 <script>
     import Multiselect from 'vue-multiselect';
 
+    import moment from 'moment';
+
     export default {
         props: ['userId'],
         components: {Multiselect},
@@ -327,8 +329,8 @@
                     });
 
                     axios.post('/contacts/search', {
-                        startDate: vm.searchForm.startDate+"",
-                        endDate: vm.searchForm.endDate+"",
+                        startDate: moment(vm.searchForm.startDate).format("YYYY-MM-DD"),
+                        endDate: moment(vm.searchForm.endDate).format("YYYY-MM-DD"),
                         source: vm.searchForm.source,
                         status: vm.searchForm.status,
                         userId: userId,
@@ -392,8 +394,8 @@
                 });
 
                 axios.post('/contacts/export', {
-                    startDate: vm.searchForm.startDate+"",
-                    endDate: vm.searchForm.endDate+"",
+                    startDate: moment(vm.searchForm.startDate).format("YYYY-MM-DD"),
+                    endDate: moment(vm.searchForm.endDate).format("YYYY-MM-DD"),
                     source: vm.searchForm.source,
                     status: vm.searchForm.status,
                     userId: vm.userId,

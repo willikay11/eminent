@@ -206,6 +206,8 @@
 <script>
     import Multiselect from 'vue-multiselect';
 
+    import moment from 'moment';
+
     export default {
         components: {Multiselect},
         data() {
@@ -372,7 +374,7 @@
                             roles: vm.ruleForm.role,
                             active: 0,
                             userId: vm.userId,
-                            employment_date: vm.ruleForm.employmentDate+"",
+                            employment_date: moment(vm.ruleForm.employmentDate).format("YYYY-MM-DD"),
                             contactId: vm.contactId
                         })
                             .then(function (response)
@@ -389,8 +391,6 @@
                                     vm.getUsers();
 
                                     vm.$refs[formName].resetFields();
-
-                                    vm.ruleForm.role = '';
                                 }
                                 else
                                 {
@@ -429,9 +429,9 @@
                 vm.ruleForm.gender = user.gender_id;
                 vm.ruleForm.email = user.email;
                 vm.ruleForm.employmentDate = new Date(user.employment_date);
-                vm.contactId = user.contact_id,
-                vm.ruleForm.role = user.roles,
-                vm.userId = user.id
+                vm.contactId = user.contact_id;
+                vm.ruleForm.role = user.roles;
+                vm.userId = user.id;
             },
 
             UserRole(user)

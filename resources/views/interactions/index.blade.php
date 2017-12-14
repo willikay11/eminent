@@ -81,7 +81,7 @@
                                             <span>@{{ scope.row.remarks }}</span>
                                         </el-col>
                                         <el-col :span="24" :gutter="10" style="margin-top:10px">
-                                            <el-col :span="8">
+                                            <el-col :span="16">
                                                 <span>Date: @{{ scope.row.date }}</span>
                                             </el-col>
                                             <el-col :span="8">
