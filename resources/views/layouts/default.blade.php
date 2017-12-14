@@ -6,7 +6,8 @@
     <title>Eminent CRM</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" href="/css/app.css" rel="stylesheet">
+    {{--<link rel="stylesheet" href="/css/app.css" rel="stylesheet">--}}
+    <link rel="stylesheet" href="{{ mix('/css/app.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
 </head>
@@ -25,7 +26,8 @@
 
 <!-- jQuery CDN -->
 <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
-<script src="/js/app.js"></script>
+{{--<script src="/js/app.js"></script>--}}
+<script src="{{ mix('/js/app.js') }}"></script>
 
 <script type="text/javascript">
     $(document).ready(function () {
