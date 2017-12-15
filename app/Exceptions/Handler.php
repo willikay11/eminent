@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Rollbar\Rollbar;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 
 class Handler extends ExceptionHandler
 {
@@ -96,6 +97,15 @@ class Handler extends ExceptionHandler
             }
 
             case($exception instanceof ModelNotFoundException):
+            {
+                $e = new NotFoundHttpException($exception->getMessage(), $exception);
+
+                return response()->view('errors.404', [], 404);
+
+                break;
+            }
+
+            case($exception instanceof MethodNotAllowedHttpException):
             {
                 $e = new NotFoundHttpException($exception->getMessage(), $exception);
 
