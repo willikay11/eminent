@@ -35,8 +35,6 @@ class SchedulerEventReminder
             event(new ReminderNotification($event));
 
             $reminder->delete();
-
-
         }
     }
 }

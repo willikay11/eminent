@@ -51,4 +51,28 @@ class ActivityMailers
             $message->to($data['to'])->subject($data['subject'])->cc($data['cc'])->from('eminentCRM@eminent.co.ke')->bcc(getAdmins());
         });
     }
+
+    public static function task24HourReminder($data)
+    {
+        $data['subject'] = 'Eminent CRM : 24 Hour Task Reminder';
+
+        $data['content'] = 'The following task is due in 24 Hours ('.$data['dueDate'].')';
+
+        Mail::send('emails.activities.taskReminder', $data, function ($message) use ($data)
+        {
+            $message->to($data['to'])->subject($data['subject'])->cc($data['cc'])->from('eminentCRM@eminent.co.ke')->bcc(getAdmins());
+        });
+    }
+
+    public static function task48HourReminder($data)
+    {
+        $data['subject'] = 'Eminent CRM : 48 Hour Task Reminder';
+
+        $data['content'] = 'The following task is due in 48 Hours ('.$data['dueDate'].')';
+
+        Mail::send('emails.activities.taskReminder', $data, function ($message) use ($data)
+        {
+            $message->to($data['to'])->subject($data['subject'])->cc($data['cc'])->from('eminentCRM@eminent.co.ke')->bcc(getAdmins());
+        });
+    }
 }

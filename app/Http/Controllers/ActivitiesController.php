@@ -18,6 +18,8 @@ use eminent\Activities\ActivityRepository;
 use eminent\ActivityFile\ActivityFileRepository;
 use eminent\ActivityWatcher\ActivityWatcherRepository;
 use eminent\Comments\CommentsRepository;
+use eminent\EventReminders\EventRemindersRepository;
+use eminent\Events\EventsRepository;
 use eminent\Models\Activity;
 use eminent\Models\ActivityType;
 use eminent\Models\ActivityWatcher;
@@ -63,6 +65,14 @@ class ActivitiesController extends Controller
      * @var ProjectUpdateFilesRepository
      */
     private $projectUpdateFilesRepository;
+    /**
+     * @var EventsRepository
+     */
+    private $eventsRepository;
+    /**
+     * @var EventRemindersRepository
+     */
+    private $eventRemindersRepository;
 
 
     public function __construct(UsersRepository $usersRepository,
@@ -71,7 +81,9 @@ class ActivitiesController extends Controller
                                 ActivityFileRepository $activityFileRepository,
                                 ActivityWatcherRepository $activityWatcherRepository,
                                 ProgressUpdateRepository $progressUpdateRepository,
-                                ProjectUpdateFilesRepository $projectUpdateFilesRepository)
+                                ProjectUpdateFilesRepository $projectUpdateFilesRepository,
+                                EventsRepository $eventsRepository,
+                                EventRemindersRepository $eventRemindersRepository)
     {
 
         $this->usersRepository = $usersRepository;
@@ -81,6 +93,8 @@ class ActivitiesController extends Controller
         $this->activityWatcherRepository = $activityWatcherRepository;
         $this->progressUpdateRepository = $progressUpdateRepository;
         $this->projectUpdateFilesRepository = $projectUpdateFilesRepository;
+        $this->eventsRepository = $eventsRepository;
+        $this->eventRemindersRepository = $eventRemindersRepository;
     }
 
     public function index($userId = null)
@@ -206,6 +220,14 @@ class ActivitiesController extends Controller
 
                 $this->activityWatcherRepository->create($input);
             }
+
+            $twentyFourHourEvent =  $this->eventsRepository->save24HourTaskEvent($activity);
+
+            $this->eventRemindersRepository->saveEventReminder($twentyFourHourEvent);
+
+            $fortyEightHourEvent =  $this->eventsRepository->save48HourTaskEvent($activity);
+
+            $this->eventRemindersRepository->saveEventReminder($fortyEightHourEvent);
 
             event(new TaskAssigned($activity));
 

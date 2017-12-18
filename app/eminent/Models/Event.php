@@ -31,7 +31,8 @@ class Event extends Model
         'start_date',
         'end_date',
         'type',
-        'description'
+        'description',
+        'filters'
     ];
 
     /**
@@ -43,8 +44,8 @@ class Event extends Model
     /*
      * Relationship between a role and user
      */
-    public function users()
+    public function user()
     {
-        return $this->hasMany(User::class);
+        return $this->belongsTo(User::class);
     }
 }
