@@ -353,7 +353,7 @@
                     })
                         .then(function (response) {
 
-                            vm.loading = false;
+                            vm.tableLoading = false;
 
                             if (response.data.success) {
                                 vm.$message({
