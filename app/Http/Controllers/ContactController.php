@@ -354,7 +354,7 @@ class ContactController extends Controller
         return $this->toResponse(null, [
             'success' => true,
             'contacts' => $contacts,
-            'messgae' => 'Contacts loaded'
+            'message' => 'Contacts loaded'
         ]);
     }
 
