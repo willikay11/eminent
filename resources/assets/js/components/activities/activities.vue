@@ -536,6 +536,12 @@
             {
                 let vm = this;
 
+                let user = vm.userId;
+
+                let startDate = '';
+
+                let endDate = '';
+
                 vm.loading = true;
 
                 vm.$message({
@@ -543,16 +549,24 @@
                     message: 'Searching...'
                 });
 
-                let user = vm.userId;
-
                 if (vm.searchForm.user != '')
                 {
                     user = vm.searchForm.user;
                 }
 
+                if(vm.searchForm.startDate != '')
+                {
+                    startDate = moment(vm.searchForm.startDate).format("YYYY-MM-DD");
+                }
+
+                if(vm.searchForm.endDate != '')
+                {
+                    endDate = moment(vm.searchForm.endDate).format("YYYY-MM-DD")
+                }
+
                 axios.post('/activity/search', {
-                    startDate: moment(vm.searchForm.startDate).format("YYYY-MM-DD"),
-                    endDate: moment(vm.searchForm.endDate).format("YYYY-MM-DD"),
+                    startDate: startDate,
+                    endDate: endDate,
                     priority: vm.searchForm.priority,
                     userId: user,
                 })
