@@ -337,6 +337,8 @@
                         endDate = moment(vm.searchForm.endDate).format("YYYY-MM-DD")
                     }
 
+                    vm.tableLoading = true;
+
                     vm.$message({
                         type: 'info',
                         message: 'Searching...'
@@ -350,6 +352,8 @@
                         userId: userId,
                     })
                         .then(function (response) {
+
+                            vm.loading = false;
 
                             if (response.data.success) {
                                 vm.$message({
