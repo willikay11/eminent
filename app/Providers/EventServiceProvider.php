@@ -46,6 +46,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Activities\TaskProgressUpdated' => [
             'App\Listeners\Activities\WhenTaskProgressUpdated',
         ],
+        'App\Events\Events\ReminderNotification' => [
+            'App\Listeners\Activities\WhenReminderNotification',
+        ],
     ];
 
     /**

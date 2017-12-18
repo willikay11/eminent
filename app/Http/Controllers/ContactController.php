@@ -204,7 +204,6 @@ class ContactController extends Controller
         return self::toResponse(null, $data);
     }
 
-
     public function getContacts()
     {
         $contacts = $this->sortFilterPaginate(new Contact(), [], function ($contact)
@@ -223,7 +222,6 @@ class ContactController extends Controller
 
         return $this->toResponse(null, $contacts);
     }
-
 
     public function getUserClients($userId)
     {

@@ -551,8 +551,8 @@
                 }
 
                 axios.post('/activity/search', {
-                    startDate: vm.searchForm.startDate+"",
-                    endDate: vm.searchForm.endDate+"",
+                    startDate: moment(vm.searchForm.startDate).format("YYYY-MM-DD"),
+                    endDate: moment(vm.searchForm.endDate).format("YYYY-MM-DD"),
                     priority: vm.searchForm.priority,
                     userId: user,
                 })

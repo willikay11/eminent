@@ -323,14 +323,28 @@
                         userId = vm.searchForm.user;
                     }
 
+                    let startDate = '';
+
+                    let endDate = '';
+
+                    if(vm.searchForm.startDate != '')
+                    {
+                        startDate = moment(vm.searchForm.startDate).format("YYYY-MM-DD");
+                    }
+
+                    if(vm.searchForm.endDate != '')
+                    {
+                        endDate = moment(vm.searchForm.endDate).format("YYYY-MM-DD")
+                    }
+
                     vm.$message({
                         type: 'info',
                         message: 'Searching...'
                     });
 
                     axios.post('/contacts/search', {
-                        startDate: moment(vm.searchForm.startDate).format("YYYY-MM-DD"),
-                        endDate: moment(vm.searchForm.endDate).format("YYYY-MM-DD"),
+                        startDate: startDate,
+                        endDate: endDate,
                         source: vm.searchForm.source,
                         status: vm.searchForm.status,
                         userId: userId,
