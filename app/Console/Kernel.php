@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Console\Commands\CheckReminders;
+use App\Console\Commands\TaskDueReminder;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -14,7 +15,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        CheckReminders::class
+        CheckReminders::class,
+        TaskDueReminder::class
     ];
 
     /**
@@ -26,6 +28,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('eminent:reminders')->everyMinute();
+        $schedule->command('eminent:taskDueReminder')->dailyAt('07:00');
         // $schedule->command('inspire')
         //          ->hourly();
     }

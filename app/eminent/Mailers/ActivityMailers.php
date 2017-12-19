@@ -75,4 +75,14 @@ class ActivityMailers
             $message->to($data['to'])->subject($data['subject'])->cc($data['cc'])->from('eminentCRM@eminent.co.ke')->bcc(getAdmins());
         });
     }
+
+    public static function taskDueReminder($data)
+    {
+        $data['subject'] = 'Eminent CRM : Task Due Reminder';
+
+        Mail::send('emails.activities.taskReminder', $data, function ($message) use ($data)
+        {
+            $message->to($data['to'])->subject($data['subject'])->cc($data['cc'])->from('eminentCRM@eminent.co.ke')->bcc(getAdmins());
+        });
+    }
 }

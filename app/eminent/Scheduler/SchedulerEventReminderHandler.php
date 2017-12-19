@@ -63,6 +63,42 @@ class SchedulerEventReminderHandler
         ActivityMailers::task48HourReminder($data);
     }
 
+    public static function sendTaskDueReminder()
+    {
+        $activityRepository = new ActivityRepository();
+
+        $activities = $activityRepository->getTasksDueToday();
+
+        foreach ($activities as $activity)
+        {
+            $data = [
+                'firstname' => $activity->user->firstname,
+                'to' => $activity->user->email,
+                'cc' => SchedulerEventReminderHandler::getActivityTaskWatchers($activity),
+                'name' => $activity->name,
+                'type' => $activity->activityType->name,
+                'description' => $activity->description,
+                'priority' => $activity->priorityType->name,
+                'dueDate' => Carbon::parse($activity->due_date)->format('l jS F Y'),
+                'content' => SchedulerEventReminderHandler::getTaskDueContent($activity->due_date)
+            ];
+
+            ActivityMailers::taskDueReminder($data);
+        }
+    }
+
+    public static function getTaskDueContent($date)
+    {
+        $diffInDays = Carbon::parse($date)->endOfDay()->diffInDays(Carbon::now());
+
+        if ($diffInDays == 0)
+        {
+            return 'The following task is due today ('.Carbon::parse($date)->format('l jS F Y').')';
+        }
+
+        return 'The following task was due '.$diffInDays.' days ago';
+    }
+
     public static function getActivityTaskWatchers($activity)
     {
         $emails = array();
