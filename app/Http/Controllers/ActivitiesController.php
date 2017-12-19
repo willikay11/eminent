@@ -179,7 +179,7 @@ class ActivitiesController extends Controller
             'description' => $request->get('description'),
             'user_id' => $request->get('user_id'),
             'priority_type_id' => $request->get('priority_type_id'),
-            'due_date' => Carbon::parse($request->get('due_date'))->toDateString(),
+            'due_date' => Carbon::parse($request->get('due_date'))->endOfDay()->toDateString(),
             'activity_status_id' => $request->get('activity_status_id'),
             'created_by' => Auth::id(),
             'activity_type_id' => $request->get('activity_type_id'),
@@ -221,13 +221,19 @@ class ActivitiesController extends Controller
                 $this->activityWatcherRepository->create($input);
             }
 
-            $twentyFourHourEvent =  $this->eventsRepository->save24HourTaskEvent($activity);
+            if (Carbon::parse($request->get('due_date'))->endOfDay()->diffInDays(Carbon::now()) > 1)
+            {
+                $twentyFourHourEvent =  $this->eventsRepository->save24HourTaskEvent($activity);
 
-            $this->eventRemindersRepository->saveEventReminder($twentyFourHourEvent);
+                $this->eventRemindersRepository->saveEventReminder($twentyFourHourEvent);
+            }
 
-            $fortyEightHourEvent =  $this->eventsRepository->save48HourTaskEvent($activity);
+            if (Carbon::parse($request->get('due_date'))->endOfDay()->diffInDays(Carbon::now()) > 2)
+            {
+                $fortyEightHourEvent =  $this->eventsRepository->save48HourTaskEvent($activity);
 
-            $this->eventRemindersRepository->saveEventReminder($fortyEightHourEvent);
+                $this->eventRemindersRepository->saveEventReminder($fortyEightHourEvent);
+            }
 
             event(new TaskAssigned($activity));
 

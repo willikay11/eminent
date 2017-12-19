@@ -48,7 +48,7 @@ class EventsRepository
             'type' => 2,
             'where' => 'Unspecified',
             'filters' => json_encode(['activityId' => $activity->id]),
-            'description' => 'Send a 24 Hour reminder to task assignee'
+            'description' => 'Send a 48 Hour reminder to task assignee'
         ];
 
         return Event::create($eventArray);
