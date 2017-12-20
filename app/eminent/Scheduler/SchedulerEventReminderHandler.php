@@ -72,7 +72,7 @@ class SchedulerEventReminderHandler
         foreach ($activities as $activity)
         {
             $data = [
-                'firstname' => $activity->user->firstname,
+                'firstname' => $activity->user->contact->firstname,
                 'to' => $activity->user->email,
                 'cc' => SchedulerEventReminderHandler::getActivityTaskWatchers($activity),
                 'name' => $activity->name,
