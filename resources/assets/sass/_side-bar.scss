@@ -183,7 +183,13 @@ a.article, a.article:hover {
   color: #fff !important;
 }
 
+.show-hamburger{
+  display: none;
+}
 
+#show {
+  display: block;
+}
 
 /* ---------------------------------------------------
     CONTENT STYLE
@@ -201,11 +207,16 @@ a.article, a.article:hover {
     MEDIAQUERIES
 ----------------------------------------------------- */
 @media (max-width: 768px) {
+  .show-hamburger{
+    display: block;
+  }
+
   #sidebar {
     min-width: 80px;
     max-width: 80px;
     text-align: center;
     margin-left: -80px !important ;
+    display: none;
   }
   a[aria-expanded="false"]::before, a[aria-expanded="true"]::before {
     top: auto;

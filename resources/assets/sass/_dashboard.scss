@@ -1,0 +1,38 @@
+/* Extra Small Devices, Phones */
+@media (min-width : 480px) {
+  .contact-panel-left{
+    margin-left: 0px;
+    margin-right: 0px
+  }
+
+  .contact-panel-right{
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+}
+
+/* Small Devices, Tablets */
+@media (min-width : 768px) {
+  .contact-panel-left{
+    margin-left: 0px;
+    margin-right: 0px
+  }
+
+  .contact-panel-right{
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+}
+
+/* Medium Devices, Desktops */
+@media (min-width : 992px) {
+  .contact-panel-left{
+    margin-left: 40px;
+    margin-right: 0px
+  }
+
+  .contact-panel-right{
+    margin-left: 0px;
+    margin-right: 40px;
+  }
+}

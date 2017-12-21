@@ -1,5 +1,5 @@
 <template>
-    <div class="panel panel-default" style="margin-right: 0px">
+    <div class="panel panel-default contact-panel-left">
         <div class="col-lg-12 panel-header">
             <div class="col-lg-6">
                 <h4>Contacts</h4>

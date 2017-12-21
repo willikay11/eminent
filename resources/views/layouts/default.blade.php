@@ -32,8 +32,8 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('#sidebarCollapse').on('click', function () {
-            $('#sidebar').toggleClass('active');
-            $('#fixedNav').toggleClass('active');
+            $('#sidebar').toggleClass('show');
+            $('#fixedNav').toggleClass('show');
         });
     });
 </script>

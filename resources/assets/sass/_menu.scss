@@ -34,9 +34,19 @@
   }
 }
 
+#show{
+  left: 100px !important;
+  transition: .3s;
+}
+
 @media (max-width: 768px) {
   .navbar-fixed-top {
     left: 0px !important;
+  }
+
+  #fixedNav.active {
+    left: 0px !important;
+    transition: .3s;
   }
 
   .logo-container{

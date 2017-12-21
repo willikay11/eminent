@@ -3,11 +3,11 @@
     <div>
         <div id="fixedNav" class="navbar navbar-fixed-top active" role="navigation">
             <div class="navbar-header">
-                <div class="navbar-left">
-                    <!--{{&#45;&#45;<button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">&#45;&#45;}}-->
-                    <!--{{&#45;&#45;<i class="glyphicon glyphicon-align-left"></i>&#45;&#45;}}-->
-                    <!--{{&#45;&#45;<span></span>&#45;&#45;}}-->
-                    <!--{{&#45;&#45;</button>&#45;&#45;}}-->
+                <div class="navbar-left show-hamburger">
+                    <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
+                        <i class="glyphicon glyphicon-align-left"></i>
+                        <span></span>
+                    </button>
                 </div>
             </div>
 
