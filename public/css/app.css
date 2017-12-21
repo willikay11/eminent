@@ -8924,3 +8924,35 @@ a.article:hover {
   }
 }
 
+.contact-panel {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+/* Extra Small Devices, Phones */
+
+@media (min-width: 480px) {
+  .contact-panel {
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+}
+
+/* Small Devices, Tablets */
+
+@media (min-width: 768px) {
+  .contact-panel {
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+}
+
+/* Medium Devices, Desktops */
+
+@media (min-width: 992px) {
+  .contact-panel {
+    margin-left: 40px;
+    margin-right: 40px;
+  }
+}
+

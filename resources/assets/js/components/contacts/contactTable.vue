@@ -543,6 +543,24 @@
     .contact-type-span{
         margin-top: 10px;
     }
+
+    @media(min-width:768px) and (max-width:991px){
+        .el-dialog--small {
+            width: 90%;
+        }
+    }
+
+    @media(max-width:767px){
+        .el-dialog--small {
+            width: 90%;
+        }
+    }
+
+    @media(min-width:992px) and (max-width:1199px){
+        .el-dialog--small {
+            width: 70%;
+        }
+    }
 </style>
 
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

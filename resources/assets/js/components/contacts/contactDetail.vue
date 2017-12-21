@@ -1,5 +1,5 @@
 <template>
-    <div class="panel panel-default">
+    <div class="panel panel-default contact-panel">
         <div class="col-lg-12 panel-header">
             <div class="col-lg-6">
                 <h4>Contacts</h4>
@@ -45,7 +45,7 @@
 
                         <el-row :gutter="20">
                             <el-col :span="24" class="contact-row">
-                                <el-col :span="5">
+                                <el-col :xs="16" :sm="12" :md="12" :lg="6">
                                     <el-select v-model="statusValue" placeholder="Select" @change="changeStatus">
                                         <el-option
                                                 v-for="item in statuses"
@@ -101,7 +101,7 @@
                                 </el-form-item>
                             </el-col>
 
-                            <el-col :span="8">
+                            <el-col :xs="24" :sm="24" :md="8" :lg="8">
                                 <el-form-item prop="interaction" label="How did you interact?">
                                     <el-select v-model="ruleForm.interaction" placeholder="Select the type of interaction">
                                         <el-option
@@ -114,7 +114,7 @@
                                 </el-form-item>
                             </el-col>
 
-                            <el-col :span="8">
+                            <el-col :xs="24" :sm="24" :md="8" :lg="8">
                                 <el-form-item prop="interactionDate" label="When was the interaction?">
                                     <el-date-picker
                                             v-model="ruleForm.interactionDate"
@@ -124,7 +124,7 @@
                                 </el-form-item>
                             </el-col>
 
-                            <el-col :span="8">
+                            <el-col :xs="24" :sm="24" :md="8" :lg="8">
                                 <el-form-item prop="nextInteractionDate" label="Add next interaction?">
                                     <el-date-picker
                                             v-model="ruleForm.nextInteractionDate"
@@ -572,5 +572,23 @@
         color: #eaa568;
         z-index: 1;
         position: relative;
+    }
+
+    @media(min-width:768px) and (max-width:991px){
+        .avatar{
+            display: none;
+        }
+    }
+
+    @media(max-width:767px){
+        .avatar{
+            display: none;
+        }
+    }
+
+    @media(min-width:992px) and (max-width:1199px){
+        .avatar{
+            display: none;
+        }
     }
 </style>
