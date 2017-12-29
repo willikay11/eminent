@@ -189,10 +189,10 @@
                             @endif
                             <el-table-column type="expand">
                                 <template scope="scope">
-                                    <p>Email: @{{ scope.row.email }}</p>
-                                    <p>Phone: @{{ scope.row.phone }}</p>
-                                    <p>Source: @{{ scope.row.source }}</p>
-                                    <p>Status: <el-tag
+                                    <p><strong>Email:</strong> @{{ scope.row.email }}</p>
+                                    <p><strong>Phone:</strong> @{{ scope.row.phone }}</p>
+                                    <p><strong>Source:</strong> @{{ scope.row.source }}</p>
+                                    <p><strong>Status:</strong> <el-tag
                                                         :type="scope.row.status === 'Client' ? 'success' : scope.row.status === 'Prospect' ? 'warning' : 'danger'"
                                                         close-transition>@{{scope.row.status}}
                                                 </el-tag></p>

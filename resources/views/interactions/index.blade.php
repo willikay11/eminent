@@ -6,7 +6,7 @@
     <div class="row">
         <div class="col-lg-12">
             <interactions-table user-id="{!! $userId !!}" inline-template>
-                <div class="panel panel-default">
+                <div class="panel panel-default contact-panel">
                     <div class="col-lg-12 panel-header">
                         <div class="col-lg-6">
                             <h4>Interactions</h4>

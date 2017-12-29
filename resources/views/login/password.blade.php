@@ -6,7 +6,7 @@
         <div class="row">
             <div class="login-container">
                 <div class="login-overlay"></div>
-                <div class="col-lg-6 inner-left">
+                <div class="col-lg-6 col-md-6 visible-lg visible-md inner-left">
                     <div class="inner-left-overlay"></div>
                     <div class="vertical-center">
                         <img class="login-image" src="/img/EBG-logo.png">
@@ -18,7 +18,7 @@
                     </div>
 
                 </div>
-                <div class="col-lg-6 inner-right">
+                <div class="col-lg-6 col-md-6 col-sm-12 inner-right">
 
                     <div class="ebg-input-container">
                         @include('layouts.partials.errors')
