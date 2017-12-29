@@ -7,16 +7,16 @@
         <div class="col-lg-12">
             <activities user-id="{!! $user->id !!}" inline-template>
                 <div>
-                    <el-row :span="24" :gutter="20">
+                    <el-row :xs="24" :sm="24" :md="24" :lg="24" :gutter="20">
                         <el-form :model="searchForm" :rules="searchRules" ref="searchForm" label-position="top"
                                  style="padding-left: 30px">
 
-                            <el-col :span="2">
+                            <el-col :xs="24" :sm="24" :md="24" :lg="2">
                                 <el-form-item prop="filter" label="Filter By:">
                                 </el-form-item>
                             </el-col>
 
-                            <el-col :span="5">
+                            <el-col :xs="12" :sm="12" :md="6" :lg="4">
                                 <el-form-item prop="startDate" label="From date:">
                                     <el-date-picker
                                             v-model="searchForm.startDate"
@@ -26,7 +26,7 @@
                                 </el-form-item>
                             </el-col>
 
-                            <el-col :span="5">
+                            <el-col :xs="12" :sm="12" :md="6" :lg="4">
                                 <el-form-item prop="endDate" label="To date:">
                                     <el-date-picker
                                             v-model="searchForm.endDate"
@@ -36,7 +36,7 @@
                                 </el-form-item>
                             </el-col>
 
-                            <el-col :span="5">
+                            <el-col :xs="12" :sm="12" :md="6" :lg="4">
                                 <el-form-item prop="priority" label="Priority:">
                                     <el-select v-model="searchForm.priority" placeholder="Select Priority">
                                         <el-option
@@ -50,7 +50,7 @@
                             </el-col>
 
                             @if(in_array(12, getPermissions()))
-                                <el-col :span="5">
+                                <el-col :xs="12" :sm="12" :md="6" :lg="4">
                                     <el-form-item prop="user" label="User:">
                                         <el-select v-model="searchForm.user" placeholder="Select User">
                                             <el-option
@@ -63,7 +63,7 @@
                                     </el-form-item>
                                 </el-col>
                             @endif
-                            <el-col :span="2">
+                            <el-col :xs="6" :sm="6" :md="3" :lg="2">
                                 <el-form-item prop="search" style="margin-top: 30px">
                                     <el-button type="primary" @click="searchActivities()">Search</el-button>
                                 </el-form-item>
@@ -72,8 +72,8 @@
                         </el-form>
                     </el-row>
 
-                    <el-row :span="24" :gutter="20">
-                        <el-col :span="6">
+                    <div class="activity-container">
+                        <div class="activity-box">
                             <div class="panel panel-primary to-do-panel" v-loading.body="loading">
                                 <div class="panel-heading">
                                     <h3 class="panel-title">To Do</h3>
@@ -124,9 +124,9 @@
                                     <el-button type="primary" @click="taskDialogVisible = true" size="mini">Add Task</el-button>
                                 </div>
                             </div>
-                        </el-col>
+                        </div>
 
-                        <el-col :span="6">
+                        <div class="activity-box">
                             <div class="panel panel-warning in-progress-panel" v-loading.body="loading">
                                 <div class="panel-heading">
                                     <h3 class="panel-title">In Progress</h3>
@@ -174,9 +174,9 @@
                                     </draggable>
                                 </div>
                             </div>
-                        </el-col>
+                        </div>
 
-                        <el-col :span="6">
+                        <div class="activity-box">
                             <div class="panel panel-info in-review-panel" v-loading.body="loading">
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Review</h3>
@@ -224,9 +224,9 @@
                                     </draggable>
                                 </div>
                             </div>
-                        </el-col>
+                        </div>
 
-                        <el-col :span="6">
+                        <div class="activity-box">
                             <div class="panel panel-success done-panel" v-loading.body="loading">
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Complete</h3>
@@ -268,8 +268,207 @@
                                     </draggable>
                                 </div>
                             </div>
-                        </el-col>
-                    </el-row>
+                        </div>
+                    </div>
+
+                    {{--<el-row :span="24" :gutter="20">--}}
+                        {{--<el-col :span="6">--}}
+                            {{--<div class="panel panel-primary to-do-panel" v-loading.body="loading">--}}
+                                {{--<div class="panel-heading">--}}
+                                    {{--<h3 class="panel-title">To Do</h3>--}}
+                                {{--</div>--}}
+                                {{--<div class="panel-body">--}}
+                                    {{--<draggable--}}
+                                            {{--id="1"--}}
+                                            {{--class="dragArea"--}}
+                                            {{--v-model="todo"--}}
+                                            {{--:options="{group:'people'}"--}}
+                                            {{--:move="showMove"--}}
+                                    {{--@end="onEnd">--}}
+                                    {{--<div class="dragElements" v-for="element in todo" :key="element.id">--}}
+                                        {{--<div>--}}
+                                            {{--<el-row :span="24">--}}
+                                                {{--<el-col :span="12"><span v-if="element.priority_type == 'Low'"--}}
+                                                                         {{--class="low-priority-span">Low Priority</span></el-col>--}}
+                                                {{--<el-col :span="12"><span v-if="element.priority_type == 'Medium'" class="med-priority-span">Med Priority</span>--}}
+                                                {{--</el-col>--}}
+                                                {{--<el-col :span="12"><span v-if="element.priority_type == 'High'" class="high-priority-span">High Priority</span>--}}
+                                                {{--</el-col>--}}
+                                                {{--@if(in_array(23, getPermissions()))--}}
+                                                    {{--<el-col :span="12" style="text-align: right">--}}
+                                                        {{--<a href="#" @click="showTaskWatchDialog(element)"><i class="fa fa-eye" aria-hidden="true"></i></a>--}}
+                                                    {{--</el-col>--}}
+                                                {{--@endif--}}
+                                            {{--</el-row>--}}
+                                        {{--</div>--}}
+
+                                        {{--<div class="element-container">@{{ element.name }}</div>--}}
+                                        {{--<el-row :span="24" :gutter="20">--}}
+                                            {{--<el-col :span="4">--}}
+                                                {{--<el-badge :value="element.comments.length" class="item">--}}
+                                                    {{--<button class="btn comments-btn" @click="getSelectedTask(element)"><i--}}
+                                                            {{--class="fa fa-comment font-icon" aria-hidden="true"></i></button>--}}
+                                                {{--</el-badge>--}}
+                                            {{--</el-col>--}}
+                                            {{--<el-col :span="4">--}}
+                                                {{--<el-badge :value="element.countProgressUpdates" class="item">--}}
+                                                    {{--<button class="btn comments-btn" @click="showTaskProgress(element)"><i class="fa fa-tasks font-icon" aria-hidden="true"></i></button>--}}
+                                                {{--</el-badge>--}}
+                                            {{--</el-col>--}}
+                                        {{--</el-row>--}}
+                                    {{--</div>--}}
+                                    {{--</draggable>--}}
+                                {{--</div>--}}
+                                {{--<div class="panel-footer" style="text-align: center">--}}
+                                    {{--<el-button type="primary" @click="taskDialogVisible = true" size="mini">Add Task</el-button>--}}
+                                {{--</div>--}}
+                            {{--</div>--}}
+                        {{--</el-col>--}}
+
+                        {{--<el-col :span="6">--}}
+                            {{--<div class="panel panel-warning in-progress-panel" v-loading.body="loading">--}}
+                                {{--<div class="panel-heading">--}}
+                                    {{--<h3 class="panel-title">In Progress</h3>--}}
+                                {{--</div>--}}
+                                {{--<div class="panel-body">--}}
+                                    {{--<draggable--}}
+                                            {{--id="2"--}}
+                                            {{--class="dragArea"--}}
+                                            {{--v-model="inProgress"--}}
+                                            {{--:options="{group:'people'}"--}}
+                                            {{--:move="showMove"--}}
+                                    {{--@end="onEnd">--}}
+                                    {{--<div class="dragElements" v-for="element in inProgress">--}}
+                                        {{--<div>--}}
+                                            {{--<el-row :span="24">--}}
+                                                {{--<el-col :span="12"><span v-if="element.priority_type == 'Low'"--}}
+                                                                         {{--class="low-priority-span">Low Priority</span></el-col>--}}
+                                                {{--<el-col :span="12"><span v-if="element.priority_type == 'Medium'" class="med-priority-span">Med Priority</span>--}}
+                                                {{--</el-col>--}}
+                                                {{--<el-col :span="12"><span v-if="element.priority_type == 'High'" class="high-priority-span">High Priority</span>--}}
+                                                {{--</el-col>--}}
+                                                {{--@if(in_array(23, getPermissions()))--}}
+                                                    {{--<el-col :span="12" style="text-align: right">--}}
+                                                        {{--<a href="#" @click="showTaskWatchDialog(element)"><i class="fa fa-eye" aria-hidden="true"></i></a>--}}
+                                                    {{--</el-col>--}}
+                                                {{--@endif--}}
+                                            {{--</el-row>--}}
+                                        {{--</div>--}}
+
+                                        {{--<div class="element-container">@{{ element.name }}</div>--}}
+                                        {{--<el-row :span="24" :gutter="20">--}}
+                                            {{--<el-col :span="4">--}}
+                                                {{--<el-badge :value="element.comments.length" class="item">--}}
+                                                    {{--<button class="btn comments-btn" @click="getSelectedTask(element)"><i--}}
+                                                            {{--class="fa fa-comment font-icon" aria-hidden="true"></i></button>--}}
+                                                {{--</el-badge>--}}
+                                            {{--</el-col>--}}
+                                            {{--<el-col :span="4">--}}
+                                                {{--<el-badge :value="element.countProgressUpdates" class="item">--}}
+                                                    {{--<button class="btn comments-btn" @click="showTaskProgress(element)"><i class="fa fa-tasks font-icon" aria-hidden="true"></i></button>--}}
+                                                {{--</el-badge>--}}
+                                            {{--</el-col>--}}
+                                        {{--</el-row>--}}
+                                    {{--</div>--}}
+                                    {{--</draggable>--}}
+                                {{--</div>--}}
+                            {{--</div>--}}
+                        {{--</el-col>--}}
+
+                        {{--<el-col :span="6">--}}
+                            {{--<div class="panel panel-info in-review-panel" v-loading.body="loading">--}}
+                                {{--<div class="panel-heading">--}}
+                                    {{--<h3 class="panel-title">Review</h3>--}}
+                                {{--</div>--}}
+                                {{--<div class="panel-body">--}}
+                                    {{--<draggable--}}
+                                            {{--id="3"--}}
+                                            {{--class="dragArea"--}}
+                                            {{--v-model="inReview"--}}
+                                            {{--:options="{group:'people'}"--}}
+                                            {{--:move="showMove"--}}
+                                    {{--@end="onEnd">--}}
+                                    {{--<div class="dragElements" v-for="element in inReview">--}}
+                                        {{--<div>--}}
+                                            {{--<el-row :span="24">--}}
+                                                {{--<el-col :span="12"><span v-if="element.priority_type == 'Low'"--}}
+                                                                         {{--class="low-priority-span">Low Priority</span></el-col>--}}
+                                                {{--<el-col :span="12"><span v-if="element.priority_type == 'Medium'" class="med-priority-span">Med Priority</span>--}}
+                                                {{--</el-col>--}}
+                                                {{--<el-col :span="12"><span v-if="element.priority_type == 'High'" class="high-priority-span">High Priority</span>--}}
+                                                {{--</el-col>--}}
+                                                {{--@if(in_array(23, getPermissions()))--}}
+                                                    {{--<el-col :span="12" style="text-align: right">--}}
+                                                        {{--<a href="#" @click="showTaskWatchDialog(element)"><i class="fa fa-eye" aria-hidden="true"></i></a>--}}
+                                                    {{--</el-col>--}}
+                                                {{--@endif--}}
+                                            {{--</el-row>--}}
+                                        {{--</div>--}}
+
+                                        {{--<div class="element-container">@{{ element.name }}</div>--}}
+                                        {{--<el-row :span="24" :gutter="20">--}}
+                                            {{--<el-col :span="4">--}}
+                                                {{--<el-badge :value="element.comments.length" class="item">--}}
+                                                    {{--<button class="btn comments-btn" @click="getSelectedTask(element)"><i--}}
+                                                            {{--class="fa fa-comment font-icon" aria-hidden="true"></i></button>--}}
+                                                {{--</el-badge>--}}
+                                            {{--</el-col>--}}
+                                            {{--<el-col :span="4">--}}
+                                                {{--<el-badge :value="element.countProgressUpdates" class="item">--}}
+                                                    {{--<button class="btn comments-btn" @click="showTaskProgress(element)"><i class="fa fa-tasks font-icon" aria-hidden="true"></i></button>--}}
+                                                {{--</el-badge>--}}
+                                            {{--</el-col>--}}
+                                        {{--</el-row>--}}
+                                    {{--</div>--}}
+                                    {{--</draggable>--}}
+                                {{--</div>--}}
+                            {{--</div>--}}
+                        {{--</el-col>--}}
+
+                        {{--<el-col :span="6">--}}
+                            {{--<div class="panel panel-success done-panel" v-loading.body="loading">--}}
+                                {{--<div class="panel-heading">--}}
+                                    {{--<h3 class="panel-title">Complete</h3>--}}
+                                {{--</div>--}}
+                                {{--<div class="panel-body">--}}
+                                    {{--<draggable--}}
+                                            {{--id="4"--}}
+                                            {{--class="dragArea"--}}
+                                            {{--v-model="done"--}}
+                                            {{--:options="{group:'people'}"--}}
+                                            {{--:move="showMove"--}}
+                                    {{--@end="onEnd">--}}
+                                    {{--<div class="dragElements" v-for="element in done">--}}
+                                        {{--<div>--}}
+                                            {{--<el-row :span="24">--}}
+                                                {{--<el-col :span="12"><span v-if="element.priority_type == 'Low'"--}}
+                                                                         {{--class="low-priority-span">Low Priority</span></el-col>--}}
+                                                {{--<el-col :span="12"><span v-if="element.priority_type == 'Medium'" class="med-priority-span">Med Priority</span>--}}
+                                                {{--</el-col>--}}
+                                                {{--<el-col :span="12"><span v-if="element.priority_type == 'High'" class="high-priority-span">High Priority</span>--}}
+                                                {{--</el-col>--}}
+                                            {{--</el-row>--}}
+                                        {{--</div>--}}
+                                        {{--<div class="element-container">@{{ element.name }}</div>--}}
+                                        {{--<el-row :span="24" :gutter="20">--}}
+                                            {{--<el-col :span="4">--}}
+                                                {{--<el-badge :value="element.comments.length" class="item">--}}
+                                                    {{--<button class="btn comments-btn" @click="getSelectedTask(element)"><i--}}
+                                                            {{--class="fa fa-comment font-icon" aria-hidden="true"></i></button>--}}
+                                                {{--</el-badge>--}}
+                                            {{--</el-col>--}}
+                                            {{--<el-col :span="4">--}}
+                                                {{--<el-badge :value="element.countProgressUpdates" class="item">--}}
+                                                    {{--<button class="btn comments-btn" @click="showTaskProgress(element)"><i class="fa fa-tasks font-icon" aria-hidden="true"></i></button>--}}
+                                                {{--</el-badge>--}}
+                                            {{--</el-col>--}}
+                                        {{--</el-row>--}}
+                                    {{--</div>--}}
+                                    {{--</draggable>--}}
+                                {{--</div>--}}
+                            {{--</div>--}}
+                        {{--</el-col>--}}
+                    {{--</el-row>--}}
 
                     <el-popover
                             ref="popover1"
@@ -300,10 +499,10 @@
 
                             <div class="form-item-container">
                                 <el-row :span="24" :gutter="20">
-                                    <el-col :span="4">
+                                    <el-col :xs="24" :sm="24" :md="24" :lg="4">
                                         <span>Activity: </span>
                                     </el-col>
-                                    <el-col :span="20">
+                                    <el-col :xs="22" :sm="22" :md="22" :lg="20">
                                         <el-form-item prop="name">
                                             <el-input placeholder="Activity Name" v-model="ruleForm.name"></el-input>
                                         </el-form-item>
@@ -311,10 +510,10 @@
                                 </el-row>
 
                                 <el-row :span="24" :gutter="20">
-                                    <el-col :span="4">
+                                    <el-col :xs="24" :sm="24" :md="24" :lg="4">
                                         <span>Description: </span>
                                     </el-col>
-                                    <el-col :span="20">
+                                    <el-col :xs="22" :sm="22" :md="22" :lg="20">
                                         <el-form-item prop="description">
                                             <el-input placeholder="Activity Description"
                                                       type="textarea"
@@ -325,11 +524,11 @@
                                 </el-row>
 
                                 <el-row :span="24" :gutter="20">
-                                    <el-col :span="4">
+                                    <el-col :xs="24" :sm="24" :md="24" :lg="4">
                                         <span>Activity Type: </span>
                                     </el-col>
 
-                                    <el-col :span="20">
+                                    <el-col :xs="22" :sm="22" :md="22" :lg="20">
                                         <el-form-item prop="activityType">
                                             <el-select v-model="ruleForm.activityType" placeholder="Select Activity Type">
                                                 <el-option
@@ -344,10 +543,10 @@
                                 </el-row>
 
                                 <el-row :span="24" :gutter="20" v-if="ruleForm.activityType == 2">
-                                    <el-col :span="4">
+                                    <el-col :xs="24" :sm="24" :md="24" :lg="4">
                                         <span>Source: </span>
                                     </el-col>
-                                    <el-col :span="20">
+                                    <el-col :xs="22" :sm="22" :md="22" :lg="20">
                                         <el-form-item prop="source">
                                             <el-select v-model="ruleForm.source" filterable placeholder="Select Source">
                                                 <el-option
@@ -362,10 +561,10 @@
                                 </el-row>
 
                                 <el-row :span="24" :gutter="20" v-if="ruleForm.activityType == 2">
-                                    <el-col :span="4">
+                                    <el-col :xs="24" :sm="24" :md="24" :lg="4">
                                         <span>Projected Revenue: </span>
                                     </el-col>
-                                    <el-col :span="20">
+                                    <el-col :xs="22" :sm="22" :md="22" :lg="20">
                                         <el-form-item prop="projectedRevenue">
                                             <el-input-number placeholder="Projected Revenue" v-model="ruleForm.projectedRevenue"></el-input-number>
                                         </el-form-item>
@@ -374,11 +573,11 @@
 
                                 @if(in_array(12, getPermissions()))
                                     <el-row :span="24" :gutter="20">
-                                        <el-col :span="4">
+                                        <el-col :xs="24" :sm="24" :md="24" :lg="4">
                                             <span>Assign To: </span>
                                         </el-col>
 
-                                        <el-col :span="20">
+                                        <el-col :xs="22" :sm="22" :md="22" :lg="20">
                                             <el-form-item prop="user">
                                                 <el-select v-model="ruleForm.user" placeholder="Select User">
                                                     <el-option
@@ -394,11 +593,11 @@
                                 @endif
 
                                 <el-row :span="24" :gutter="20">
-                                    <el-col :span="4">
+                                    <el-col :xs="24" :sm="24" :md="24" :lg="4">
                                         <span>Priority</span>
                                     </el-col>
 
-                                    <el-col :span="20">
+                                    <el-col :xs="22" :sm="22" :md="22" :lg="20">
                                         <el-form-item prop="priority">
                                             <el-select v-model="ruleForm.priority" placeholder="Select Priority">
                                                 <el-option
@@ -414,10 +613,10 @@
 
 
                                 <el-row :span="24" :gutter="20">
-                                    <el-col :span="4">
+                                    <el-col :xs="24" :sm="24" :md="24" :lg="4">
                                         <span>Due Date</span>
                                     </el-col>
-                                    <el-col :span="20">
+                                    <el-col :xs="22" :sm="22" :md="22" :lg="20">
                                         <el-form-item prop="dueDate">
                                             <el-date-picker
                                                     v-model="ruleForm.dueDate"
@@ -541,10 +740,10 @@
 
                                 <div class="form-item-container">
                                     <el-row :span="24" :gutter="20">
-                                        <el-col :span="4">
+                                        <el-col :xs="24" :sm="24" :md="24" :lg="4">
                                             <span>Progress Description: </span>
                                         </el-col>
-                                        <el-col :span="20">
+                                        <el-col :xs="22" :sm="22" :md="22" :lg="20">
                                             <el-form-item prop="description">
                                                 <el-input placeholder="Progress Description"
                                                           type="textarea"
@@ -555,11 +754,11 @@
                                     </el-row>
 
                                     <el-row :span="24" :gutter="20">
-                                        <el-col :span="4">
+                                        <el-col :xs="24" :sm="24" :md="24" :lg="4">
                                             <span>Status: </span>
                                         </el-col>
 
-                                        <el-col :span="20">
+                                        <el-col :xs="22" :sm="22" :md="22" :lg="20">
                                             <el-form-item prop="status">
                                                 <el-select v-model="progressRuleForm.status" placeholder="Select Status">
                                                     <el-option
@@ -574,10 +773,10 @@
                                     </el-row>
 
                                     <el-row :span="24" :gutter="20">
-                                        <el-col :span="4">
+                                        <el-col :xs="24" :sm="24" :md="24" :lg="4">
                                             <span>Progress Percentage: </span>
                                         </el-col>
-                                        <el-col :span="20">
+                                        <el-col :xs="22" :sm="22" :md="22" :lg="20">
                                             <el-form-item prop="percentage">
                                                 <el-input-number placeholder="Progress Percentage"
                                                                  :min="0"
@@ -588,11 +787,11 @@
                                     </el-row>
 
                                     <el-row :span="24" :gutter="20">
-                                        <el-col :span="4">
+                                        <el-col :xs="24" :sm="24" :md="24" :lg="4">
                                             <span>File: </span>
                                         </el-col>
 
-                                        <el-col :span="20">
+                                        <el-col :xs="22" :sm="22" :md="22" :lg="20">
                                             <el-form-item prop="file">
                                                 <el-upload
                                                         class="upload-demo"

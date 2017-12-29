@@ -108738,72 +108738,78 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "panel panel-default contact-panel-left" }, [
-    _vm._m(0),
-    _vm._v(" "),
-    _c(
-      "div",
-      { staticClass: "panel-body" },
-      [
-        _c(
-          "el-table",
-          {
-            staticStyle: { width: "100%" },
-            attrs: { data: _vm.tableData, stripe: "" }
-          },
-          [
-            _c("el-table-column", { attrs: { prop: "name", label: "Name" } }),
-            _vm._v(" "),
-            _c("el-table-column", { attrs: { prop: "email", label: "Email" } }),
-            _vm._v(" "),
-            _c("el-table-column", {
-              attrs: { label: "Actions", width: "120" },
-              scopedSlots: _vm._u([
-                {
-                  key: "default",
-                  fn: function(scope) {
-                    return [
-                      _c(
-                        "el-button",
-                        {
-                          attrs: { size: "small" },
-                          on: {
-                            click: function($event) {
-                              _vm.showDetails(scope.row)
-                            }
-                          }
-                        },
-                        [_vm._v("Details")]
-                      )
-                    ]
-                  }
-                }
-              ])
-            })
-          ],
-          1
-        )
-      ],
-      1
-    ),
-    _vm._v(" "),
-    _c("hr", { staticClass: "panel-hr" }),
-    _vm._v(" "),
-    _c("div", { staticClass: "panel-footer" }, [
+  return _c(
+    "div",
+    { staticClass: "panel panel-default contact-panel-left contact-panel" },
+    [
+      _vm._m(0),
+      _vm._v(" "),
       _c(
-        "button",
-        {
-          staticClass: "btn ebg-button",
-          on: {
-            click: function($event) {
-              _vm.showMore()
+        "div",
+        { staticClass: "panel-body" },
+        [
+          _c(
+            "el-table",
+            {
+              staticStyle: { width: "100%" },
+              attrs: { data: _vm.tableData, stripe: "" }
+            },
+            [
+              _c("el-table-column", { attrs: { prop: "name", label: "Name" } }),
+              _vm._v(" "),
+              _c("el-table-column", {
+                attrs: { prop: "email", label: "Email" }
+              }),
+              _vm._v(" "),
+              _c("el-table-column", {
+                attrs: { label: "Actions", width: "120" },
+                scopedSlots: _vm._u([
+                  {
+                    key: "default",
+                    fn: function(scope) {
+                      return [
+                        _c(
+                          "el-button",
+                          {
+                            attrs: { size: "small" },
+                            on: {
+                              click: function($event) {
+                                _vm.showDetails(scope.row)
+                              }
+                            }
+                          },
+                          [_vm._v("Details")]
+                        )
+                      ]
+                    }
+                  }
+                ])
+              })
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("hr", { staticClass: "panel-hr" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "panel-footer" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn ebg-button",
+            on: {
+              click: function($event) {
+                _vm.showMore()
+              }
             }
-          }
-        },
-        [_vm._v("See More")]
-      )
-    ])
-  ])
+          },
+          [_vm._v("See More")]
+        )
+      ])
+    ]
+  )
 }
 var staticRenderFns = [
   function() {
@@ -109017,90 +109023,94 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "panel panel-default contact-panel-right" }, [
-    _vm._m(0),
-    _vm._v(" "),
-    _c(
-      "div",
-      { staticClass: "panel-body" },
-      [
-        _c(
-          "el-table",
-          {
-            staticStyle: { width: "100%" },
-            attrs: { data: _vm.tableData, stripe: "" }
-          },
-          [
-            _c("el-table-column", {
-              attrs: { label: "Name" },
-              scopedSlots: _vm._u([
-                {
-                  key: "default",
-                  fn: function(scope) {
-                    return [
-                      _c(
-                        "el-row",
-                        [
-                          _c("el-col", { attrs: { span: 24 } }, [
-                            _c("span", [_vm._v(_vm._s(scope.row.remarks))])
-                          ]),
-                          _vm._v(" "),
-                          _c(
-                            "el-col",
-                            {
-                              staticStyle: { "margin-top": "10px" },
-                              attrs: { span: 24, gutter: 10 }
-                            },
-                            [
-                              _c("el-col", { attrs: { span: 8 } }, [
-                                _c("span", [
-                                  _vm._v("Date: " + _vm._s(scope.row.date))
-                                ])
-                              ]),
-                              _vm._v(" "),
-                              _c("el-col", { attrs: { span: 8 } }, [
-                                _c("span", [
-                                  _vm._v(
-                                    "Interacted over a " +
-                                      _vm._s(scope.row.interactionType)
-                                  )
-                                ])
-                              ])
-                            ],
-                            1
-                          )
-                        ],
-                        1
-                      )
-                    ]
-                  }
-                }
-              ])
-            })
-          ],
-          1
-        )
-      ],
-      1
-    ),
-    _vm._v(" "),
-    _c("hr", { staticClass: "panel-hr" }),
-    _vm._v(" "),
-    _c("div", { staticClass: "panel-footer" }, [
+  return _c(
+    "div",
+    { staticClass: "panel panel-default contact-panel-right contact-panel" },
+    [
+      _vm._m(0),
+      _vm._v(" "),
       _c(
-        "button",
-        {
-          staticClass: "btn ebg-button",
-          on: {
-            click: function($event) {
-              _vm.showMore()
+        "div",
+        { staticClass: "panel-body" },
+        [
+          _c(
+            "el-table",
+            {
+              staticStyle: { width: "100%" },
+              attrs: { data: _vm.tableData, stripe: "" }
+            },
+            [
+              _c("el-table-column", {
+                attrs: { label: "Name" },
+                scopedSlots: _vm._u([
+                  {
+                    key: "default",
+                    fn: function(scope) {
+                      return [
+                        _c(
+                          "el-row",
+                          [
+                            _c("el-col", { attrs: { span: 24 } }, [
+                              _c("span", [_vm._v(_vm._s(scope.row.remarks))])
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "el-col",
+                              {
+                                staticStyle: { "margin-top": "10px" },
+                                attrs: { span: 24, gutter: 10 }
+                              },
+                              [
+                                _c("el-col", { attrs: { span: 8 } }, [
+                                  _c("span", [
+                                    _vm._v("Date: " + _vm._s(scope.row.date))
+                                  ])
+                                ]),
+                                _vm._v(" "),
+                                _c("el-col", { attrs: { span: 8 } }, [
+                                  _c("span", [
+                                    _vm._v(
+                                      "Interacted over a " +
+                                        _vm._s(scope.row.interactionType)
+                                    )
+                                  ])
+                                ])
+                              ],
+                              1
+                            )
+                          ],
+                          1
+                        )
+                      ]
+                    }
+                  }
+                ])
+              })
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("hr", { staticClass: "panel-hr" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "panel-footer" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn ebg-button",
+            on: {
+              click: function($event) {
+                _vm.showMore()
+              }
             }
-          }
-        },
-        [_vm._v("See More")]
-      )
-    ])
-  ])
+          },
+          [_vm._v("See More")]
+        )
+      ])
+    ]
+  )
 }
 var staticRenderFns = [
   function() {
@@ -109464,7 +109474,7 @@ exports = module.exports = __webpack_require__(350)(undefined);
 
 
 // module
-exports.push([module.i, "\n.comment-container .el-dialog__body {\n    padding: 20px 20px;\n    max-height: 700px;\n    overflow: hidden;\n    overflow-y: scroll;\n}\n.task-progress-update .el-dialog__body{\n    max-height: 700px;\n    overflow: hidden;\n    overflow-y: scroll;\n}\n.el-select {\n    width: 100%;\n}\n.el-date-editor.el-input {\n    width: 100%;\n}\n.el-input-number{\n    width: 100%;\n}\n.dragArea {\n    min-height: 50px;\n}\n.dragElements {\n    margin: 15px 10px 0px 10px;\n    background-color: #ffffff;\n    min-height: 100px;\n    border-radius: 5px;\n    color: black;\n    padding: 10px;\n}\n.element-container {\n    margin-top: 20px;\n    margin-bottom: 20px;\n}\n.to-do-panel {\n    border-color: transparent;\n    border-top: 5px solid #e43e52;\n    background-color: #f7f8fc !important;\n}\n.panel-heading {\n    color: black !important;\n    background-color: transparent !important;\n    border-color: transparent !important;\n}\n.in-progress-panel {\n    border-color: transparent;\n    border-top: 5px solid #f5a622;\n    background-color: #f7f8fc !important;\n}\n.in-review-panel {\n    border-color: transparent;\n    border-top: 5px solid #4b8fe3;\n    background-color: #f7f8fc !important;\n}\n.done-panel {\n    border-color: transparent;\n    border-top: 5px solid #12884b;\n    background-color: #f7f8fc !important;\n}\n.low-priority-span {\n    padding: 5px 10px 5px 10px;\n    background-color: #4b8fe3;\n    color: white;\n    border-radius: 5px;\n    font-size: 12px;\n}\n.med-priority-span {\n    padding: 5px 10px 5px 10px;\n    background-color: #12884b;\n    color: white;\n    border-radius: 5px;\n    font-size: 12px;\n}\n.high-priority-span {\n    padding: 5px 10px 5px 10px;\n    background-color: #e43e52;\n    color: white;\n    border-radius: 5px;\n    font-size: 12px;\n}\n.chat {\n    list-style: none;\n    background: none;\n    margin: 0;\n    margin-top: 60px;\n    margin-bottom: 50px;\n    min-height: 500px;\n    overflow: auto;\n}\n.chat li {\n    padding: 0.5rem;\n    overflow: hidden;\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n}\n.chat .avatar {\n    width: 40px;\n    height: 40px;\n    position: relative;\n    display: block;\n    z-index: 2;\n    border-radius: 100%;\n    -webkit-border-radius: 100%;\n    -moz-border-radius: 100%;\n    -ms-border-radius: 100%;\n    background-color: rgba(255, 255, 255, 0.9);\n}\n.chat .avatar img {\n    width: 40px;\n    height: 40px;\n    border-radius: 100%;\n    -webkit-border-radius: 100%;\n    -moz-border-radius: 100%;\n    -ms-border-radius: 100%;\n    background-color: rgba(255, 255, 255, 0.9);\n    -webkit-touch-callout: none;\n    -webkit-user-select: none;\n    -moz-user-select: none;\n    -ms-user-select: none;\n}\n.other .msg {\n    -webkit-box-ordinal-group: 2;\n        -ms-flex-order: 1;\n            order: 1;\n    margin-left: 15px;\n    border-top-left-radius: 0px;\n    -webkit-box-shadow: -1px 2px 0px #d7e8f9;\n            box-shadow: -1px 2px 0px #d7e8f9;\n}\n.other:before {\n    content: \"\";\n    position: relative;\n    top: 0px;\n    right: 0px;\n    left: 53px;\n    width: 0px;\n    height: 0px;\n    border: 5px solid #f6f8fa;\n    border-left-color: transparent;\n    border-bottom-color: transparent;\n}\n.self {\n    -webkit-box-pack: end;\n        -ms-flex-pack: end;\n            justify-content: flex-end;\n    -webkit-box-align: end;\n        -ms-flex-align: end;\n            align-items: flex-end;\n}\n.self .msg {\n    -webkit-box-ordinal-group: 2;\n        -ms-flex-order: 1;\n            order: 1;\n    margin-right: 15px;\n    background-color: #d7e8f9;\n    border-bottom-right-radius: 0px;\n    -webkit-box-shadow: 1px 2px 0px #d7e8f9;\n            box-shadow: 1px 2px 0px #d7e8f9;\n}\n.self .avatar {\n    -webkit-box-ordinal-group: 3;\n        -ms-flex-order: 2;\n            order: 2;\n}\n.self .avatar:after {\n    content: \"\";\n    position: relative;\n    display: inline-block;\n    bottom: 19px;\n    right: 15px;\n    width: 0px;\n    height: 0px;\n    border: 5px solid #fff;\n    border-left-color: #d7e8f9;\n    border-right-color: transparent;\n    border-top-color: transparent;\n    border-bottom-color: #d7e8f9;\n    -webkit-box-shadow: 0px 2px 0px #d7e8f9;\n            box-shadow: 0px 2px 0px #d7e8f9;\n}\n.msg {\n    background: #f6f8fa;\n    min-width: 50px;\n    padding: 10px;\n    border-radius: 2px;\n    -webkit-box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.07);\n            box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.07);\n}\n.msg p {\n    font-size: 14px;\n    letter-spacing: 1px;\n    margin: 0 0 0.2rem 0;\n    color: #777;\n}\n.msg .name {\n    font-size: 0.7em;\n    color: #0000fe;\n}\n.msg img {\n    position: relative;\n    display: block;\n    width: 300px;\n    border-radius: 5px;\n    -webkit-box-shadow: 0px 0px 3px #eee;\n            box-shadow: 0px 0px 3px #eee;\n    -webkit-transition: all .4s cubic-bezier(0.565, -0.260, 0.255, 1.410);\n    transition: all .4s cubic-bezier(0.565, -0.260, 0.255, 1.410);\n    cursor: default;\n    -webkit-touch-callout: none;\n    -webkit-user-select: none;\n    -moz-user-select: none;\n    -ms-user-select: none;\n}\n@media screen and (max-width: 800px) {\n.msg img {\n        width: 300px;\n}\n}\n@media screen and (max-width: 550px) {\n.msg img {\n        width: 200px;\n}\n}\n.msg img:hover {\n    opacity: 0.4;\n}\n.msg time {\n    font-size: 13px;\n    color: #777;;\n    margin-top: 5px;\n    float: right;\n    cursor: default;\n    -webkit-touch-callout: none;\n    -webkit-user-select: none;\n    -moz-user-select: none;\n    -ms-user-select: none;\n}\n.msg time:before {\n    content: \"\\F017\";\n    color: #777;\n    font-family: FontAwesome;\n    display: inline-block;\n    margin-right: 4px;\n}\n.msg .edit {\n    font-size: 12px;\n    color: #777;;\n    margin-top: 5px;\n    float: left;\n}\n.chat-comments-control input[type=\"text\"].comment-box {\n    bottom: 0;\n    width: 90%;\n    padding: 5px;\n    font-size: 0.9rem;\n    color: #777;\n    height: 50px;\n    float: left;\n    background-color: transparent !important;\n    border-style: none !important;\n    border-color: transparent !important;\n    -webkit-box-shadow: none !important;\n            box-shadow: none !important;\n}\ninput[type=\"submit\"] .send {\n    background-color: #42ff55;\n}\n.chat-comments-control {\n    border-top: solid 1px #d7e8f9;\n    width: 90%;\n    height: 50px;\n    border-radius: 2px;\n    margin: auto;\n    margin-top: 5px;\n}\n.attachbox {\n    float: left;\n    width: 70px;\n    height: 100%;\n    margin-right: 10px;\n}\n.attachbox .clip {\n    color: #d7e8f9;\n    font-size: 25px;\n    margin-top: 10px;\n    float: right;\n}\n.attachbox .image {\n    color: #d7e8f9;\n    font-size: 25px;\n    margin-top: 10px;\n    float: left;\n}\n.sendbox {\n    float: right;\n    width: 20px;\n    height: 100%;\n    margin-right: 10px;\n}\n.sendbox .send {\n    color: #d7e8f9;\n    font-size: 25px;\n    background-color: white;\n    float: left;\n}\n.clip:hover {\n    font-size: 35px;\n}\n.image:hover {\n    font-size: 35px;\n}\n.holder {\n    width: 80%;\n    background: white;\n    position: fixed;\n    bottom: 0;\n    margin-left: -1%;\n    margin-top: 10px;\n    height: 80px;\n}\n.load-more {\n    background-color: #66b0fb;\n    margin-left: 200px;\n    margin-right: 200px;\n    margin-top: 10px;\n    margin-bottom: 10px;\n}\n.load-more:hover {\n    background-color: #4c91d7;\n}\n.component-users {\n    background: #006B5B;\n    color: #FFFFFF;\n    margin-right: 5px;\n    font-weight: 300;\n    padding: 2px 10px;\n    border-radius: 3px;\n    line-height: 20px;\n    font-size: 12px;\n    display: -webkit-inline-box;\n    display: -ms-inline-flexbox;\n    display: inline-flex;\n    margin-top: 10px;\n}\n.component-remove {\n    margin-left: 5px;\n    border-left: solid white 1px;\n    padding-left: 5px;\n    color: #ffffff;\n}\n.el-upload__input {\n    display: none !important;\n}\n.el-upload-list__item-name {\n    background-color: transparent !important;\n}\n.font-icon {\n    font-size: 20px;\n    color: #1b6d85;\n}\n.el-badge__content.is-fixed {\n    top: 10px;\n    right: 18px;\n    position: absolute;\n    -webkit-transform: translateY(-50%) translateX(100%);\n            transform: translateY(-50%) translateX(100%);\n}\n", ""]);
+exports.push([module.i, "\n.comment-container .el-dialog__body {\n    padding: 20px 20px;\n    max-height: 700px;\n    overflow: hidden;\n    overflow-y: scroll;\n}\n.task-progress-update .el-dialog__body{\n    max-height: 700px;\n    overflow: hidden;\n    overflow-y: scroll;\n}\n.el-select {\n    width: 100%;\n}\n.el-date-editor.el-input {\n    width: 100%;\n}\n.el-input-number{\n    width: 100%;\n}\n.dragArea {\n    min-height: 50px;\n}\n.dragElements {\n    margin: 15px 10px 0px 10px;\n    background-color: #ffffff;\n    min-height: 100px;\n    border-radius: 5px;\n    color: black;\n    padding: 10px;\n}\n.element-container {\n    margin-top: 20px;\n    margin-bottom: 20px;\n}\n.to-do-panel {\n    border-color: transparent;\n    border-top: 5px solid #e43e52;\n    background-color: #f7f8fc !important;\n}\n.panel-heading {\n    color: black !important;\n    background-color: transparent !important;\n    border-color: transparent !important;\n}\n.in-progress-panel {\n    border-color: transparent;\n    border-top: 5px solid #f5a622;\n    background-color: #f7f8fc !important;\n}\n.in-review-panel {\n    border-color: transparent;\n    border-top: 5px solid #4b8fe3;\n    background-color: #f7f8fc !important;\n}\n.done-panel {\n    border-color: transparent;\n    border-top: 5px solid #12884b;\n    background-color: #f7f8fc !important;\n}\n.low-priority-span {\n    padding: 5px 10px 5px 10px;\n    background-color: #4b8fe3;\n    color: white;\n    border-radius: 5px;\n    font-size: 12px;\n}\n.med-priority-span {\n    padding: 5px 10px 5px 10px;\n    background-color: #12884b;\n    color: white;\n    border-radius: 5px;\n    font-size: 12px;\n}\n.high-priority-span {\n    padding: 5px 10px 5px 10px;\n    background-color: #e43e52;\n    color: white;\n    border-radius: 5px;\n    font-size: 12px;\n}\n.chat {\n    list-style: none;\n    background: none;\n    margin: 0;\n    margin-top: 60px;\n    margin-bottom: 50px;\n    min-height: 500px;\n    overflow: auto;\n}\n.chat li {\n    padding: 0.5rem;\n    overflow: hidden;\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n}\n.chat .avatar {\n    width: 40px;\n    height: 40px;\n    position: relative;\n    display: block;\n    z-index: 2;\n    border-radius: 100%;\n    -webkit-border-radius: 100%;\n    -moz-border-radius: 100%;\n    -ms-border-radius: 100%;\n    background-color: rgba(255, 255, 255, 0.9);\n}\n.chat .avatar img {\n    width: 40px;\n    height: 40px;\n    border-radius: 100%;\n    -webkit-border-radius: 100%;\n    -moz-border-radius: 100%;\n    -ms-border-radius: 100%;\n    background-color: rgba(255, 255, 255, 0.9);\n    -webkit-touch-callout: none;\n    -webkit-user-select: none;\n    -moz-user-select: none;\n    -ms-user-select: none;\n}\n.other .msg {\n    -webkit-box-ordinal-group: 2;\n        -ms-flex-order: 1;\n            order: 1;\n    margin-left: 15px;\n    border-top-left-radius: 0px;\n    -webkit-box-shadow: -1px 2px 0px #d7e8f9;\n            box-shadow: -1px 2px 0px #d7e8f9;\n}\n.other:before {\n    content: \"\";\n    position: relative;\n    top: 0px;\n    right: 0px;\n    left: 53px;\n    width: 0px;\n    height: 0px;\n    border: 5px solid #f6f8fa;\n    border-left-color: transparent;\n    border-bottom-color: transparent;\n}\n.self {\n    -webkit-box-pack: end;\n        -ms-flex-pack: end;\n            justify-content: flex-end;\n    -webkit-box-align: end;\n        -ms-flex-align: end;\n            align-items: flex-end;\n}\n.self .msg {\n    -webkit-box-ordinal-group: 2;\n        -ms-flex-order: 1;\n            order: 1;\n    margin-right: 15px;\n    background-color: #d7e8f9;\n    border-bottom-right-radius: 0px;\n    -webkit-box-shadow: 1px 2px 0px #d7e8f9;\n            box-shadow: 1px 2px 0px #d7e8f9;\n}\n.self .avatar {\n    -webkit-box-ordinal-group: 3;\n        -ms-flex-order: 2;\n            order: 2;\n}\n.self .avatar:after {\n    content: \"\";\n    position: relative;\n    display: inline-block;\n    bottom: 19px;\n    right: 15px;\n    width: 0px;\n    height: 0px;\n    border: 5px solid #fff;\n    border-left-color: #d7e8f9;\n    border-right-color: transparent;\n    border-top-color: transparent;\n    border-bottom-color: #d7e8f9;\n    -webkit-box-shadow: 0px 2px 0px #d7e8f9;\n            box-shadow: 0px 2px 0px #d7e8f9;\n}\n.msg {\n    background: #f6f8fa;\n    min-width: 50px;\n    padding: 10px;\n    border-radius: 2px;\n    -webkit-box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.07);\n            box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.07);\n}\n.msg p {\n    font-size: 14px;\n    letter-spacing: 1px;\n    margin: 0 0 0.2rem 0;\n    color: #777;\n}\n.msg .name {\n    font-size: 0.7em;\n    color: #0000fe;\n}\n.msg img {\n    position: relative;\n    display: block;\n    width: 300px;\n    border-radius: 5px;\n    -webkit-box-shadow: 0px 0px 3px #eee;\n            box-shadow: 0px 0px 3px #eee;\n    -webkit-transition: all .4s cubic-bezier(0.565, -0.260, 0.255, 1.410);\n    transition: all .4s cubic-bezier(0.565, -0.260, 0.255, 1.410);\n    cursor: default;\n    -webkit-touch-callout: none;\n    -webkit-user-select: none;\n    -moz-user-select: none;\n    -ms-user-select: none;\n}\n@media screen and (max-width: 800px) {\n.msg img {\n        width: 300px;\n}\n}\n@media screen and (max-width: 550px) {\n.msg img {\n        width: 200px;\n}\n}\n.msg img:hover {\n    opacity: 0.4;\n}\n.msg time {\n    font-size: 13px;\n    color: #777;;\n    margin-top: 5px;\n    float: right;\n    cursor: default;\n    -webkit-touch-callout: none;\n    -webkit-user-select: none;\n    -moz-user-select: none;\n    -ms-user-select: none;\n}\n.msg time:before {\n    content: \"\\F017\";\n    color: #777;\n    font-family: FontAwesome;\n    display: inline-block;\n    margin-right: 4px;\n}\n.msg .edit {\n    font-size: 12px;\n    color: #777;;\n    margin-top: 5px;\n    float: left;\n}\n.chat-comments-control input[type=\"text\"].comment-box {\n    bottom: 0;\n    width: 90%;\n    padding: 5px;\n    font-size: 0.9rem;\n    color: #777;\n    height: 50px;\n    float: left;\n    background-color: transparent !important;\n    border-style: none !important;\n    border-color: transparent !important;\n    -webkit-box-shadow: none !important;\n            box-shadow: none !important;\n}\ninput[type=\"submit\"] .send {\n    background-color: #42ff55;\n}\n.chat-comments-control {\n    border-top: solid 1px #d7e8f9;\n    width: 90%;\n    height: 50px;\n    border-radius: 2px;\n    margin: auto;\n    margin-top: 5px;\n}\n.attachbox {\n    float: left;\n    width: 70px;\n    height: 100%;\n    margin-right: 10px;\n}\n.attachbox .clip {\n    color: #d7e8f9;\n    font-size: 25px;\n    margin-top: 10px;\n    float: right;\n}\n.attachbox .image {\n    color: #d7e8f9;\n    font-size: 25px;\n    margin-top: 10px;\n    float: left;\n}\n.sendbox {\n    float: right;\n    width: 20px;\n    height: 100%;\n    margin-right: 10px;\n}\n.sendbox .send {\n    color: #d7e8f9;\n    font-size: 25px;\n    background-color: white;\n    float: left;\n}\n.clip:hover {\n    font-size: 35px;\n}\n.image:hover {\n    font-size: 35px;\n}\n.holder {\n    width: 80%;\n    background: white;\n    position: fixed;\n    bottom: 0;\n    margin-left: -1%;\n    margin-top: 10px;\n    height: 80px;\n}\n.load-more {\n    background-color: #66b0fb;\n    margin-left: 200px;\n    margin-right: 200px;\n    margin-top: 10px;\n    margin-bottom: 10px;\n}\n.load-more:hover {\n    background-color: #4c91d7;\n}\n.component-users {\n    background: #006B5B;\n    color: #FFFFFF;\n    margin-right: 5px;\n    font-weight: 300;\n    padding: 2px 10px;\n    border-radius: 3px;\n    line-height: 20px;\n    font-size: 12px;\n    display: -webkit-inline-box;\n    display: -ms-inline-flexbox;\n    display: inline-flex;\n    margin-top: 10px;\n}\n.component-remove {\n    margin-left: 5px;\n    border-left: solid white 1px;\n    padding-left: 5px;\n    color: #ffffff;\n}\n.el-upload__input {\n    display: none !important;\n}\n.el-upload-list__item-name {\n    background-color: transparent !important;\n}\n.font-icon {\n    font-size: 20px;\n    color: #1b6d85;\n}\n.el-badge__content.is-fixed {\n    top: 10px;\n    right: 18px;\n    position: absolute;\n    -webkit-transform: translateY(-50%) translateX(100%);\n            transform: translateY(-50%) translateX(100%);\n}\n@media(min-width:768px) and (max-width:991px){\n.el-dialog--small {\n        width: 90%;\n}\n}\n@media(max-width:767px){\n.el-dialog--small {\n        width: 90%;\n}\n}\n@media(min-width:992px) and (max-width:1199px){\n.el-dialog--small {\n        width: 70%;\n}\n}\n", ""]);
 
 // exports
 

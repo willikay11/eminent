@@ -22,6 +22,14 @@
 /* Medium Devices, Desktops */
 @media (min-width : 992px) {
   .contact-panel{
+    margin-left: 0px;
+    margin-right: 0px
+  }
+}
+
+/* Large Devices */
+@media(min-width:1200px){
+  .contact-panel{
     margin-left: 40px;
     margin-right: 40px
   }

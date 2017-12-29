@@ -8882,6 +8882,50 @@ a.article:hover {
   background-color: transparent;
 }
 
+.activity-container {
+  white-space: nowrap;
+  overflow-x: auto;
+}
+
+.activity-box {
+  margin: 10px;
+  display: inline-block;
+  vertical-align: top;
+  width: 70%;
+}
+
+/* Extra Small Devices, Phones */
+
+@media (min-width: 480px) {
+  .activity-box {
+    width: 75%;
+  }
+}
+
+/* Small Devices, Tablets */
+
+@media (min-width: 768px) {
+  .activity-box {
+    width: 50%;
+  }
+}
+
+/* Medium Devices, Desktops */
+
+@media (min-width: 992px) {
+  .activity-box {
+    width: 50%;
+  }
+}
+
+/* Large Devices */
+
+@media (min-width: 1200px) {
+  .activity-box {
+    width: 25%;
+  }
+}
+
 /* Extra Small Devices, Phones */
 
 @media (min-width: 480px) {
@@ -8950,6 +8994,15 @@ a.article:hover {
 /* Medium Devices, Desktops */
 
 @media (min-width: 992px) {
+  .contact-panel {
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+}
+
+/* Large Devices */
+
+@media (min-width: 1200px) {
   .contact-panel {
     margin-left: 40px;
     margin-right: 40px;

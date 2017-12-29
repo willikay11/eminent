@@ -1009,4 +1009,22 @@
         position: absolute;
         transform: translateY(-50%) translateX(100%);
     }
+
+    @media(min-width:768px) and (max-width:991px){
+        .el-dialog--small {
+            width: 90%;
+        }
+    }
+
+    @media(max-width:767px){
+        .el-dialog--small {
+            width: 90%;
+        }
+    }
+
+    @media(min-width:992px) and (max-width:1199px){
+        .el-dialog--small {
+            width: 70%;
+        }
+    }
 </style>
