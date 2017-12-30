@@ -10,6 +10,7 @@ namespace App\Http\Controllers;
 
 
 use Carbon\Carbon;
+use eminent\Activities\ActivityRepository;
 use eminent\API\SortFilterPaginate;
 use eminent\Authorization\Authorizer;
 use eminent\Models\Contact;
@@ -22,6 +23,16 @@ class DashboardController extends Controller
     use SortFilterPaginate;
 
     use Authorizer;
+
+    /**
+     * @var ActivityRepository
+     */
+    private $activityRepository;
+
+    public function __construct(ActivityRepository $activityRepository)
+    {
+        $this->activityRepository = $activityRepository;
+    }
 
     public function index()
     {
@@ -105,6 +116,29 @@ class DashboardController extends Controller
             'success' => true,
             'interactions' => $interactions,
             'message' => 'Interactions loaded'
+        ]);
+    }
+
+    public function getDashBoardCalendar($userId, $month = null, $year = null)
+    {
+        $month = (is_null($month) && is_null($year))?Carbon::now():Carbon::createFromDate($year, $month, 1);
+
+        $monthlyTasks = $this->activityRepository->getMonthlyTasks(Carbon::parse($month), $userId);
+
+        $monthlyTasks = $monthlyTasks->map(function ($monthlyTask)
+        {
+            return [
+                'id' => $monthlyTask->id,
+                'title' => $monthlyTask->name,
+                'date' => Carbon::parse($monthlyTask->due_date)->format('Y/m/d'),
+                'formattedDate' => explode(',', Carbon::parse($monthlyTask->due_date)->toFormattedDateString())[0]
+            ];
+        });
+
+        return self::toResponse(null, [
+            'success' => true,
+            'calendar' => $monthlyTasks,
+            'message' => 'Calendar loaded'
         ]);
     }
 

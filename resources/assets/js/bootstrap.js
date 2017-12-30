@@ -41,6 +41,13 @@ import draggable from 'vuedraggable';
 Vue.use(draggable);
 
 /**
+ * Use Vue Event Calendar
+ */
+import 'vue-event-calendar/dist/style.css'
+import vueEventCalendar from 'vue-event-calendar'
+Vue.use(vueEventCalendar, {locale: 'en'});
+
+/**
  * Next we will register the CSRF Token as a common header with Axios so that
  * all outgoing HTTP requests automatically have it attached. This is just
  * a simple convenience so we don't have to attach every token manually.

@@ -39,4 +39,17 @@ class ActivityRepository
 
         return Activity::where('due_date', '<=', $today)->where('activity_status_id', '!=', 4)->get();
     }
+
+    public function getMonthlyTasks(Carbon $month, $userId)
+    {
+        $startOfMonth = Carbon::parse($month)->startOfMonth();
+
+        $endOfMonth = Carbon::parse($month)->endOfMonth();
+
+        return Activity::where('due_date', '>=', $startOfMonth)
+            ->where('due_date', '<=', $endOfMonth)
+            ->where('user_id', $userId)
+            ->orderBy('due_date')
+            ->get();
+    }
 }

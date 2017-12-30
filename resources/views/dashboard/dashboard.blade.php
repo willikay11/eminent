@@ -11,6 +11,10 @@
         <div class="col-lg-6 col-md-6 col-sm-12">
             <dashboard-interactions user-id="{!! $userId !!}"></dashboard-interactions>
         </div>
+
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <calendar user-id="{!! $userId !!}"></calendar>
+        </div>
     </div>
 
 @stop

@@ -9002,10 +9002,3 @@ a.article:hover {
 
 /* Large Devices */
 
-@media (min-width: 1200px) {
-  .contact-panel {
-    margin-left: 40px;
-    margin-right: 40px;
-  }
-}
-
