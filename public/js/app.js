@@ -113541,7 +113541,7 @@ exports = module.exports = __webpack_require__(1)(undefined);
 
 
 // module
-exports.push([module.i, "\n.__vev_calendar-wrapper {\n     max-width: 100%;\n}\n.__vev_calendar-wrapper .cal-wrapper {\n    padding: 0px 10px 0px 0px;\n}\n.__vev_calendar-wrapper .cal-wrapper .cal-header {\n    background-color: #455060;\n}\n.__vev_calendar-wrapper .arrow-left.icon:before {\n    color: white;\n}\n.__vev_calendar-wrapper .arrow-right.icon:before {\n    color: white;\n}\n.__vev_calendar-wrapper .cal-wrapper .cal-header .title {\n    color: white;\n}\n.__vev_calendar-wrapper .cal-wrapper .cal-body .dates .item .is-today {\n    content: \"\";\n    color: white;\n    background-color: #409eff !important;\n    border-radius: 50%;\n    width: 36px;\n    height: 36px;\n    position: absolute;\n    left: 50%;\n    top: 50%;\n    z-index: 1;\n    margin-left: -18px;\n    margin-top: -19px;\n}\n.__vev_calendar-wrapper .cal-wrapper .cal-body {\n    background-color: white;\n}\n.__vev_calendar-wrapper .cal-wrapper .cal-body .weeks .item {\n    color: #455060;\n}\n.__vev_calendar-wrapper .cal-wrapper .cal-body .dates .item .date-num {\n    color: #455060 !important;\n}\n.__vev_calendar-wrapper .events-wrapper {\n    border-radius: 0px;\n    background-color: #454f5f !important;\n}\n.__vev_calendar-wrapper .events-wrapper .event-item {\n    padding: 5px 20px;\n    margin-top: 5px;\n    -webkit-box-shadow: none;\n            box-shadow: none;\n    background-color: #fff;\n    border-radius: 3px;\n    color: #323232;\n    position: relative;\n    border-bottom: 1px solid;\n    border-left: 6px solid #e6934b;\n}\n.__vev_calendar-wrapper .events-wrapper .date {\n    max-width: 100%;\n    min-width: 200px;\n    text-align: left;\n    color: white;\n    background-color: transparent;\n    border-radius: 0px;\n    margin: 0 auto;\n    font-size: 22px;\n}\n.date-holder{\n    width: 9%;\n    word-wrap: break-word;\n    margin-right: 5px;\n}\n.new-date{\n    font-size: 22px;\n    line-height: 28px;\n    font-weight: 600;\n}\n.title-holder{\n    vertical-align: top;\n}\n.new-title{\n    font-size: 20px;\n    text-transform: uppercase;\n    font-weight: 400;\n}\n.__vev_calendar-wrapper .events-wrapper .event-item {\n    padding-top: 10px;\n    padding-bottom: 10px;\n}\n\n/* Custom, iPhone Retina */\n@media only screen and (min-width : 320px) {\n.new-date{\n        font-size: 15px;\n}\n.new-title{\n        font-size: 18px;\n}\n}\n\n/* Extra Small Devices, Phones */\n@media only screen and (min-width : 480px) {\n.new-date{\n        font-size: 15px;\n}\n.new-title{\n        font-size: 18px;\n}\n}\n\n/* Small Devices, Tablets */\n@media only screen and (min-width : 768px) {\n.new-date{\n        font-size: 17px;\n}\n.new-title{\n        font-size: 20px;\n}\n}\n\n/* Medium Devices, Desktops */\n@media only screen and (min-width : 992px) {\n.new-date{\n        font-size: 17px;\n}\n.new-title{\n        font-size: 20px;\n}\n}\n\n/* Large Devices, Wide Screens */\n@media only screen and (min-width : 1200px) {\n.new-date{\n        font-size: 22px;\n}\n.new-title{\n        font-size: 20px;\n}\n}\n\n/*#app {*/\n/*font-family: 'Avenir', Helvetica, Arial, sans-serif;*/\n/*-webkit-font-smoothing: antialiased;*/\n/*-moz-osx-font-smoothing: grayscale;*/\n/*color: #2c3e50;*/\n/*margin-top: 30px;*/\n/*}*/\n\n/*h1, h2, h3 {*/\n    /*font-weight: normal;*/\n    /*margin: 0;*/\n    /*padding: 0;*/\n/*}*/\n\n/*ul {*/\n    /*list-style-type: none;*/\n    /*padding: 0;*/\n/*}*/\n\n/*li {*/\n    /*display: inline-block;*/\n    /*margin: 0 10px;*/\n/*}*/\n\n/*a {*/\n    /*color: #42b983;*/\n/*}*/\n\n/*.t-center {*/\n    /*text-align: center;*/\n    /*margin: 20px;*/\n/*}*/\n\n/*.mt150 {*/\n    /*margin-top: 150px;*/\n/*}*/\n", ""]);
+exports.push([module.i, "\n.__vev_calendar-wrapper {\n     max-width: 100%;\n}\n.__vev_calendar-wrapper .cal-wrapper {\n    padding: 0px 10px 0px 0px;\n}\n.__vev_calendar-wrapper .cal-wrapper .cal-header {\n    background-color: #455060;\n}\n.__vev_calendar-wrapper .arrow-left.icon:before {\n    color: white;\n}\n.__vev_calendar-wrapper .arrow-right.icon:before {\n    color: white;\n}\n.__vev_calendar-wrapper .cal-wrapper .cal-header .title {\n    color: white;\n}\n.__vev_calendar-wrapper .cal-wrapper .cal-body .dates .item .is-today {\n    content: \"\";\n    color: white;\n    background-color: #409eff !important;\n    border-radius: 50%;\n    width: 36px;\n    height: 36px;\n    position: absolute;\n    left: 50%;\n    top: 50%;\n    z-index: 1;\n    margin-left: -18px;\n    margin-top: -19px;\n}\n.__vev_calendar-wrapper .cal-wrapper .cal-body {\n    background-color: white;\n}\n.__vev_calendar-wrapper .cal-wrapper .cal-body .weeks .item {\n    color: #455060;\n}\n.__vev_calendar-wrapper .cal-wrapper .cal-body .dates .item .date-num {\n    color: #455060 !important;\n}\n.__vev_calendar-wrapper .events-wrapper {\n    border-radius: 0px;\n    background-color: #454f5f !important;\n}\n.__vev_calendar-wrapper .events-wrapper .event-item {\n    padding: 5px 20px;\n    margin-top: 5px;\n    -webkit-box-shadow: none;\n            box-shadow: none;\n    background-color: #fff;\n    border-radius: 3px;\n    color: #323232;\n    position: relative;\n    border-bottom: 1px solid;\n}\n.__vev_calendar-wrapper .events-wrapper .date {\n    max-width: 100%;\n    min-width: 200px;\n    text-align: left;\n    color: white;\n    background-color: transparent;\n    border-radius: 0px;\n    margin: 0 auto;\n    font-size: 22px;\n}\n.__vev_calendar-wrapper .cal-wrapper .cal-body .dates .item .date-num {\n    font-size: 1.3rem;\n}\n.date-holder{\n    /*width: 9%;*/\n    word-wrap: break-word;\n    margin-right: 5px;\n}\n.new-date{\n    font-size: 22px;\n    line-height: 28px;\n    font-weight: 600;\n}\n.title-holder{\n    vertical-align: top;\n}\n.new-title{\n    font-size: 20px;\n    font-weight: 400;\n}\n.__vev_calendar-wrapper .events-wrapper .event-item {\n    padding-top: 10px;\n    padding-bottom: 10px;\n}\n.task-holder{\n    vertical-align: top;\n    border: 1px solid #d4dbe4;\n    padding: 15px;\n    width: 80%;\n    border-radius: 5px;\n}\n.task-date{\n    font-size: 30px;\n    vertical-align: top;\n}\n.task-days{\n}\n.to-do-task{\n    border-left: 20px solid #e53e52;\n}\n.in-progress-task{\n    border-left: 20px solid #f5a622;\n}\n.in-review-task{\n    border-left: 20px solid #4a8fe3;\n}\n.completed-task{\n    border-left: 20px solid #12884b;\n}\n/* Custom, iPhone Retina */\n@media only screen and (min-width : 320px) {\n.new-date{\n        font-size: 15px;\n}\n.new-title{\n        font-size: 18px;\n}\n}\n\n/* Extra Small Devices, Phones */\n@media only screen and (min-width : 480px) {\n.new-date{\n        font-size: 15px;\n}\n.new-title{\n        font-size: 18px;\n}\n}\n\n/* Small Devices, Tablets */\n@media only screen and (min-width : 768px) {\n.new-date{\n        font-size: 17px;\n}\n.new-title{\n        font-size: 20px;\n}\n}\n\n/* Medium Devices, Desktops */\n@media only screen and (min-width : 992px) {\n.new-date{\n        font-size: 17px;\n}\n.new-title{\n        font-size: 20px;\n}\n}\n\n/* Large Devices, Wide Screens */\n@media only screen and (min-width : 1200px) {\n.new-date{\n        font-size: 22px;\n}\n.new-title{\n        font-size: 20px;\n}\n}\n\n/*#app {*/\n/*font-family: 'Avenir', Helvetica, Arial, sans-serif;*/\n/*-webkit-font-smoothing: antialiased;*/\n/*-moz-osx-font-smoothing: grayscale;*/\n/*color: #2c3e50;*/\n/*margin-top: 30px;*/\n/*}*/\n\n/*h1, h2, h3 {*/\n    /*font-weight: normal;*/\n    /*margin: 0;*/\n    /*padding: 0;*/\n/*}*/\n\n/*ul {*/\n    /*list-style-type: none;*/\n    /*padding: 0;*/\n/*}*/\n\n/*li {*/\n    /*display: inline-block;*/\n    /*margin: 0 10px;*/\n/*}*/\n\n/*a {*/\n    /*color: #42b983;*/\n/*}*/\n\n/*.t-center {*/\n    /*text-align: center;*/\n    /*margin: 20px;*/\n/*}*/\n\n/*.mt150 {*/\n    /*margin-top: 150px;*/\n/*}*/\n", ""]);
 
 // exports
 
@@ -113556,6 +113556,17 @@ exports.push([module.i, "\n.__vev_calendar-wrapper {\n     max-width: 100%;\n}\n
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -113677,26 +113688,86 @@ var render = function() {
                   return [
                     _vm._l(props.showEvents, function(event, index) {
                       return props.showEvents.length != 0
-                        ? _c("div", { staticClass: "event-item" }, [
-                            _c("span", { staticClass: "date-holder" }, [
-                              _c("p", { staticClass: "new-date" }, [
-                                _vm._v(_vm._s(event.formattedDate))
-                              ])
-                            ]),
-                            _vm._v(" "),
-                            _c("span", { staticClass: "title-holder" }, [
-                              _c("p", { staticClass: "new-title" }, [
-                                _vm._v(_vm._s(event.title))
-                              ]),
+                        ? _c(
+                            "div",
+                            {
+                              staticClass: "event-item row",
+                              class: [
+                                event.status == 1
+                                  ? "to-do-task"
+                                  : event.status == 2
+                                    ? "in-progress-task"
+                                    : event.status == 3
+                                      ? "in-review-task"
+                                      : event.status == 4
+                                        ? "completed-task"
+                                        : ""
+                              ]
+                            },
+                            [
+                              _c(
+                                "span",
+                                {
+                                  staticClass:
+                                    "col-lg-2 col-md-2 col-sm-2 col-xs-2 date-holder"
+                                },
+                                [
+                                  _c("p", { staticClass: "new-date" }, [
+                                    _vm._v(_vm._s(event.formattedDate))
+                                  ])
+                                ]
+                              ),
                               _vm._v(" "),
-                              _c("p", [
-                                _vm._v(
-                                  "Task is due on " +
-                                    _vm._s(event.formattedDate)
-                                )
-                              ])
-                            ])
-                          ])
+                              _c(
+                                "span",
+                                {
+                                  staticClass:
+                                    "col-lg-8 col-md-8 col-sm-8 col-xs-8 task-holder"
+                                },
+                                [
+                                  _c("span", { staticClass: "title-holder" }, [
+                                    _c("p", { staticClass: "new-title" }, [
+                                      _vm._v(_vm._s(event.title))
+                                    ])
+                                  ]),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    {
+                                      staticClass:
+                                        "col-lg-6 col-md-6 col-sm-6 col-xs-6"
+                                    },
+                                    [
+                                      _c("span", { staticClass: "task-date" }, [
+                                        _vm._v(_vm._s(event.days.daysRemaining))
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("span", { staticClass: "task-days" }, [
+                                        _vm._v(_vm._s(event.days.content))
+                                      ])
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    {
+                                      staticClass:
+                                        "col-lg-6 col-md-6 col-sm-6 col-xs-6"
+                                    },
+                                    [
+                                      _c("el-progress", {
+                                        attrs: {
+                                          type: "line",
+                                          percentage: event.percentage
+                                        }
+                                      })
+                                    ],
+                                    1
+                                  )
+                                ]
+                              )
+                            ]
+                          )
                         : _vm._e()
                     }),
                     _vm._v(" "),

@@ -131,7 +131,10 @@ class DashboardController extends Controller
                 'id' => $monthlyTask->id,
                 'title' => $monthlyTask->name,
                 'date' => Carbon::parse($monthlyTask->due_date)->format('Y/m/d'),
-                'formattedDate' => explode(',', Carbon::parse($monthlyTask->due_date)->toFormattedDateString())[0]
+                'formattedDate' => explode(',', Carbon::parse($monthlyTask->due_date)->toFormattedDateString())[0],
+                'status' => $monthlyTask->activity_status_id,
+                'days' => self::getDaysRemaining(Carbon::parse($monthlyTask->due_date)),
+                'percentage' => ($monthlyTask->progressUpdates->last())?$monthlyTask->progressUpdates->last()->percentage:0
             ];
         });
 
@@ -142,6 +145,29 @@ class DashboardController extends Controller
         ]);
     }
 
+    public function getDaysRemaining(Carbon $date)
+    {
+        $daysRemaining = Carbon::now()->diffInDays($date);
+
+        if(Carbon::today()->gt($date))
+        {
+            return [
+                'daysRemaining' => $daysRemaining,
+                'content' => 'Days ago'
+            ];
+        }
+        elseif (Carbon::today()->eq($date))
+        {
+            return [
+                'daysRemaining' => $daysRemaining,
+                'content' => 'Task due today'
+            ];
+        }
+        return [
+            'daysRemaining' => $daysRemaining,
+            'content' => 'Days to finish'
+        ];
+    }
     public function toResponse($request = null, $data)
     {
         return response($data);

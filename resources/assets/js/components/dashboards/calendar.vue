@@ -11,14 +11,25 @@
                                 @day-changed="handleDayChanged"
                                 @month-changed="handleMonthChanged">
                 <template slot-scope="props">
-                    <div v-if="props.showEvents.length != 0" v-for="(event, index) in props.showEvents" class="event-item">
-                        <span class="date-holder">
+                    <div v-if="props.showEvents.length != 0"
+                         v-for="(event, index) in props.showEvents"
+                         class="event-item row"
+                         v-bind:class="[event.status == 1 ? 'to-do-task' : event.status == 2 ? 'in-progress-task' : event.status == 3 ? 'in-review-task' : event.status == 4 ? 'completed-task' : '']">
+                        <span class="col-lg-2 col-md-2 col-sm-2 col-xs-2 date-holder">
                             <p class="new-date">{{ event.formattedDate }}</p>
                         </span>
 
-                        <span class="title-holder">
-                            <p class="new-title">{{ event.title }}</p>
-                            <p>Task is due on {{ event.formattedDate }}</p>
+                        <span class="col-lg-8 col-md-8 col-sm-8 col-xs-8 task-holder">
+                            <span class="title-holder">
+                                <p class="new-title">{{ event.title }}</p>
+                            </span>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                <span class="task-date">{{ event.days.daysRemaining }}</span>
+                                <span class="task-days">{{ event.days.content }}</span>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                <el-progress type="line" :percentage="event.percentage"></el-progress>
+                            </div>
                         </span>
                     </div>
 
@@ -147,7 +158,6 @@
         color: #323232;
         position: relative;
         border-bottom: 1px solid;
-        border-left: 6px solid #e6934b;
     }
 
     .__vev_calendar-wrapper .events-wrapper .date {
@@ -161,8 +171,12 @@
         font-size: 22px;
     }
 
+    .__vev_calendar-wrapper .cal-wrapper .cal-body .dates .item .date-num {
+        font-size: 1.3rem;
+    }
+
     .date-holder{
-        width: 9%;
+        /*width: 9%;*/
         word-wrap: break-word;
         margin-right: 5px;
     }
@@ -179,7 +193,6 @@
 
     .new-title{
         font-size: 20px;
-        text-transform: uppercase;
         font-weight: 400;
     }
 
@@ -188,6 +201,38 @@
         padding-bottom: 10px;
     }
 
+    .task-holder{
+        vertical-align: top;
+        border: 1px solid #d4dbe4;
+        padding: 15px;
+        width: 80%;
+        border-radius: 5px;
+    }
+
+    .task-date{
+        font-size: 30px;
+        vertical-align: top;
+    }
+
+    .task-days{
+
+    }
+
+    .to-do-task{
+        border-left: 20px solid #e53e52;
+    }
+
+    .in-progress-task{
+        border-left: 20px solid #f5a622;
+    }
+
+    .in-review-task{
+        border-left: 20px solid #4a8fe3;
+    }
+
+    .completed-task{
+        border-left: 20px solid #12884b;
+    }
     /* Custom, iPhone Retina */
     @media only screen and (min-width : 320px) {
         .new-date{
