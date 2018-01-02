@@ -113,6 +113,13 @@ class ActivitiesController extends Controller
         ]);
     }
 
+    public function viewActivity($id)
+    {
+        return view('activities.individualActivity', [
+            'activityId' => $id
+        ]);
+    }
+
     public function getInformation()
     {
         $users = $this->usersRepository
@@ -367,6 +374,60 @@ class ActivitiesController extends Controller
         return self::toResponse(null, $activities);
     }
 
+    public function getActivity($activityId)
+    {
+        $activity = $this->activityRepository->getActivityById($activityId);
+
+        $activityData = [
+            'id' => $activity->id,
+            'name' => $activity->name,
+            'description' => $activity->description,
+            'priority_type_id' => $activity->priority_type_id,
+            'priority_type' => $activity->priorityType->name,
+            'activity_status_id' => $activity->activity_status_id,
+            'activity_status' => $activity->activityStatus->name,
+            'due_date' => $activity->due_date,
+            'isWatcher' => ($this->activityWatcherRepository->getActivityWatcherByUserIdAndActivityId(Auth::id(), $activity->id) != null)?true:false,
+            'start_date' => Carbon::parse($activity->created_at)->format('m/d/Y'),
+            'calendar_end_date' => Carbon::parse($activity->due_date)->format('m/d/Y'),
+            'today' => Carbon::today()->format('m/d/Y')
+        ];
+
+        $comments = $this->getActivityComments($activityId);
+
+        $watchers = $this->getActivityWatchers($activityId);
+
+        $progressUpdates = $this->progressUpdateRepository->getProgressUpdatesByActivityId($activityId);
+
+        $progressUpdates = $progressUpdates->map(function ($progressUpdate)
+        {
+            return [
+                'name' => $progressUpdate->name,
+                'description' => $progressUpdate->description,
+                'percentage' => $progressUpdate->percentage,
+                'progress_update_status_id' => $progressUpdate->progress_update_status_id,
+                'progress_files' => $this->getFile($progressUpdate->progressUpdateFiles)
+            ];
+        });
+
+        $progressUpdateStatuses = ProgressUpdateStatus::all()
+            ->map(function ($progressUpdateStatus)
+            {
+                return [
+                    'label' => $progressUpdateStatus->name,
+                    'value' => $progressUpdateStatus->id
+                ];
+            });
+
+        return self::toResponse(null, [
+            'activity' => $activityData,
+            'comments' => $comments,
+            'watchers' => $watchers,
+            'progressUpdate' => $progressUpdates,
+            'progressUpdateStatuses' => $progressUpdateStatuses
+        ]);
+    }
+
     public function search(Request $request)
     {
         $startDate = $request->get('startDate');
@@ -456,7 +517,8 @@ class ActivitiesController extends Controller
         return $activityWatchers->map(function ($activityWatcher)
         {
             return [
-                'name' => $activityWatcher->user->contact->present()->fullName
+                'name' => $activityWatcher->user->contact->present()->fullName,
+                'initials' => strtoupper($activityWatcher->user->contact->firstname[0]."".$activityWatcher->user->contact->lastname[0])
             ];
         });
     }

@@ -344,6 +344,19 @@ Route::group(['middleware' => 'auth'], function (){
     Route::get('/api/progress/update/{activityId}', [
         'uses' => 'ActivitiesController@getProgressUpdate'
     ]);
+
+    Route::get('/activity/{id}', [
+        'uses' => 'ActivitiesController@viewActivity'
+    ]);
+
+    Route::get('/api/activity/{id}', [
+        'uses' => 'ActivitiesController@getActivity'
+    ]);
+
+    Route::get('/api/watchers/{id}', [
+        'uses' => 'ActivitiesController@getActivityWatchers'
+    ]);
+
     /*
      * Team
      */

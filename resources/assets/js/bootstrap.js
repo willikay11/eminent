@@ -48,6 +48,15 @@ import vueEventCalendar from 'vue-event-calendar'
 Vue.use(vueEventCalendar, {locale: 'en'});
 
 /**
+ * Use Vue Calendar
+ */
+import VCalendar from 'v-calendar';
+import 'v-calendar/lib/v-calendar.min.css';
+
+// Access v-calendar, v-date-packer and v-popover components
+Vue.use(VCalendar);
+
+/**
  * Next we will register the CSRF Token as a common header with Axios so that
  * all outgoing HTTP requests automatically have it attached. This is just
  * a simple convenience so we don't have to attach every token manually.
