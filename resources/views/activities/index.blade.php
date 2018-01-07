@@ -634,10 +634,10 @@
                         </el-form>
 
                         <div class="form-item-container">
-                <span slot="footer" class="dialog-footer">
-                    <el-button @click="taskDialogVisible = false">Cancel</el-button>
-                    <el-button type="primary" @click="addTask('ruleForm')">Save</el-button>
-                  </span>
+                            <span slot="footer" class="dialog-footer">
+                                <el-button @click="taskDialogVisible = false">Cancel</el-button>
+                                <el-button type="primary" @click="addTask('ruleForm')">Save</el-button>
+                            </span>
                         </div>
                     </el-dialog>
 

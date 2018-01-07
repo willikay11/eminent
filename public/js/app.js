@@ -111056,6 +111056,7 @@ exports.default = {
                     });
 
                     axios.post('/activity/save', {
+                        activity_id: null,
                         type: 1,
                         name: vm.ruleForm.name,
                         description: vm.ruleForm.description,
@@ -111458,256 +111459,12 @@ exports.push([module.i, "\n.el-select {\n    width: 100%;\n}\n.el-date-editor.el
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
+var _moment = __webpack_require__(0);
+
+var _moment2 = _interopRequireDefault(_moment);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
     props: ['activityId'],
@@ -111722,6 +111479,9 @@ exports.default = {
             progressUpdateData: [],
             progressUpdateStatuses: [],
             watchersData: [],
+            priorityTypes: [],
+            activityTypes: [],
+            userClients: [],
             file: false,
             progressFile: false,
             input: '',
@@ -111729,6 +111489,26 @@ exports.default = {
             data: {
                 comment: '',
                 activity_id: ''
+            },
+            ruleForm: {
+                name: '',
+                description: '',
+                activityType: '',
+                user: '',
+                priority: '',
+                dueDate: '',
+                projectedRevenue: ''
+            },
+            rules: {
+                name: [{ required: true, message: 'Please input activity name', trigger: 'blur' }],
+                projectedRevenue: [{ required: false, message: 'Please input projected revenue', trigger: 'blur', type: 'number' }],
+                description: [{ required: true, message: 'Please input activity description', trigger: 'blur' }],
+                user: [{ required: false, message: 'Please select user', trigger: 'change', type: 'number' }],
+                activityType: [{ required: false, message: 'Please select activity type', trigger: 'change', type: 'number' }],
+                //                    priority: [
+                //                        {required: false, message: 'Please select priority', trigger: 'change'},
+                //                    ],
+                dueDate: [{ required: true, message: 'Please input due date', trigger: 'blur', type: 'date' }]
             },
             progressData: {
                 description: '',
@@ -111843,13 +111623,62 @@ exports.default = {
 
             vm.updateTaskProgressDialogVisible = true;
         },
+        addTask: function addTask(formName) {
+            var _this = this;
+
+            this.$refs[formName].validate(function (valid) {
+                if (valid) {
+                    var vm = _this;
+
+                    vm.$message({
+                        type: 'info',
+                        message: 'Updating Task'
+                    });
+
+                    axios.post('/activity/save', {
+                        activity_id: vm.activityData.id,
+                        name: vm.ruleForm.name,
+                        description: vm.ruleForm.description,
+                        user_id: vm.activityData.user_id,
+                        due_date: (0, _moment2.default)(vm.activityData.due_date).format("YYYY-MM-DD"),
+                        activity_status_id: vm.activityData.activity_status_id,
+                        priority_type_id: vm.ruleForm.priority,
+                        activity_type_id: vm.ruleForm.activityType,
+                        projected_revenue: vm.ruleForm.projectedRevenue,
+                        user_client_id: vm.ruleForm.source
+                    }).then(function (response) {
+
+                        if (response.data.success) {
+
+                            vm.$message({
+                                type: 'success',
+                                message: response.data.message
+                            });
+
+                            vm.getActivityInfo();
+
+                            vm.$refs[formName].resetFields();
+                        } else {
+                            vm.$message({
+                                type: 'error',
+                                message: response.data.message
+                            });
+                        }
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+                } else {
+                    return false;
+                }
+            });
+        },
         getActivityInfo: function getActivityInfo() {
             var vm = this;
             axios.get('/api/activity/' + vm.activityId).then(function (response) {
-                vm.attributes[1].dates = response.data.activity.today;
-                vm.attributes[0].dates.start = response.data.activity.start_date;
-                vm.attributes[0].dates.end = response.data.activity.calendar_end_date;
-                vm.activityData = response.data.activity;
+                vm.priorityTypes = response.data.priorityTypes;
+                vm.activityTypes = response.data.activityTypes;
+                vm.userClients = response.data.userClients;
+                vm.attributes[1].dates = response.data.activity.today, vm.attributes[0].dates.start = response.data.activity.start_date, vm.attributes[0].dates.end = response.data.activity.calendar_end_date, vm.ruleForm.name = response.data.activity.name, vm.ruleForm.description = response.data.activity.description, vm.ruleForm.activityType = response.data.activity.activity_type_id, vm.ruleForm.priority = response.data.activity.priority_type_id, vm.ruleForm.source = response.data.activity.user_client_id, vm.ruleForm.projectedRevenue = response.data.activity.projected_revenue, vm.activityData = response.data.activity;
                 vm.commentsData = response.data.comments;
                 vm.progressUpdateData = response.data.progressUpdate;
                 vm.progressUpdateStatuses = response.data.progressUpdateStatuses;
@@ -111896,11 +111725,11 @@ exports.default = {
             }
         },
         addProgressUpdate: function addProgressUpdate(formName) {
-            var _this = this;
+            var _this2 = this;
 
             this.$refs[formName].validate(function (valid) {
                 if (valid) {
-                    var vm = _this;
+                    var vm = _this2;
 
                     if (vm.progressFile) {
 
@@ -112012,7 +111841,356 @@ exports.default = {
             });
         }
     }
-};
+}; //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /***/ }),
 /* 328 */
@@ -112033,7 +112211,7 @@ var render = function() {
         _c(
           "el-tabs",
           {
-            staticStyle: { "min-height": "500px" },
+            staticStyle: { "min-height": "500px", "padding-bottom": "20px" },
             model: {
               value: _vm.activeName,
               callback: function($$v) {
@@ -112044,62 +112222,419 @@ var render = function() {
           },
           [
             _c("el-tab-pane", { attrs: { label: "Overview", name: "first" } }, [
-              _c("div", { staticClass: "row" }, [
-                _c(
-                  "div",
-                  { staticClass: "col-lg-12 col-md-12 col-sm-12 col-xs-12" },
-                  [
-                    _c("span", [
-                      _c("strong", [_vm._v("Activity: ")]),
-                      _vm._v(_vm._s(_vm.activityData.name))
-                    ])
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "col-lg-12 col-md-12 col-sm-12 col-xs-12" },
-                  [
-                    _c("span", [
-                      _c("strong", [_vm._v("Description: ")]),
-                      _vm._v(_vm._s(_vm.activityData.description))
-                    ])
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "col-lg-12 col-md-12 col-sm-12 col-xs-12" },
-                  [
-                    _c("span", [
-                      _c("strong", [_vm._v("Status: ")]),
-                      _vm._v(_vm._s(_vm.activityData.activity_status))
-                    ])
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "col-lg-12 col-md-12 col-sm-12 col-xs-12" },
-                  [
-                    _c("span", [
-                      _c("strong", [_vm._v("Due Date: ")]),
-                      _vm._v(_vm._s(_vm.activityData.due_date))
-                    ])
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "col-lg-12 col-md-12 col-sm-12 col-xs-12" },
-                  [
-                    _c("span", [
-                      _c("strong", [_vm._v("Priority: ")]),
-                      _vm._v(_vm._s(_vm.activityData.priority_type))
-                    ])
-                  ]
-                )
-              ])
+              _c(
+                "div",
+                { staticClass: "row" },
+                [
+                  _c(
+                    "el-form",
+                    {
+                      ref: "ruleForm",
+                      attrs: {
+                        model: _vm.ruleForm,
+                        rules: _vm.rules,
+                        "label-position": "left"
+                      }
+                    },
+                    [
+                      _c(
+                        "div",
+                        {
+                          staticClass: "col-lg-12 col-md-12 col-sm-12 col-xs-12"
+                        },
+                        [
+                          _c(
+                            "el-col",
+                            { attrs: { xs: 24, sm: 24, md: 24, lg: 4 } },
+                            [_c("span", [_vm._v("Activity: ")])]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "el-col",
+                            { attrs: { xs: 22, sm: 22, md: 22, lg: 20 } },
+                            [
+                              _c(
+                                "el-form-item",
+                                { attrs: { prop: "name" } },
+                                [
+                                  _c("el-input", {
+                                    attrs: { placeholder: "Activity Name" },
+                                    model: {
+                                      value: _vm.ruleForm.name,
+                                      callback: function($$v) {
+                                        _vm.$set(_vm.ruleForm, "name", $$v)
+                                      },
+                                      expression: "ruleForm.name"
+                                    }
+                                  })
+                                ],
+                                1
+                              )
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          staticClass: "col-lg-12 col-md-12 col-sm-12 col-xs-12"
+                        },
+                        [
+                          _c(
+                            "el-col",
+                            { attrs: { xs: 24, sm: 24, md: 24, lg: 4 } },
+                            [_c("span", [_vm._v("Description: ")])]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "el-col",
+                            { attrs: { xs: 22, sm: 22, md: 22, lg: 20 } },
+                            [
+                              _c(
+                                "el-form-item",
+                                { attrs: { prop: "description" } },
+                                [
+                                  _c("el-input", {
+                                    attrs: {
+                                      placeholder: "Activity Description",
+                                      type: "textarea",
+                                      rows: 3
+                                    },
+                                    model: {
+                                      value: _vm.ruleForm.description,
+                                      callback: function($$v) {
+                                        _vm.$set(
+                                          _vm.ruleForm,
+                                          "description",
+                                          $$v
+                                        )
+                                      },
+                                      expression: "ruleForm.description"
+                                    }
+                                  })
+                                ],
+                                1
+                              )
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          staticClass: "col-lg-12 col-md-12 col-sm-12 col-xs-12"
+                        },
+                        [
+                          _c(
+                            "el-col",
+                            { attrs: { xs: 24, sm: 24, md: 24, lg: 4 } },
+                            [_c("span", [_vm._v("Activity Type: ")])]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "el-col",
+                            { attrs: { xs: 22, sm: 22, md: 22, lg: 20 } },
+                            [
+                              _c(
+                                "el-form-item",
+                                { attrs: { prop: "activityType" } },
+                                [
+                                  _c(
+                                    "el-select",
+                                    {
+                                      attrs: {
+                                        placeholder: "Select Activity Type"
+                                      },
+                                      model: {
+                                        value: _vm.ruleForm.activityType,
+                                        callback: function($$v) {
+                                          _vm.$set(
+                                            _vm.ruleForm,
+                                            "activityType",
+                                            $$v
+                                          )
+                                        },
+                                        expression: "ruleForm.activityType"
+                                      }
+                                    },
+                                    _vm._l(_vm.activityTypes, function(item) {
+                                      return _c("el-option", {
+                                        key: item.value,
+                                        attrs: {
+                                          label: item.label,
+                                          value: item.value
+                                        }
+                                      })
+                                    })
+                                  )
+                                ],
+                                1
+                              )
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          staticClass: "col-lg-12 col-md-12 col-sm-12 col-xs-12"
+                        },
+                        [
+                          _vm.ruleForm.activityType == 2
+                            ? _c(
+                                "el-row",
+                                { attrs: { span: 24, gutter: 20 } },
+                                [
+                                  _c(
+                                    "el-col",
+                                    {
+                                      attrs: { xs: 24, sm: 24, md: 24, lg: 4 }
+                                    },
+                                    [_c("span", [_vm._v("Source: ")])]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "el-col",
+                                    {
+                                      attrs: { xs: 22, sm: 22, md: 22, lg: 20 }
+                                    },
+                                    [
+                                      _c(
+                                        "el-form-item",
+                                        { attrs: { prop: "source" } },
+                                        [
+                                          _c(
+                                            "el-select",
+                                            {
+                                              attrs: {
+                                                filterable: "",
+                                                placeholder: "Select Source"
+                                              },
+                                              model: {
+                                                value: _vm.ruleForm.source,
+                                                callback: function($$v) {
+                                                  _vm.$set(
+                                                    _vm.ruleForm,
+                                                    "source",
+                                                    $$v
+                                                  )
+                                                },
+                                                expression: "ruleForm.source"
+                                              }
+                                            },
+                                            _vm._l(_vm.userClients, function(
+                                              item
+                                            ) {
+                                              return _c("el-option", {
+                                                key: item.value,
+                                                attrs: {
+                                                  label: item.label,
+                                                  value: item.value
+                                                }
+                                              })
+                                            })
+                                          )
+                                        ],
+                                        1
+                                      )
+                                    ],
+                                    1
+                                  )
+                                ],
+                                1
+                              )
+                            : _vm._e()
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          staticClass: "col-lg-12 col-md-12 col-sm-12 col-xs-12"
+                        },
+                        [
+                          _vm.ruleForm.activityType == 2
+                            ? _c(
+                                "el-row",
+                                { attrs: { span: 24, gutter: 20 } },
+                                [
+                                  _c(
+                                    "el-col",
+                                    {
+                                      attrs: { xs: 24, sm: 24, md: 24, lg: 4 }
+                                    },
+                                    [
+                                      _c("span", [
+                                        _vm._v("Projected Revenue: ")
+                                      ])
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "el-col",
+                                    {
+                                      attrs: { xs: 22, sm: 22, md: 22, lg: 20 }
+                                    },
+                                    [
+                                      _c(
+                                        "el-form-item",
+                                        { attrs: { prop: "projectedRevenue" } },
+                                        [
+                                          _c("el-input-number", {
+                                            attrs: {
+                                              placeholder: "Projected Revenue"
+                                            },
+                                            model: {
+                                              value:
+                                                _vm.ruleForm.projectedRevenue,
+                                              callback: function($$v) {
+                                                _vm.$set(
+                                                  _vm.ruleForm,
+                                                  "projectedRevenue",
+                                                  $$v
+                                                )
+                                              },
+                                              expression:
+                                                "ruleForm.projectedRevenue"
+                                            }
+                                          })
+                                        ],
+                                        1
+                                      )
+                                    ],
+                                    1
+                                  )
+                                ],
+                                1
+                              )
+                            : _vm._e()
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          staticClass: "col-lg-12 col-md-12 col-sm-12 col-xs-12"
+                        },
+                        [
+                          _c(
+                            "el-col",
+                            { attrs: { xs: 24, sm: 24, md: 24, lg: 4 } },
+                            [_c("span", [_vm._v("Priority")])]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "el-col",
+                            { attrs: { xs: 22, sm: 22, md: 22, lg: 20 } },
+                            [
+                              _c(
+                                "el-form-item",
+                                { attrs: { prop: "priority" } },
+                                [
+                                  _c(
+                                    "el-select",
+                                    {
+                                      attrs: { placeholder: "Select Priority" },
+                                      model: {
+                                        value: _vm.ruleForm.priority,
+                                        callback: function($$v) {
+                                          _vm.$set(
+                                            _vm.ruleForm,
+                                            "priority",
+                                            $$v
+                                          )
+                                        },
+                                        expression: "ruleForm.priority"
+                                      }
+                                    },
+                                    _vm._l(_vm.priorityTypes, function(item) {
+                                      return _c("el-option", {
+                                        key: item.value,
+                                        attrs: {
+                                          label: item.label,
+                                          value: item.value
+                                        }
+                                      })
+                                    })
+                                  )
+                                ],
+                                1
+                              )
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          staticClass: "col-lg-12 col-md-12 col-sm-12 col-xs-12"
+                        },
+                        [
+                          _c(
+                            "el-col",
+                            { attrs: { xs: 24, sm: 24, md: 24, lg: 4 } },
+                            [_c("span", [_vm._v("Due Date")])]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "el-col",
+                            { attrs: { xs: 22, sm: 22, md: 22, lg: 20 } },
+                            [
+                              _vm._v(
+                                "\n                                " +
+                                  _vm._s(_vm.activityData.due_date) +
+                                  "\n                            "
+                              )
+                            ]
+                          )
+                        ],
+                        1
+                      )
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "col-lg-12 col-md-12 col-sm-12 col-xs-12" },
+                    [_c("hr")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "col-lg-12 col-md-12 col-sm-12 col-xs-12" },
+                    [
+                      _c(
+                        "el-button",
+                        {
+                          attrs: { type: "primary" },
+                          on: {
+                            click: function($event) {
+                              _vm.addTask("ruleForm")
+                            }
+                          }
+                        },
+                        [_vm._v("Save")]
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
             ]),
             _vm._v(" "),
             _c(

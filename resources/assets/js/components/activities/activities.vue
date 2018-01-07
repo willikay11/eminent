@@ -290,6 +290,7 @@
                         });
 
                         axios.post('/activity/save', {
+                            activity_id: null,
                             type: 1,
                             name: vm.ruleForm.name,
                             description: vm.ruleForm.description,

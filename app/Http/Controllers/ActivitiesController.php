@@ -182,6 +182,7 @@ class ActivitiesController extends Controller
     public function save(Request $request)
     {
         $input = [
+            'activity_id' => $request->get('activity_id'),
             'name' => $request->get('name'),
             'description' => $request->get('description'),
             'user_id' => $request->get('user_id'),
@@ -202,52 +203,62 @@ class ActivitiesController extends Controller
 
         if ($activity)
         {
-            if ($request->get('user_id') != Auth::id())
+            if(is_null($input['activity_id']))
             {
-                $input = [
-                    'activity_id' => $activity->id,
-                    'user_id' => Auth::id()
-                ];
+                if ($request->get('user_id') != Auth::id())
+                {
+                    $input = [
+                        'activity_id' => $activity->id,
+                        'user_id' => Auth::id()
+                    ];
 
-                $this->activityWatcherRepository->create($input);
+                    $this->activityWatcherRepository->create($input);
 
-                $input = [
-                    'activity_id' => $activity->id,
-                    'user_id' => $request->get('user_id')
-                ];
+                    $input = [
+                        'activity_id' => $activity->id,
+                        'user_id' => $request->get('user_id')
+                    ];
 
-                $this->activityWatcherRepository->create($input);
+                    $this->activityWatcherRepository->create($input);
+                }
+                else
+                {
+                    $input = [
+                        'activity_id' => $activity->id,
+                        'user_id' => Auth::id()
+                    ];
+
+                    $this->activityWatcherRepository->create($input);
+                }
+
+                if (Carbon::parse($request->get('due_date'))->endOfDay()->diffInDays(Carbon::now()) > 1)
+                {
+                    $twentyFourHourEvent =  $this->eventsRepository->save24HourTaskEvent($activity);
+
+                    $this->eventRemindersRepository->saveEventReminder($twentyFourHourEvent);
+                }
+
+                if (Carbon::parse($request->get('due_date'))->endOfDay()->diffInDays(Carbon::now()) > 2)
+                {
+                    $fortyEightHourEvent =  $this->eventsRepository->save48HourTaskEvent($activity);
+
+                    $this->eventRemindersRepository->saveEventReminder($fortyEightHourEvent);
+                }
+
+                event(new TaskAssigned($activity));
+
+                return self::toResponse(null, [
+                    'success' => true,
+                    'message' => 'Task added successfully'
+                ]);
             }
             else
             {
-                $input = [
-                    'activity_id' => $activity->id,
-                    'user_id' => Auth::id()
-                ];
-
-                $this->activityWatcherRepository->create($input);
+                return self::toResponse(null, [
+                    'success' => true,
+                    'message' => 'Task updated successfully'
+                ]);
             }
-
-            if (Carbon::parse($request->get('due_date'))->endOfDay()->diffInDays(Carbon::now()) > 1)
-            {
-                $twentyFourHourEvent =  $this->eventsRepository->save24HourTaskEvent($activity);
-
-                $this->eventRemindersRepository->saveEventReminder($twentyFourHourEvent);
-            }
-
-            if (Carbon::parse($request->get('due_date'))->endOfDay()->diffInDays(Carbon::now()) > 2)
-            {
-                $fortyEightHourEvent =  $this->eventsRepository->save48HourTaskEvent($activity);
-
-                $this->eventRemindersRepository->saveEventReminder($fortyEightHourEvent);
-            }
-
-            event(new TaskAssigned($activity));
-
-            return self::toResponse(null, [
-                'success' => true,
-                'message' => 'Task added successfully'
-            ]);
         }
 
         return self::toResponse(null, [
@@ -387,6 +398,10 @@ class ActivitiesController extends Controller
             'activity_status_id' => $activity->activity_status_id,
             'activity_status' => $activity->activityStatus->name,
             'due_date' => $activity->due_date,
+            'user_client_id' => $activity->user_client_id,
+            'activity_type_id' => $activity->activity_type_id,
+            'user_id' => $activity->user_id,
+            'projected_revenue' => $activity->projected_revenue,
             'isWatcher' => ($this->activityWatcherRepository->getActivityWatcherByUserIdAndActivityId(Auth::id(), $activity->id) != null)?true:false,
             'start_date' => Carbon::parse($activity->created_at)->format('m/d/Y'),
             'calendar_end_date' => Carbon::parse($activity->due_date)->format('m/d/Y'),
@@ -419,12 +434,43 @@ class ActivitiesController extends Controller
                 ];
             });
 
+        $priorities = PriorityType::all()
+            ->map(function ($priority)
+            {
+                return [
+                    'label' => $priority->name,
+                    'value' => $priority->id
+                ];
+            });
+
+        $activityTypes = ActivityType::all()
+            ->map(function ($activityType)
+            {
+                return [
+                    'label' => $activityType->name,
+                    'value' => $activityType->id
+                ];
+            });
+
+        $userClients = UserClient::where('user_id', Auth::id())->get()->map(function ($userClient)
+        {
+            $client = $userClient->client;
+
+            return[
+                'label' => $client->contact->present()->fullName,
+                'value' => $client->id
+            ];
+        });
+
         return self::toResponse(null, [
             'activity' => $activityData,
             'comments' => $comments,
             'watchers' => $watchers,
             'progressUpdate' => $progressUpdates,
-            'progressUpdateStatuses' => $progressUpdateStatuses
+            'progressUpdateStatuses' => $progressUpdateStatuses,
+            'priorityTypes' => $priorities,
+            'activityTypes' => $activityTypes,
+            'userClients' => $userClients
         ]);
     }
 

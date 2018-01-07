@@ -21,7 +21,18 @@ class ActivityRepository
 
     public function store(array $input)
     {
-        return Activity::create($input);
+        if(is_null($input['activity_id']))
+        {
+            return Activity::create($input);
+        }
+        else
+        {
+            $activity = $this->getActivityById($input['activity_id']);
+
+            $activity->update($input);
+
+            return $activity;
+        }
     }
 
     public function updateActivities($activityId, array $input)

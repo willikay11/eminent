@@ -1,24 +1,124 @@
     <template>
         <div>
             <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12" style="background-color: white">
-                <el-tabs v-model="activeName" style="min-height: 500px">
+                <el-tabs v-model="activeName" style="min-height: 500px; padding-bottom: 20px">
                     <el-tab-pane label="Overview" name="first">
                         <div class="row">
+                            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-position="left">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <el-col :xs="24" :sm="24" :md="24" :lg="4">
+                                        <span>Activity: </span>
+                                    </el-col>
+                                    <el-col :xs="22" :sm="22" :md="22" :lg="20">
+                                        <el-form-item prop="name">
+                                            <el-input placeholder="Activity Name" v-model="ruleForm.name"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </div>
+
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <el-col :xs="24" :sm="24" :md="24" :lg="4">
+                                        <span>Description: </span>
+                                    </el-col>
+                                    <el-col :xs="22" :sm="22" :md="22" :lg="20">
+                                        <el-form-item prop="description">
+                                            <el-input placeholder="Activity Description"
+                                                      type="textarea"
+                                                      :rows="3"
+                                                      v-model="ruleForm.description"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </div>
+
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <el-col :xs="24" :sm="24" :md="24" :lg="4">
+                                        <span>Activity Type: </span>
+                                    </el-col>
+
+                                    <el-col :xs="22" :sm="22" :md="22" :lg="20">
+                                        <el-form-item prop="activityType">
+                                            <el-select v-model="ruleForm.activityType" placeholder="Select Activity Type">
+                                                <el-option
+                                                        v-for="item in activityTypes"
+                                                        :key="item.value"
+                                                        :label="item.label"
+                                                        :value="item.value">
+                                                </el-option>
+                                            </el-select>
+                                        </el-form-item>
+                                    </el-col>
+                                </div>
+
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <el-row :span="24" :gutter="20" v-if="ruleForm.activityType == 2">
+                                        <el-col :xs="24" :sm="24" :md="24" :lg="4">
+                                            <span>Source: </span>
+                                        </el-col>
+                                        <el-col :xs="22" :sm="22" :md="22" :lg="20">
+                                            <el-form-item prop="source">
+                                                <el-select v-model="ruleForm.source" filterable placeholder="Select Source">
+                                                    <el-option
+                                                            v-for="item in userClients"
+                                                            :key="item.value"
+                                                            :label="item.label"
+                                                            :value="item.value">
+                                                    </el-option>
+                                                </el-select>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                </div>
+
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <el-row :span="24" :gutter="20" v-if="ruleForm.activityType == 2">
+                                        <el-col :xs="24" :sm="24" :md="24" :lg="4">
+                                            <span>Projected Revenue: </span>
+                                        </el-col>
+                                        <el-col :xs="22" :sm="22" :md="22" :lg="20">
+                                            <el-form-item prop="projectedRevenue">
+                                                <el-input-number placeholder="Projected Revenue" v-model="ruleForm.projectedRevenue"></el-input-number>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                </div>
+
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <el-col :xs="24" :sm="24" :md="24" :lg="4">
+                                        <span>Priority</span>
+                                    </el-col>
+
+                                    <el-col :xs="22" :sm="22" :md="22" :lg="20">
+                                        <el-form-item prop="priority">
+                                            <el-select v-model="ruleForm.priority" placeholder="Select Priority">
+                                                <el-option
+                                                        v-for="item in priorityTypes"
+                                                        :key="item.value"
+                                                        :label="item.label"
+                                                        :value="item.value">
+                                                </el-option>
+                                            </el-select>
+                                        </el-form-item>
+                                    </el-col>
+                                </div>
+
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <el-col :xs="24" :sm="24" :md="24" :lg="4">
+                                        <span>Due Date</span>
+                                    </el-col>
+                                    <el-col :xs="22" :sm="22" :md="22" :lg="20">
+                                        {{ activityData.due_date }}
+                                    </el-col>
+                                </div>
+                            </el-form>
+
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <span><strong>Activity: </strong>{{ activityData.name }}</span>
+                                <hr>
                             </div>
+
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <span><strong>Description: </strong>{{ activityData.description }}</span>
+                                <el-button type="primary" @click="addTask('ruleForm')">Save</el-button>
                             </div>
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <span><strong>Status: </strong>{{ activityData.activity_status }}</span>
-                            </div>
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <span><strong>Due Date: </strong>{{ activityData.due_date }}</span>
-                            </div>
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <span><strong>Priority: </strong>{{ activityData.priority_type }}</span>
-                            </div>
+
                         </div>
                     </el-tab-pane>
                     <el-tab-pane label="Comments" name="second">
@@ -249,6 +349,8 @@
     </template>
 
     <script>
+        import moment from 'moment';
+
         export default {
             props: ['activityId'],
             data() {
@@ -262,6 +364,9 @@
                     progressUpdateData: [],
                     progressUpdateStatuses:[],
                     watchersData:[],
+                    priorityTypes: [],
+                    activityTypes: [],
+                    userClients: [],
                     file: false,
                     progressFile: false,
                     input: '',
@@ -269,6 +374,38 @@
                     data: {
                         comment: '',
                         activity_id: ''
+                    },
+                    ruleForm: {
+                        name: '',
+                        description: '',
+                        activityType: '',
+                        user: '',
+                        priority: '',
+                        dueDate: '',
+                        projectedRevenue: '',
+                    },
+                    rules: {
+                        name: [
+                            {required: true, message: 'Please input activity name', trigger: 'blur'},
+                        ],
+                        projectedRevenue: [
+                            {required: false, message: 'Please input projected revenue', trigger: 'blur', type: 'number'},
+                        ],
+                        description: [
+                            {required: true, message: 'Please input activity description', trigger: 'blur'},
+                        ],
+                        user: [
+                            {required: false, message: 'Please select user', trigger: 'change', type: 'number'},
+                        ],
+                        activityType: [
+                            {required: false, message: 'Please select activity type', trigger: 'change', type: 'number'},
+                        ],
+//                    priority: [
+//                        {required: false, message: 'Please select priority', trigger: 'change'},
+//                    ],
+                        dueDate: [
+                            {required: true, message: 'Please input due date', trigger: 'blur', type: 'date'},
+                        ],
                     },
                     progressData: {
                         description: '',
@@ -406,14 +543,74 @@
                     vm.updateTaskProgressDialogVisible = true;
                 },
 
+                addTask(formName)
+                {
+                    this.$refs[formName].validate((valid) => {
+                        if (valid) {
+                            let vm = this;
+
+                            vm.$message({
+                                type: 'info',
+                                message: 'Updating Task'
+                            });
+
+                            axios.post('/activity/save', {
+                                activity_id: vm.activityData.id,
+                                name: vm.ruleForm.name,
+                                description: vm.ruleForm.description,
+                                user_id: vm.activityData.user_id,
+                                due_date: moment(vm.activityData.due_date).format("YYYY-MM-DD"),
+                                activity_status_id: vm.activityData.activity_status_id,
+                                priority_type_id: vm.ruleForm.priority,
+                                activity_type_id: vm.ruleForm.activityType,
+                                projected_revenue: vm.ruleForm.projectedRevenue,
+                                user_client_id: vm.ruleForm.source
+                            })
+                                .then(function (response) {
+
+                                    if (response.data.success) {
+
+                                        vm.$message({
+                                            type: 'success',
+                                            message: response.data.message
+                                        });
+
+                                        vm.getActivityInfo();
+
+                                        vm.$refs[formName].resetFields();
+                                    }
+                                    else {
+                                        vm.$message({
+                                            type: 'error',
+                                            message: response.data.message
+                                        });
+                                    }
+                                }).catch(function (error) {
+                                console.log(error);
+                            });
+                        } else {
+                            return false;
+                        }
+                    });
+                },
+
                 getActivityInfo()
                 {
                     let vm = this;
                     axios.get('/api/activity/'+vm.activityId)
                         .then(function (response) {
-                            vm.attributes[1].dates = response.data.activity.today
-                            vm.attributes[0].dates.start = response.data.activity.start_date
-                            vm.attributes[0].dates.end = response.data.activity.calendar_end_date
+                            vm.priorityTypes = response.data.priorityTypes;
+                            vm.activityTypes = response.data.activityTypes;
+                            vm.userClients = response.data.userClients;
+                            vm.attributes[1].dates = response.data.activity.today,
+                            vm.attributes[0].dates.start = response.data.activity.start_date,
+                            vm.attributes[0].dates.end = response.data.activity.calendar_end_date,
+                            vm.ruleForm.name = response.data.activity.name,
+                            vm.ruleForm.description = response.data.activity.description,
+                            vm.ruleForm.activityType = response.data.activity.activity_type_id,
+                            vm.ruleForm.priority = response.data.activity.priority_type_id,
+                            vm.ruleForm.source = response.data.activity.user_client_id,
+                            vm.ruleForm.projectedRevenue = response.data.activity.projected_revenue,
                             vm.activityData = response.data.activity;
                             vm.commentsData = response.data.comments;
                             vm.progressUpdateData = response.data.progressUpdate;
