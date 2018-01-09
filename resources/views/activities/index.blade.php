@@ -101,9 +101,11 @@
                                                 {{--@endif--}}
                                             </el-row>
 
-                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 element-container">@{{ element.name }}</div>
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 element-container">
+                                            <p style="white-space: normal;">@{{ element.name }}</p>
+                                        </div>
 
-                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="text-align: center">
                                             <el-progress type="circle" :percentage="element.percentage"></el-progress>
                                         </div>
 
@@ -164,9 +166,11 @@
                                             </el-row>
                                         </div>
 
-                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 element-container">@{{ element.name }}</div>
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 element-container">
+                                            <p style="white-space: normal;">@{{ element.name }}</p>
+                                        </div>
 
-                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="text-align: center">
                                             <el-progress type="circle" :percentage="element.percentage"></el-progress>
                                         </div>
 
@@ -225,9 +229,11 @@
                                             </el-row>
                                         </div>
 
-                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 element-container">@{{ element.name }}</div>
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 element-container">
+                                            <p style="white-space: normal;">@{{ element.name }}</p>
+                                        </div>
 
-                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="text-align: center">
                                             <el-progress type="circle" :percentage="element.percentage"></el-progress>
                                         </div>
 
@@ -281,9 +287,11 @@
                                             </el-row>
                                         </div>
 
-                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 element-container">@{{ element.name }}</div>
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 element-container">
+                                            <p style="white-space: normal;">@{{ element.name }}</p>
+                                        </div>
 
-                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="text-align: center">
                                             <el-progress type="circle" :percentage="element.percentage"></el-progress>
                                         </div>
 
