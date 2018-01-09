@@ -29,7 +29,7 @@
                             </div>
                         </div>
 
-                        <div class="row col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="row col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1 col-lg-10 col-md-10 col-sm-10 col-xs-10">
                             <hr>
                         </div>
                     </div>
