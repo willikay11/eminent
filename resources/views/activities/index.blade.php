@@ -64,7 +64,7 @@
                                 </el-col>
                             @endif
                             <el-col :xs="6" :sm="6" :md="3" :lg="2">
-                                <el-form-item prop="search" style="margin-top: 30px">
+                                <el-form-item prop="search" style="margin-top: 56px">
                                     <el-button type="primary" @click="searchActivities()">Search</el-button>
                                 </el-form-item>
                             </el-col>

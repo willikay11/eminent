@@ -107,13 +107,13 @@
                                 @endif()
 
                                 <el-col :xs="6" :sm="6" :md="3" :lg="2">
-                                    <el-form-item prop="search" style="margin-top: 30px">
+                                    <el-form-item prop="search" style="margin-top: 56px">
                                         <el-button type="primary" @click="searchContacts()">Search</el-button>
                                     </el-form-item>
                                 </el-col>
 
                                 <el-col :xs="6" :sm="6" :md="3" :lg="2">
-                                    <el-form-item prop="search" style="margin-top: 30px; margin-left: 20px">
+                                    <el-form-item prop="search" style="margin-top: 56px; margin-left: 20px">
                                         @if(in_array(8, getPermissions()))
                                             <el-button type="primary" @click="exportContacts()">Export</el-button>
                                         @endif
@@ -214,7 +214,7 @@
                         <el-dialog
                                 title="New/Edit Contact"
                                 :visible.sync="dialogVisible"
-                                size="large">
+                                width="80%">
                             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-position="left">
 
                                 <div class="form-item-container">
@@ -417,7 +417,7 @@
                         <el-dialog
                                 title="Assign User Contacts"
                                 :visible.sync="reassignContactsDialogVisible"
-                                size="small">
+                                width="70%">
                             <el-form :model="reassignForm" :rules="reassignRules" ref="reassignForm" label-position="top">
                                 <el-row :span="24" :gutter="20" style="margin-bottom: 10px">
                                     <el-col :xs="4" :sm="4" :md="4" :lg="4">
