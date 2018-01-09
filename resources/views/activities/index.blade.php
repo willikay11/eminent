@@ -87,7 +87,6 @@
                                             :move="showMove"
                                     @end="onEnd">
                                     <div class="dragElements" v-for="element in todo" :key="element.id">
-                                        <div>
                                             <el-row :span="24">
                                                 <el-col :span="12"><span v-if="element.priority_type == 'Low'"
                                                                          class="low-priority-span">Low Priority</span></el-col>
@@ -95,28 +94,37 @@
                                                 </el-col>
                                                 <el-col :span="12"><span v-if="element.priority_type == 'High'" class="high-priority-span">High Priority</span>
                                                 </el-col>
-                                                @if(in_array(23, getPermissions()))
-                                                    <el-col :span="12" style="text-align: right">
-                                                        <a href="#" @click="showTaskWatchDialog(element)"><i class="fa fa-eye" aria-hidden="true"></i></a>
-                                                    </el-col>
-                                                @endif
+                                                {{--@if(in_array(23, getPermissions()))--}}
+                                                    {{--<el-col :span="12" style="text-align: right">--}}
+                                                        {{--<a href="#" @click="showTaskWatchDialog(element)"><i class="fa fa-eye" aria-hidden="true"></i></a>--}}
+                                                    {{--</el-col>--}}
+                                                {{--@endif--}}
                                             </el-row>
+
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 element-container">@{{ element.name }}</div>
+
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <el-progress type="circle" :percentage="element.percentage"></el-progress>
                                         </div>
 
-                                        <div class="element-container">@{{ element.name }}</div>
-                                        <el-row :span="24" :gutter="20">
-                                            <el-col :span="4">
-                                                <el-badge :value="element.comments.length" class="item">
-                                                    <button class="btn comments-btn" @click="getSelectedTask(element)"><i
-                                                            class="fa fa-comment font-icon" aria-hidden="true"></i></button>
-                                                </el-badge>
-                                            </el-col>
-                                            <el-col :span="4">
-                                                <el-badge :value="element.countProgressUpdates" class="item">
-                                                    <button class="btn comments-btn" @click="showTaskProgress(element)"><i class="fa fa-tasks font-icon" aria-hidden="true"></i></button>
-                                                </el-badge>
-                                            </el-col>
-                                        </el-row>
+                                        <div class="row" style="text-align: center">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <el-button type="text" @click="openActivity(element)">View</el-button>
+                                            </div>
+                                            {{--<el-row :span="24" :gutter="20">--}}
+                                                {{--<el-col :span="4">--}}
+                                                    {{--<el-badge :value="element.comments.length" class="item">--}}
+                                                        {{--<button class="btn comments-btn" @click="getSelectedTask(element)"><i--}}
+                                                                {{--class="fa fa-comment font-icon" aria-hidden="true"></i></button>--}}
+                                                    {{--</el-badge>--}}
+                                                {{--</el-col>--}}
+                                                {{--<el-col :span="4">--}}
+                                                    {{--<el-badge :value="element.countProgressUpdates" class="item">--}}
+                                                        {{--<button class="btn comments-btn" @click="showTaskProgress(element)"><i class="fa fa-tasks font-icon" aria-hidden="true"></i></button>--}}
+                                                    {{--</el-badge>--}}
+                                                {{--</el-col>--}}
+                                            {{--</el-row>--}}
+                                        </div>
                                     </div>
                                     </draggable>
                                 </div>
@@ -156,20 +164,31 @@
                                             </el-row>
                                         </div>
 
-                                        <div class="element-container">@{{ element.name }}</div>
-                                        <el-row :span="24" :gutter="20">
-                                            <el-col :span="4">
-                                                <el-badge :value="element.comments.length" class="item">
-                                                    <button class="btn comments-btn" @click="getSelectedTask(element)"><i
-                                                            class="fa fa-comment font-icon" aria-hidden="true"></i></button>
-                                                </el-badge>
-                                            </el-col>
-                                            <el-col :span="4">
-                                                <el-badge :value="element.countProgressUpdates" class="item">
-                                                    <button class="btn comments-btn" @click="showTaskProgress(element)"><i class="fa fa-tasks font-icon" aria-hidden="true"></i></button>
-                                                </el-badge>
-                                            </el-col>
-                                        </el-row>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 element-container">@{{ element.name }}</div>
+
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <el-progress type="circle" :percentage="element.percentage"></el-progress>
+                                        </div>
+
+                                        <div class="row" style="text-align: center">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <el-button type="text" @click="openActivity(element)">View</el-button>
+                                            </div>
+                                        </div>
+
+                                        {{--<el-row :span="24" :gutter="20">--}}
+                                            {{--<el-col :span="4">--}}
+                                                {{--<el-badge :value="element.comments.length" class="item">--}}
+                                                    {{--<button class="btn comments-btn" @click="getSelectedTask(element)"><i--}}
+                                                            {{--class="fa fa-comment font-icon" aria-hidden="true"></i></button>--}}
+                                                {{--</el-badge>--}}
+                                            {{--</el-col>--}}
+                                            {{--<el-col :span="4">--}}
+                                                {{--<el-badge :value="element.countProgressUpdates" class="item">--}}
+                                                    {{--<button class="btn comments-btn" @click="showTaskProgress(element)"><i class="fa fa-tasks font-icon" aria-hidden="true"></i></button>--}}
+                                                {{--</el-badge>--}}
+                                            {{--</el-col>--}}
+                                        {{--</el-row>--}}
                                     </div>
                                     </draggable>
                                 </div>
@@ -206,20 +225,31 @@
                                             </el-row>
                                         </div>
 
-                                        <div class="element-container">@{{ element.name }}</div>
-                                        <el-row :span="24" :gutter="20">
-                                            <el-col :span="4">
-                                                <el-badge :value="element.comments.length" class="item">
-                                                    <button class="btn comments-btn" @click="getSelectedTask(element)"><i
-                                                            class="fa fa-comment font-icon" aria-hidden="true"></i></button>
-                                                </el-badge>
-                                            </el-col>
-                                            <el-col :span="4">
-                                                <el-badge :value="element.countProgressUpdates" class="item">
-                                                    <button class="btn comments-btn" @click="showTaskProgress(element)"><i class="fa fa-tasks font-icon" aria-hidden="true"></i></button>
-                                                </el-badge>
-                                            </el-col>
-                                        </el-row>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 element-container">@{{ element.name }}</div>
+
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <el-progress type="circle" :percentage="element.percentage"></el-progress>
+                                        </div>
+
+                                        <div class="row" style="text-align: center">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <el-button type="text" @click="openActivity(element)">View</el-button>
+                                            </div>
+                                        </div>
+
+                                        {{--<el-row :span="24" :gutter="20">--}}
+                                            {{--<el-col :span="4">--}}
+                                                {{--<el-badge :value="element.comments.length" class="item">--}}
+                                                    {{--<button class="btn comments-btn" @click="getSelectedTask(element)"><i--}}
+                                                            {{--class="fa fa-comment font-icon" aria-hidden="true"></i></button>--}}
+                                                {{--</el-badge>--}}
+                                            {{--</el-col>--}}
+                                            {{--<el-col :span="4">--}}
+                                                {{--<el-badge :value="element.countProgressUpdates" class="item">--}}
+                                                    {{--<button class="btn comments-btn" @click="showTaskProgress(element)"><i class="fa fa-tasks font-icon" aria-hidden="true"></i></button>--}}
+                                                {{--</el-badge>--}}
+                                            {{--</el-col>--}}
+                                        {{--</el-row>--}}
                                     </div>
                                     </draggable>
                                 </div>
@@ -250,20 +280,32 @@
                                                 </el-col>
                                             </el-row>
                                         </div>
-                                        <div class="element-container">@{{ element.name }}</div>
-                                        <el-row :span="24" :gutter="20">
-                                            <el-col :span="4">
-                                                <el-badge :value="element.comments.length" class="item">
-                                                    <button class="btn comments-btn" @click="getSelectedTask(element)"><i
-                                                            class="fa fa-comment font-icon" aria-hidden="true"></i></button>
-                                                </el-badge>
-                                            </el-col>
-                                            <el-col :span="4">
-                                                <el-badge :value="element.countProgressUpdates" class="item">
-                                                    <button class="btn comments-btn" @click="showTaskProgress(element)"><i class="fa fa-tasks font-icon" aria-hidden="true"></i></button>
-                                                </el-badge>
-                                            </el-col>
-                                        </el-row>
+
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 element-container">@{{ element.name }}</div>
+
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <el-progress type="circle" :percentage="element.percentage"></el-progress>
+                                        </div>
+
+                                        <div class="row" style="text-align: center">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <el-button type="text" @click="openActivity(element)">View</el-button>
+                                            </div>
+                                        </div>
+
+                                        {{--<el-row :span="24" :gutter="20">--}}
+                                            {{--<el-col :span="4">--}}
+                                                {{--<el-badge :value="element.comments.length" class="item">--}}
+                                                    {{--<button class="btn comments-btn" @click="getSelectedTask(element)"><i--}}
+                                                            {{--class="fa fa-comment font-icon" aria-hidden="true"></i></button>--}}
+                                                {{--</el-badge>--}}
+                                            {{--</el-col>--}}
+                                            {{--<el-col :span="4">--}}
+                                                {{--<el-badge :value="element.countProgressUpdates" class="item">--}}
+                                                    {{--<button class="btn comments-btn" @click="showTaskProgress(element)"><i class="fa fa-tasks font-icon" aria-hidden="true"></i></button>--}}
+                                                {{--</el-badge>--}}
+                                            {{--</el-col>--}}
+                                        {{--</el-row>--}}
                                     </div>
                                     </draggable>
                                 </div>

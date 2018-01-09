@@ -31,6 +31,9 @@
                                 <el-progress type="line" :percentage="event.percentage"></el-progress>
                             </div>
                         </span>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="text-align: center">
+                            <el-button type="text" @click="openActivity(event)">View</el-button>
+                        </div>
                     </div>
 
                     <div v-if="props.showEvents.length == 0" class="event-item">
@@ -86,6 +89,10 @@
                     }).catch(function (error) {
                     console.log(error);
                 })
+            },
+            openActivity(activity)
+            {
+                window.location.href = '/activity/'+activity.id
             }
         }
     }

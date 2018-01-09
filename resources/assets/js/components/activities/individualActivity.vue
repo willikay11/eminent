@@ -123,78 +123,89 @@
                     </el-tab-pane>
                     <el-tab-pane label="Comments" name="second">
 
-                        <el-popover
-                                ref="popover1"
-                                placement="top-start"
-                                title="Attach a file"
-                                width="500"
-                                trigger="click">
-                            <ul style="list-style:none">
-                                <el-upload
-                                        class="upload-demo"
-                                        ref="upload"
-                                        action="/activity/comment"
-                                        :data="data"
-                                        :on-change="checkIfFileIsSelected"
-                                        :on-remove="removeFileSelected"
-                                        :auto-upload="false">
-                                    <el-button slot="trigger" size="small" type="primary">Select</el-button>
-                                    <div class="el-upload__tip" slot="tip">files with a size less than 500kb</div>
-                                </el-upload>
-                            </ul>
-                        </el-popover>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="min-height: 500px; max-height: 800px; overflow: auto;">
 
-                        <ol class="chat" v-if="commentsData.length != 0">
-                            <div v-for="comment in commentsData">
+                            <el-popover
+                                    ref="popover1"
+                                    placement="top-start"
+                                    title="Attach a file"
+                                    width="500"
+                                    trigger="click">
+                                <ul style="list-style:none">
+                                    <el-upload
+                                            class="upload-demo"
+                                            ref="upload"
+                                            action="/activity/comment"
+                                            :data="data"
+                                            :on-change="checkIfFileIsSelected"
+                                            :on-remove="removeFileSelected"
+                                            :auto-upload="false">
+                                        <el-button slot="trigger" size="small" type="primary">Select</el-button>
+                                        <div class="el-upload__tip" slot="tip">files with a size less than 500kb</div>
+                                    </el-upload>
+                                </ul>
+                            </el-popover>
 
-                                <div v-if="comment.user_id == 5">
-                                    <li class="self">
-                                        <div class="avatar"><img :src="comment.avatar" draggable="false"/></div>
-                                        <div class="msg">
-                                            <p v-html="comment.comment"></p>
-                                            <div v-if="comment.files.length != 0">
-                                                <div v-for="file in comment.files">
-                                                    <img v-if="file.image == true" :src="file.path" draggable="false"/>
-                                                    <a v-if="file.image == false" class="edit" :href="file.path" download>
-                                                        <i class="fa fa-paperclip" aria-hidden="true"></i> &nbsp; {{ file.name
-                                                        }}</a>
+                            <ol class="chat" v-if="commentsData.length != 0">
+                                <div v-for="comment in commentsData">
+
+                                    <div v-if="comment.user_id == 5">
+                                        <li class="self">
+                                            <div class="avatar"><img :src="comment.avatar" draggable="false"/></div>
+                                            <div class="msg">
+                                                <p v-html="comment.comment"></p>
+                                                <div v-if="comment.files.length != 0">
+                                                    <div v-for="file in comment.files">
+                                                        <img v-if="file.image == true" :src="file.path" draggable="false"/>
+                                                        <a v-if="file.image == false" class="edit" :href="file.path" download>
+                                                            <i class="fa fa-paperclip" aria-hidden="true"></i> &nbsp; {{ file.name
+                                                            }}</a>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <time>{{ comment.time }}</time>
                                                 </div>
                                             </div>
-                                            <div>
-                                                <time>{{ comment.time }}</time>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </div>
+                                        </li>
+                                    </div>
 
-                                <div v-if="comment.user_id != 5">
-                                    <li class="other">
-                                        <div class="avatar"><img :src="comment.avatar" draggable="false"/></div>
-                                        <div class="msg">
-                                            <p class="name">{{ comment.username }}</p>
-                                            <p v-html="comment.comment"></p>
-                                            <div v-if="comment.files.length != 0">
-                                                <div v-for="file in comment.files">
-                                                    <img v-if="file.image == true" :src="file.path" draggable="false"/>
-                                                    <a v-if="file.image == false" class="edit" :href="file.path" download>
-                                                        <i class="fa fa-paperclip" aria-hidden="true"></i> &nbsp; {{ file.name
-                                                        }}</a>
+                                    <div v-if="comment.user_id != 5">
+                                        <li class="other">
+                                            <div class="avatar"><img :src="comment.avatar" draggable="false"/></div>
+                                            <div class="msg">
+                                                <p class="name">{{ comment.username }}</p>
+                                                <p v-html="comment.comment"></p>
+                                                <div v-if="comment.files.length != 0">
+                                                    <div v-for="file in comment.files">
+                                                        <img v-if="file.image == true" :src="file.path" draggable="false"/>
+                                                        <a v-if="file.image == false" class="edit" :href="file.path" download>
+                                                            <i class="fa fa-paperclip" aria-hidden="true"></i> &nbsp; {{ file.name
+                                                            }}</a>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <time>{{ comment.time }}</time>
                                                 </div>
                                             </div>
-                                            <div>
-                                                <time>{{ comment.time }}</time>
-                                            </div>
-                                        </div>
-                                    </li>
+                                        </li>
+                                    </div>
                                 </div>
+                            </ol>
+
+                            <div class="row" style="margin-bottom: 20px" v-if="commentsData.length == 0">
+                                <el-alert
+                                        title="No comments posted!"
+                                        type="info"
+                                        show-icon>
+                                </el-alert>
                             </div>
-                        </ol>
 
-                        <el-input placeholder="Please input" v-model="input">
-                            <el-button slot="prepend" v-popover:popover1>Attach</el-button>
-                            <el-button @click="postComment" slot="append">Post</el-button>
-                        </el-input>
+                            <el-input placeholder="Please input" v-model="input">
+                                <el-button slot="prepend" v-popover:popover1>Attach</el-button>
+                                <el-button @click="postComment" slot="append">Post</el-button>
+                            </el-input>
 
+                        </div>
                     </el-tab-pane>
                     <el-tab-pane label="Progress" name="third">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="min-height: 500px; max-height: 800px; overflow: auto;">
@@ -297,7 +308,7 @@
                                 <el-button type="primary" @click="showAddTaskProgress">Update Progress</el-button>
                             </div>
 
-                            <div class="form-item-container" v-for="progressUpdate in progressUpdateData">
+                            <div class="form-item-container" v-if="progressUpdateData.length != 0" v-for="progressUpdate in progressUpdateData">
                                 <el-card class="box-card" style="margin-bottom: 20px">
                                     <p>{{ progressUpdate.name }}</p>
                                     <p>{{ progressUpdate.description }}</p>
@@ -312,9 +323,16 @@
                                     </el-row>
                                 </el-card>
                             </div>
+
+                            <div class="row" style="margin-bottom: 20px" v-if="progressUpdateData.length == 0">
+                                <el-alert
+                                        title="No comments posted!"
+                                        type="info"
+                                        show-icon>
+                                </el-alert>
+                            </div>
                         </div>
                     </el-tab-pane>
-                    <el-tab-pane label="Task" name="fourth">Task</el-tab-pane>
                 </el-tabs>
             </div>
 

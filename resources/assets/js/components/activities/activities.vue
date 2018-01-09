@@ -604,6 +604,11 @@
 
                 container.scrollTop = container.scrollHeight;
             },
+
+            openActivity(activity)
+            {
+                window.location.href = '/activity/'+activity.id
+            }
         }
     }
 </script>

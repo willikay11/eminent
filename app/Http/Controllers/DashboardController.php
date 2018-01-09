@@ -133,7 +133,7 @@ class DashboardController extends Controller
                 'date' => Carbon::parse($monthlyTask->due_date)->format('Y/m/d'),
                 'formattedDate' => explode(',', Carbon::parse($monthlyTask->due_date)->toFormattedDateString())[0],
                 'status' => $monthlyTask->activity_status_id,
-                'days' => self::getDaysRemaining(Carbon::parse($monthlyTask->due_date)),
+                'days' => self::getDaysRemaining(Carbon::parse($monthlyTask->due_date)->endOfDay()),
                 'percentage' => ($monthlyTask->progressUpdates->last())?$monthlyTask->progressUpdates->last()->percentage:0
             ];
         });

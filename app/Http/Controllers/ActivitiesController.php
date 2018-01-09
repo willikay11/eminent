@@ -378,7 +378,8 @@ class ActivitiesController extends Controller
                 'comments' => $this->getActivityComments($activity->id),
                 'watchers' => $this->getActivityWatchers($activity->id),
                 'isWatcher' => ($this->activityWatcherRepository->getActivityWatcherByUserIdAndActivityId(Auth::id(), $activity->id) != null)?true:false,
-                'countProgressUpdates' =>$activity->progressUpdates->count()
+                'countProgressUpdates' =>$activity->progressUpdates->count(),
+                'percentage' => ($activity->progressUpdates->last())?$activity->progressUpdates->last()->percentage:0
             ];
         })->groupBy('activity_status');
 
@@ -516,7 +517,8 @@ class ActivitiesController extends Controller
                 'comments' => $this->getActivityComments($activity->id),
                 'watchers' => $this->getActivityWatchers($activity->id),
                 'isWatcher' => ($this->activityWatcherRepository->getActivityWatcherByUserIdAndActivityId(Auth::id(), $activity->id) != null)?true:false,
-                'countProgressUpdates' =>$activity->progressUpdates->count()
+                'countProgressUpdates' =>$activity->progressUpdates->count(),
+                'percentage' => ($activity->progressUpdates->last())?$activity->progressUpdates->last()->percentage:0
             ];
         })->groupBy('activity_status');
 

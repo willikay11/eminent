@@ -111333,6 +111333,10 @@ exports.default = {
             var container = vm.$el.querySelector(".el-dialog__body");
 
             container.scrollTop = container.scrollHeight;
+        },
+
+        openActivity: function openActivity(activity) {
+            window.location.href = '/activity/' + activity.id;
         }
     }
 };
@@ -112191,6 +112195,24 @@ exports.default = {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /***/ }),
 /* 328 */
@@ -112642,265 +112664,308 @@ var render = function() {
               { attrs: { label: "Comments", name: "second" } },
               [
                 _c(
-                  "el-popover",
+                  "div",
                   {
-                    ref: "popover1",
-                    attrs: {
-                      placement: "top-start",
-                      title: "Attach a file",
-                      width: "500",
-                      trigger: "click"
+                    staticClass: "col-lg-12 col-md-12 col-sm-12 col-xs-12",
+                    staticStyle: {
+                      "min-height": "500px",
+                      "max-height": "800px",
+                      overflow: "auto"
                     }
                   },
                   [
                     _c(
-                      "ul",
-                      { staticStyle: { "list-style": "none" } },
+                      "el-popover",
+                      {
+                        ref: "popover1",
+                        attrs: {
+                          placement: "top-start",
+                          title: "Attach a file",
+                          width: "500",
+                          trigger: "click"
+                        }
+                      },
                       [
                         _c(
-                          "el-upload",
-                          {
-                            ref: "upload",
-                            staticClass: "upload-demo",
-                            attrs: {
-                              action: "/activity/comment",
-                              data: _vm.data,
-                              "on-change": _vm.checkIfFileIsSelected,
-                              "on-remove": _vm.removeFileSelected,
-                              "auto-upload": false
-                            }
-                          },
+                          "ul",
+                          { staticStyle: { "list-style": "none" } },
                           [
                             _c(
-                              "el-button",
+                              "el-upload",
                               {
+                                ref: "upload",
+                                staticClass: "upload-demo",
                                 attrs: {
-                                  slot: "trigger",
-                                  size: "small",
-                                  type: "primary"
-                                },
-                                slot: "trigger"
+                                  action: "/activity/comment",
+                                  data: _vm.data,
+                                  "on-change": _vm.checkIfFileIsSelected,
+                                  "on-remove": _vm.removeFileSelected,
+                                  "auto-upload": false
+                                }
                               },
-                              [_vm._v("Select")]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "div",
-                              {
-                                staticClass: "el-upload__tip",
-                                attrs: { slot: "tip" },
-                                slot: "tip"
-                              },
-                              [_vm._v("files with a size less than 500kb")]
+                              [
+                                _c(
+                                  "el-button",
+                                  {
+                                    attrs: {
+                                      slot: "trigger",
+                                      size: "small",
+                                      type: "primary"
+                                    },
+                                    slot: "trigger"
+                                  },
+                                  [_vm._v("Select")]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass: "el-upload__tip",
+                                    attrs: { slot: "tip" },
+                                    slot: "tip"
+                                  },
+                                  [_vm._v("files with a size less than 500kb")]
+                                )
+                              ],
+                              1
                             )
                           ],
                           1
                         )
-                      ],
-                      1
-                    )
-                  ]
-                ),
-                _vm._v(" "),
-                _vm.commentsData.length != 0
-                  ? _c(
-                      "ol",
-                      { staticClass: "chat" },
-                      _vm._l(_vm.commentsData, function(comment) {
-                        return _c("div", [
-                          comment.user_id == 5
-                            ? _c("div", [
-                                _c("li", { staticClass: "self" }, [
-                                  _c("div", { staticClass: "avatar" }, [
-                                    _c("img", {
-                                      attrs: {
-                                        src: comment.avatar,
-                                        draggable: "false"
-                                      }
-                                    })
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "msg" }, [
-                                    _c("p", {
-                                      domProps: {
-                                        innerHTML: _vm._s(comment.comment)
-                                      }
-                                    }),
-                                    _vm._v(" "),
-                                    comment.files.length != 0
-                                      ? _c(
-                                          "div",
-                                          _vm._l(comment.files, function(file) {
-                                            return _c("div", [
-                                              file.image == true
-                                                ? _c("img", {
-                                                    attrs: {
-                                                      src: file.path,
-                                                      draggable: "false"
-                                                    }
-                                                  })
-                                                : _vm._e(),
-                                              _vm._v(" "),
-                                              file.image == false
-                                                ? _c(
-                                                    "a",
-                                                    {
-                                                      staticClass: "edit",
-                                                      attrs: {
-                                                        href: file.path,
-                                                        download: ""
-                                                      }
-                                                    },
-                                                    [
-                                                      _c("i", {
-                                                        staticClass:
-                                                          "fa fa-paperclip",
-                                                        attrs: {
-                                                          "aria-hidden": "true"
-                                                        }
-                                                      }),
-                                                      _vm._v(
-                                                        "   " +
-                                                          _vm._s(file.name)
-                                                      )
-                                                    ]
-                                                  )
-                                                : _vm._e()
-                                            ])
-                                          })
-                                        )
-                                      : _vm._e(),
-                                    _vm._v(" "),
-                                    _c("div", [
-                                      _c("time", [_vm._v(_vm._s(comment.time))])
-                                    ])
-                                  ])
-                                ])
-                              ])
-                            : _vm._e(),
-                          _vm._v(" "),
-                          comment.user_id != 5
-                            ? _c("div", [
-                                _c("li", { staticClass: "other" }, [
-                                  _c("div", { staticClass: "avatar" }, [
-                                    _c("img", {
-                                      attrs: {
-                                        src: comment.avatar,
-                                        draggable: "false"
-                                      }
-                                    })
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "msg" }, [
-                                    _c("p", { staticClass: "name" }, [
-                                      _vm._v(_vm._s(comment.username))
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("p", {
-                                      domProps: {
-                                        innerHTML: _vm._s(comment.comment)
-                                      }
-                                    }),
-                                    _vm._v(" "),
-                                    comment.files.length != 0
-                                      ? _c(
-                                          "div",
-                                          _vm._l(comment.files, function(file) {
-                                            return _c("div", [
-                                              file.image == true
-                                                ? _c("img", {
-                                                    attrs: {
-                                                      src: file.path,
-                                                      draggable: "false"
-                                                    }
-                                                  })
-                                                : _vm._e(),
-                                              _vm._v(" "),
-                                              file.image == false
-                                                ? _c(
-                                                    "a",
-                                                    {
-                                                      staticClass: "edit",
-                                                      attrs: {
-                                                        href: file.path,
-                                                        download: ""
-                                                      }
-                                                    },
-                                                    [
-                                                      _c("i", {
-                                                        staticClass:
-                                                          "fa fa-paperclip",
-                                                        attrs: {
-                                                          "aria-hidden": "true"
-                                                        }
-                                                      }),
-                                                      _vm._v(
-                                                        "   " +
-                                                          _vm._s(file.name)
-                                                      )
-                                                    ]
-                                                  )
-                                                : _vm._e()
-                                            ])
-                                          })
-                                        )
-                                      : _vm._e(),
-                                    _vm._v(" "),
-                                    _c("div", [
-                                      _c("time", [_vm._v(_vm._s(comment.time))])
-                                    ])
-                                  ])
-                                ])
-                              ])
-                            : _vm._e()
-                        ])
-                      })
-                    )
-                  : _vm._e(),
-                _vm._v(" "),
-                _c(
-                  "el-input",
-                  {
-                    attrs: { placeholder: "Please input" },
-                    model: {
-                      value: _vm.input,
-                      callback: function($$v) {
-                        _vm.input = $$v
-                      },
-                      expression: "input"
-                    }
-                  },
-                  [
-                    _c(
-                      "el-button",
-                      {
-                        directives: [
-                          {
-                            name: "popover",
-                            rawName: "v-popover:popover1",
-                            arg: "popover1"
-                          }
-                        ],
-                        attrs: { slot: "prepend" },
-                        slot: "prepend"
-                      },
-                      [_vm._v("Attach")]
+                      ]
                     ),
                     _vm._v(" "),
+                    _vm.commentsData.length != 0
+                      ? _c(
+                          "ol",
+                          { staticClass: "chat" },
+                          _vm._l(_vm.commentsData, function(comment) {
+                            return _c("div", [
+                              comment.user_id == 5
+                                ? _c("div", [
+                                    _c("li", { staticClass: "self" }, [
+                                      _c("div", { staticClass: "avatar" }, [
+                                        _c("img", {
+                                          attrs: {
+                                            src: comment.avatar,
+                                            draggable: "false"
+                                          }
+                                        })
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("div", { staticClass: "msg" }, [
+                                        _c("p", {
+                                          domProps: {
+                                            innerHTML: _vm._s(comment.comment)
+                                          }
+                                        }),
+                                        _vm._v(" "),
+                                        comment.files.length != 0
+                                          ? _c(
+                                              "div",
+                                              _vm._l(comment.files, function(
+                                                file
+                                              ) {
+                                                return _c("div", [
+                                                  file.image == true
+                                                    ? _c("img", {
+                                                        attrs: {
+                                                          src: file.path,
+                                                          draggable: "false"
+                                                        }
+                                                      })
+                                                    : _vm._e(),
+                                                  _vm._v(" "),
+                                                  file.image == false
+                                                    ? _c(
+                                                        "a",
+                                                        {
+                                                          staticClass: "edit",
+                                                          attrs: {
+                                                            href: file.path,
+                                                            download: ""
+                                                          }
+                                                        },
+                                                        [
+                                                          _c("i", {
+                                                            staticClass:
+                                                              "fa fa-paperclip",
+                                                            attrs: {
+                                                              "aria-hidden":
+                                                                "true"
+                                                            }
+                                                          }),
+                                                          _vm._v(
+                                                            "   " +
+                                                              _vm._s(file.name)
+                                                          )
+                                                        ]
+                                                      )
+                                                    : _vm._e()
+                                                ])
+                                              })
+                                            )
+                                          : _vm._e(),
+                                        _vm._v(" "),
+                                        _c("div", [
+                                          _c("time", [
+                                            _vm._v(_vm._s(comment.time))
+                                          ])
+                                        ])
+                                      ])
+                                    ])
+                                  ])
+                                : _vm._e(),
+                              _vm._v(" "),
+                              comment.user_id != 5
+                                ? _c("div", [
+                                    _c("li", { staticClass: "other" }, [
+                                      _c("div", { staticClass: "avatar" }, [
+                                        _c("img", {
+                                          attrs: {
+                                            src: comment.avatar,
+                                            draggable: "false"
+                                          }
+                                        })
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("div", { staticClass: "msg" }, [
+                                        _c("p", { staticClass: "name" }, [
+                                          _vm._v(_vm._s(comment.username))
+                                        ]),
+                                        _vm._v(" "),
+                                        _c("p", {
+                                          domProps: {
+                                            innerHTML: _vm._s(comment.comment)
+                                          }
+                                        }),
+                                        _vm._v(" "),
+                                        comment.files.length != 0
+                                          ? _c(
+                                              "div",
+                                              _vm._l(comment.files, function(
+                                                file
+                                              ) {
+                                                return _c("div", [
+                                                  file.image == true
+                                                    ? _c("img", {
+                                                        attrs: {
+                                                          src: file.path,
+                                                          draggable: "false"
+                                                        }
+                                                      })
+                                                    : _vm._e(),
+                                                  _vm._v(" "),
+                                                  file.image == false
+                                                    ? _c(
+                                                        "a",
+                                                        {
+                                                          staticClass: "edit",
+                                                          attrs: {
+                                                            href: file.path,
+                                                            download: ""
+                                                          }
+                                                        },
+                                                        [
+                                                          _c("i", {
+                                                            staticClass:
+                                                              "fa fa-paperclip",
+                                                            attrs: {
+                                                              "aria-hidden":
+                                                                "true"
+                                                            }
+                                                          }),
+                                                          _vm._v(
+                                                            "   " +
+                                                              _vm._s(file.name)
+                                                          )
+                                                        ]
+                                                      )
+                                                    : _vm._e()
+                                                ])
+                                              })
+                                            )
+                                          : _vm._e(),
+                                        _vm._v(" "),
+                                        _c("div", [
+                                          _c("time", [
+                                            _vm._v(_vm._s(comment.time))
+                                          ])
+                                        ])
+                                      ])
+                                    ])
+                                  ])
+                                : _vm._e()
+                            ])
+                          })
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.commentsData.length == 0
+                      ? _c(
+                          "div",
+                          {
+                            staticClass: "row",
+                            staticStyle: { "margin-bottom": "20px" }
+                          },
+                          [
+                            _c("el-alert", {
+                              attrs: {
+                                title: "No comments posted!",
+                                type: "info",
+                                "show-icon": ""
+                              }
+                            })
+                          ],
+                          1
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
                     _c(
-                      "el-button",
+                      "el-input",
                       {
-                        attrs: { slot: "append" },
-                        on: { click: _vm.postComment },
-                        slot: "append"
+                        attrs: { placeholder: "Please input" },
+                        model: {
+                          value: _vm.input,
+                          callback: function($$v) {
+                            _vm.input = $$v
+                          },
+                          expression: "input"
+                        }
                       },
-                      [_vm._v("Post")]
+                      [
+                        _c(
+                          "el-button",
+                          {
+                            directives: [
+                              {
+                                name: "popover",
+                                rawName: "v-popover:popover1",
+                                arg: "popover1"
+                              }
+                            ],
+                            attrs: { slot: "prepend" },
+                            slot: "prepend"
+                          },
+                          [_vm._v("Attach")]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "el-button",
+                          {
+                            attrs: { slot: "append" },
+                            on: { click: _vm.postComment },
+                            slot: "append"
+                          },
+                          [_vm._v("Post")]
+                        )
+                      ],
+                      1
                     )
                   ],
                   1
                 )
-              ],
-              1
+              ]
             ),
             _vm._v(" "),
             _c("el-tab-pane", { attrs: { label: "Progress", name: "third" } }, [
@@ -113328,94 +113393,114 @@ var render = function() {
                   ),
                   _vm._v(" "),
                   _vm._l(_vm.progressUpdateData, function(progressUpdate) {
-                    return _c(
-                      "div",
-                      { staticClass: "form-item-container" },
-                      [
-                        _c(
-                          "el-card",
-                          {
-                            staticClass: "box-card",
-                            staticStyle: { "margin-bottom": "20px" }
-                          },
+                    return _vm.progressUpdateData.length != 0
+                      ? _c(
+                          "div",
+                          { staticClass: "form-item-container" },
                           [
-                            _c("p", [_vm._v(_vm._s(progressUpdate.name))]),
-                            _vm._v(" "),
-                            _c("p", [
-                              _vm._v(_vm._s(progressUpdate.description))
-                            ]),
-                            _vm._v(" "),
-                            _c("el-progress", {
-                              attrs: { percentage: progressUpdate.percentage }
-                            }),
-                            _vm._v(" "),
-                            _c("hr"),
-                            _vm._v(" "),
                             _c(
-                              "el-row",
-                              { attrs: { span: 24, gutter: 20 } },
+                              "el-card",
+                              {
+                                staticClass: "box-card",
+                                staticStyle: { "margin-bottom": "20px" }
+                              },
                               [
-                                progressUpdate.progress_files.length != 0
-                                  ? _c(
-                                      "el-col",
-                                      { attrs: { span: 2 } },
-                                      [
-                                        _c(
-                                          "el-badge",
-                                          {
-                                            staticClass: "item",
-                                            attrs: {
-                                              value:
-                                                progressUpdate.progress_files
-                                                  .length
-                                            }
-                                          },
+                                _c("p", [_vm._v(_vm._s(progressUpdate.name))]),
+                                _vm._v(" "),
+                                _c("p", [
+                                  _vm._v(_vm._s(progressUpdate.description))
+                                ]),
+                                _vm._v(" "),
+                                _c("el-progress", {
+                                  attrs: {
+                                    percentage: progressUpdate.percentage
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("hr"),
+                                _vm._v(" "),
+                                _c(
+                                  "el-row",
+                                  { attrs: { span: 24, gutter: 20 } },
+                                  [
+                                    progressUpdate.progress_files.length != 0
+                                      ? _c(
+                                          "el-col",
+                                          { attrs: { span: 2 } },
                                           [
                                             _c(
-                                              "button",
+                                              "el-badge",
                                               {
-                                                staticClass: "btn",
-                                                on: {
-                                                  click: function($event) {
-                                                    _vm.showTaskProgressFiles(
-                                                      progressUpdate.progress_files
-                                                    )
-                                                  }
+                                                staticClass: "item",
+                                                attrs: {
+                                                  value:
+                                                    progressUpdate
+                                                      .progress_files.length
                                                 }
                                               },
                                               [
-                                                _c("i", {
-                                                  staticClass:
-                                                    "fa fa-file font-icon",
-                                                  attrs: {
-                                                    "aria-hidden": "true"
-                                                  }
-                                                })
+                                                _c(
+                                                  "button",
+                                                  {
+                                                    staticClass: "btn",
+                                                    on: {
+                                                      click: function($event) {
+                                                        _vm.showTaskProgressFiles(
+                                                          progressUpdate.progress_files
+                                                        )
+                                                      }
+                                                    }
+                                                  },
+                                                  [
+                                                    _c("i", {
+                                                      staticClass:
+                                                        "fa fa-file font-icon",
+                                                      attrs: {
+                                                        "aria-hidden": "true"
+                                                      }
+                                                    })
+                                                  ]
+                                                )
                                               ]
                                             )
-                                          ]
+                                          ],
+                                          1
                                         )
-                                      ],
-                                      1
-                                    )
-                                  : _vm._e()
+                                      : _vm._e()
+                                  ],
+                                  1
+                                )
                               ],
                               1
                             )
                           ],
                           1
                         )
-                      ],
-                      1
-                    )
-                  })
+                      : _vm._e()
+                  }),
+                  _vm._v(" "),
+                  _vm.progressUpdateData.length == 0
+                    ? _c(
+                        "div",
+                        {
+                          staticClass: "row",
+                          staticStyle: { "margin-bottom": "20px" }
+                        },
+                        [
+                          _c("el-alert", {
+                            attrs: {
+                              title: "No comments posted!",
+                              type: "info",
+                              "show-icon": ""
+                            }
+                          })
+                        ],
+                        1
+                      )
+                    : _vm._e()
                 ],
                 2
               )
-            ]),
-            _vm._v(" "),
-            _c("el-tab-pane", { attrs: { label: "Task", name: "fourth" } }, [
-              _vm._v("Task")
             ])
           ],
           1
@@ -115861,6 +115946,9 @@ Object.defineProperty(exports, "__esModule", {
 //
 //
 //
+//
+//
+//
 
 var today = new Date();
 exports.default = {
@@ -115903,6 +115991,9 @@ exports.default = {
             }).catch(function (error) {
                 console.log(error);
             });
+        },
+        openActivity: function openActivity(activity) {
+            window.location.href = '/activity/' + activity.id;
         }
     }
 };
@@ -116024,6 +116115,30 @@ var render = function() {
                                     1
                                   )
                                 ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                {
+                                  staticClass:
+                                    "col-lg-12 col-md-12 col-sm-12 col-xs-12",
+                                  staticStyle: { "text-align": "center" }
+                                },
+                                [
+                                  _c(
+                                    "el-button",
+                                    {
+                                      attrs: { type: "text" },
+                                      on: {
+                                        click: function($event) {
+                                          _vm.openActivity(event)
+                                        }
+                                      }
+                                    },
+                                    [_vm._v("View")]
+                                  )
+                                ],
+                                1
                               )
                             ]
                           )
