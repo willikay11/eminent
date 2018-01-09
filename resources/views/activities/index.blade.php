@@ -158,11 +158,11 @@
                                                 </el-col>
                                                 <el-col :span="12"><span v-if="element.priority_type == 'High'" class="high-priority-span">High Priority</span>
                                                 </el-col>
-                                                @if(in_array(23, getPermissions()))
-                                                    <el-col :span="12" style="text-align: right">
-                                                        <a href="#" @click="showTaskWatchDialog(element)"><i class="fa fa-eye" aria-hidden="true"></i></a>
-                                                    </el-col>
-                                                @endif
+                                                {{--@if(in_array(23, getPermissions()))--}}
+                                                    {{--<el-col :span="12" style="text-align: right">--}}
+                                                        {{--<a href="#" @click="showTaskWatchDialog(element)"><i class="fa fa-eye" aria-hidden="true"></i></a>--}}
+                                                    {{--</el-col>--}}
+                                                {{--@endif--}}
                                             </el-row>
                                         </div>
 
@@ -221,11 +221,11 @@
                                                 </el-col>
                                                 <el-col :span="12"><span v-if="element.priority_type == 'High'" class="high-priority-span">High Priority</span>
                                                 </el-col>
-                                                @if(in_array(23, getPermissions()))
-                                                    <el-col :span="12" style="text-align: right">
-                                                        <a href="#" @click="showTaskWatchDialog(element)"><i class="fa fa-eye" aria-hidden="true"></i></a>
-                                                    </el-col>
-                                                @endif
+                                                {{--@if(in_array(23, getPermissions()))--}}
+                                                    {{--<el-col :span="12" style="text-align: right">--}}
+                                                        {{--<a href="#" @click="showTaskWatchDialog(element)"><i class="fa fa-eye" aria-hidden="true"></i></a>--}}
+                                                    {{--</el-col>--}}
+                                                {{--@endif--}}
                                             </el-row>
                                         </div>
 

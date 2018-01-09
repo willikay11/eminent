@@ -671,7 +671,7 @@
 
     .in-progress-panel {
         border-color: transparent;
-        border-top: 5px solid #f5a622;
+        border-top: 5px solid #f5a622 !important;
         background-color: #f7f8fc !important;
     }
 
