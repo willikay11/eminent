@@ -40,7 +40,5 @@ class CheckReminders extends Command
     public function handle()
     {
         SchedulerEventReminder::sendReminders();
-
-        \Log::info(Carbon::now());
     }
 }
