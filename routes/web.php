@@ -395,6 +395,16 @@ Route::group(['middleware' => 'auth'], function (){
     ]);
 
     /*
+     * Reports
+     */
+    Route::get('/api/reports', [
+        'uses' => 'ReportController@getReports'
+    ]);
+
+    Route::get('/reports', [
+        'uses' => 'ReportController@index'
+    ]);
+    /*
      * Feedback
      */
     Route::post('/post/feedback', [

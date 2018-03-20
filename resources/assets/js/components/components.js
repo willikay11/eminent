@@ -42,6 +42,8 @@ Vue.component('flash-message', require('./general/flashMessage.vue'));
 
 Vue.component('account', require('./general/account.vue'));
 
+Vue.component('reportsTable', require('./reports/reportsTable.vue'));
+
 Vue.component('feedback', require('./general/feedback.vue'));
 
 Vue.component('calendar', require('./dashboards/calendar.vue'));

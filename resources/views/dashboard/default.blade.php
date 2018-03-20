@@ -27,12 +27,12 @@
                         Interactions
                     </a>
                 </li>
-                {{--<li>--}}
-                    {{--<a href="#">--}}
-                        {{--<i class="glyphicon glyphicon-link"></i>--}}
-                        {{--Reports--}}
-                    {{--</a>--}}
-                {{--</li>--}}
+                <li>
+                    <a href="/reports">
+                        <i class="glyphicon glyphicon-link"></i>
+                        Reports
+                    </a>
+                </li>
                 <li>
                     <a href="/activities">
                         <i class="glyphicon glyphicon-paperclip"></i>
