@@ -24,7 +24,11 @@ class ReportController extends Controller
 
     protected $completed;
 
-    protected $notCompleted;
+    protected $todo;
+
+    protected $ongoing;
+
+    protected $review;
 
     public function __construct()
     {
@@ -83,17 +87,23 @@ class ReportController extends Controller
         collect($dates)->map(function($date) use ($activities)
         {
             $this->labels[] = Carbon::parse($date)->format('Y-m-d');
+            $this->todo[] = $activities->where('updated_at', '>=',Carbon::parse($date)->startOfDay())->where('updated_at', '<=',Carbon::parse($date)->endOfDay())->where('activity_status_id', 1)->count();
+            $this->ongoing[] = $activities->where('updated_at', '>=',Carbon::parse($date)->startOfDay())->where('updated_at', '<=',Carbon::parse($date)->endOfDay())->where('activity_status_id', 2)->count();
+            $this->review[] = $activities->where('updated_at', '>=',Carbon::parse($date)->toDateString())->where('updated_at', '<=',Carbon::parse($date)->endOfDay())->where('activity_status_id',3)->count();
             $this->completed[] = $activities->where('updated_at', '>=',Carbon::parse($date)->startOfDay())->where('updated_at', '<=',Carbon::parse($date)->endOfDay())->where('activity_status_id', 4)->count();
-            $this->notCompleted[] = $activities->where('updated_at', '>=',Carbon::parse($date)->toDateString())->where('updated_at', '<=',Carbon::parse($date)->endOfDay())->where('activity_status_id', '!=',4)->count();
 
         });
 
         $data = [
             'labels' => $this->labels,
+            'todoLabel' => 'Todo',
+            'todo' => $this->todo,
+            'ongoingLabel' => 'Ongoing',
+            'ongoing' => $this->ongoing,
+            'reviewLabel' => 'Review',
+            'review' => $this->review,
             'completedLabel' => 'Completed',
             'completed' => $this->completed,
-            'notCompletedLabel' => 'Not Completed',
-            'notCompleted' => $this->notCompleted,
         ];
 
         return $this->toResponse(null, [

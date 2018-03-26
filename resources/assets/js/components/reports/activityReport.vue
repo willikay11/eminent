@@ -55,8 +55,8 @@
                         label: "",
                         fill: false,
                         lineTension: 0.2,
-                        backgroundColor: "rgba(86, 137, 240, 1)",
-                        borderColor: "rgba(25, 82, 194, 1)",
+                        backgroundColor: "rgba(255, 189, 209, 1)",
+                        borderColor: "rgba(228, 62, 82, 1)",
                         borderCapStyle: 'butt',
                         borderDash: [],
                         borderDashOffset: 0.0,
@@ -65,8 +65,8 @@
                         pointBackgroundColor: "#fff",
                         pointBorderWidth: 1,
                         pointHoverRadius: 5,
-                        pointHoverBackgroundColor: "rgba(25, 82, 194, 1)",
-                        pointHoverBorderColor: "rgba(86, 137, 240, 1)",
+                        pointHoverBackgroundColor: "rgba(228, 62, 82, 1)",
+                        pointHoverBorderColor: "rgba(255, 189, 209, 1)",
                         pointHoverBorderWidth: 2,
                         pointRadius: 1,
                         pointHitRadius: 10,
@@ -77,8 +77,8 @@
                             label: "",
                             fill: false,
                             lineTension: 0.1,
-                            backgroundColor: "rgba(255, 15, 15, 0.74)",
-                            borderColor: "rgba(255, 15, 15, 1)",
+                            backgroundColor: "rgba(255, 255, 137, 1)",
+                            borderColor: "rgba(245, 166, 35, 1)",
                             borderCapStyle: 'butt',
                             borderDash: [],
                             borderDashOffset: 0.0,
@@ -87,14 +87,59 @@
                             pointBackgroundColor: "#fff",
                             pointBorderWidth: 1,
                             pointHoverRadius: 5,
-                            pointHoverBackgroundColor: "rgba(255, 15, 15, 1)",
-                            pointHoverBorderColor: "rgba(255, 15, 15, 0.74)",
+                            pointHoverBackgroundColor: "rgba(245, 166, 35, 1)",
+                            pointHoverBorderColor: "rgba(255, 255, 137, 1)",
                             pointHoverBorderWidth: 2,
                             pointRadius: 1,
                             pointHitRadius: 10,
                             data: [],
                             spanGaps: false,
-                        }],
+                        },
+                        {
+                            label: "",
+                            fill: false,
+                            lineTension: 0.1,
+                            backgroundColor: "rgba(125, 194, 255, 1)",
+                            borderColor: "rgba(74, 143, 227, 1)",
+                            borderCapStyle: 'butt',
+                            borderDash: [],
+                            borderDashOffset: 0.0,
+                            borderJoinStyle: 'miter',
+                            pointBorderColor: "rgba(75,192,192,1)",
+                            pointBackgroundColor: "#fff",
+                            pointBorderWidth: 1,
+                            pointHoverRadius: 5,
+                            pointHoverBackgroundColor: "rgba(74, 143, 227, 1)",
+                            pointHoverBorderColor: "rgba(125, 194, 255, 1)",
+                            pointHoverBorderWidth: 2,
+                            pointRadius: 1,
+                            pointHitRadius: 10,
+                            data: [],
+                            spanGaps: false,
+                        },
+                        {
+                            label: "",
+                            fill: false,
+                            lineTension: 0.1,
+                            backgroundColor: "rgba(95, 213, 152, 1)",
+                            borderColor: "rgba(18, 136, 75, 1)",
+                            borderCapStyle: 'butt',
+                            borderDash: [],
+                            borderDashOffset: 0.0,
+                            borderJoinStyle: 'miter',
+                            pointBorderColor: "rgba(75,192,192,1)",
+                            pointBackgroundColor: "#fff",
+                            pointBorderWidth: 1,
+                            pointHoverRadius: 5,
+                            pointHoverBackgroundColor: "rgba(18, 136, 75, 1)",
+                            pointHoverBorderColor: "rgba(95, 213, 152, 1)",
+                            pointHoverBorderWidth: 2,
+                            pointRadius: 1,
+                            pointHitRadius: 10,
+                            data: [],
+                            spanGaps: false,
+                        }
+                    ],
                 loading: false,
                 startDate: moment().subtract(7, 'days').calendar(),
                 endDate: moment(),
@@ -126,10 +171,14 @@
                 })
                     .then(function (response) {
                         vm.labels = response.data.activities.labels;
-                        vm.mydatasets[0].data = response.data.activities.completed;
-                        vm.mydatasets[0].label = response.data.activities.completedLabel;
-                        vm.mydatasets[1].data = response.data.activities.notCompleted;
-                        vm.mydatasets[1].label = response.data.activities.notCompletedLabel;
+                        vm.mydatasets[0].data = response.data.activities.todo;
+                        vm.mydatasets[0].label = response.data.activities.todoLabel;
+                        vm.mydatasets[1].data = response.data.activities.ongoing;
+                        vm.mydatasets[1].label = response.data.activities.ongoingLabel;
+                        vm.mydatasets[2].data = response.data.activities.review;
+                        vm.mydatasets[2].label = response.data.activities.reviewLabel;
+                        vm.mydatasets[3].data = response.data.activities.completed;
+                        vm.mydatasets[3].label = response.data.activities.completedLabel;
                         vm.loading = false;
                     }).catch(function (error) {
                     console.log(error);
