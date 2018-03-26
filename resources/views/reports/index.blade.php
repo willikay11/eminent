@@ -34,6 +34,9 @@
                             <el-table-column
                                     prop=""
                                     label="Actions">
+                                <template slot-scope="scope">
+                                    <el-button @click="viewReport(scope.row)" size="small">View</el-button>
+                                </template>
                             </el-table-column>
                         </el-table>
                     </div>

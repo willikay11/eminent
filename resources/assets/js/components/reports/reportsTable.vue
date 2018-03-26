@@ -50,6 +50,11 @@
                 let vm = this;
 
                 vm.getInteractions(val);
+            },
+
+            viewReport(report)
+            {
+                window.location.href = '/report/'+report.id+'/';
             }
         }
     }

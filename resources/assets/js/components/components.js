@@ -44,6 +44,10 @@ Vue.component('account', require('./general/account.vue'));
 
 Vue.component('reportsTable', require('./reports/reportsTable.vue'));
 
+Vue.component('employeeTable', require('./reports/employeeTable.vue'));
+
+Vue.component('activityReport', require('./reports/activityReport.vue'));
+
 Vue.component('feedback', require('./general/feedback.vue'));
 
 Vue.component('calendar', require('./dashboards/calendar.vue'));

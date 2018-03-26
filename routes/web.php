@@ -404,6 +404,17 @@ Route::group(['middleware' => 'auth'], function (){
     Route::get('/reports', [
         'uses' => 'ReportController@index'
     ]);
+
+    Route::get('/report/{id}', [
+        'uses' => 'ReportController@viewUsers'
+    ]);
+
+    Route::get('/report/{id}/user/{userId}', [
+        'uses' => 'ReportController@viewUserReport'
+    ]);
+    Route::post('/api/activity/report', [
+        'uses' => 'ReportController@getActivityReportData'
+    ]);
     /*
      * Feedback
      */

@@ -56,6 +56,12 @@ import 'v-calendar/lib/v-calendar.min.css';
 // Access v-calendar, v-date-packer and v-popover components
 Vue.use(VCalendar);
 
+// chartjs package
+require('chart.js');
+require('hchs-vue-charts');
+
+Vue.use(VueCharts);
+
 /**
  * Next we will register the CSRF Token as a common header with Axios so that
  * all outgoing HTTP requests automatically have it attached. This is just

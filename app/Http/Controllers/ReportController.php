@@ -10,12 +10,21 @@ namespace App\Http\Controllers;
 
 
 use eminent\API\SortFilterPaginate;
+use eminent\Models\Activity;
 use eminent\Models\Report;
+use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class ReportController extends Controller
 {
 
     use SortFilterPaginate;
+
+    protected $labels;
+
+    protected $completed;
+
+    protected $notCompleted;
 
     public function __construct()
     {
@@ -44,6 +53,54 @@ class ReportController extends Controller
     public function index()
     {
         return view('reports.index');
+    }
+
+    public function viewUsers($id)
+    {
+        return view('reports.users', ['id' => $id]);
+    }
+
+    public function viewUserReport($id, $userId)
+    {
+        return view('reports.report', ['reportId' => $id, 'userId' => $userId]);
+    }
+
+    public function getActivityReportData(Request $request)
+    {
+        $startDate = $request->get('start_date');
+
+        $endDate = $request->get('end_date');
+
+        $userId = $request->get('user_id');
+
+        $activities = Activity::where('updated_at', '>=', Carbon::parse($startDate))
+                ->where('updated_at', '<=', Carbon::parse($endDate))
+                ->where('user_id', $userId)
+                ->get();
+
+        $dates = $activities->pluck('updated_at');
+
+        collect($dates)->map(function($date) use ($activities)
+        {
+            $this->labels[] = Carbon::parse($date)->format('Y-m-d');
+            $this->completed[] = $activities->where('updated_at', '>=',Carbon::parse($date)->startOfDay())->where('updated_at', '<=',Carbon::parse($date)->endOfDay())->where('activity_status_id', 4)->count();
+            $this->notCompleted[] = $activities->where('updated_at', '>=',Carbon::parse($date)->toDateString())->where('updated_at', '<=',Carbon::parse($date)->endOfDay())->where('activity_status_id', '!=',4)->count();
+
+        });
+
+        $data = [
+            'labels' => $this->labels,
+            'completedLabel' => 'Completed',
+            'completed' => $this->completed,
+            'notCompletedLabel' => 'Not Completed',
+            'notCompleted' => $this->notCompleted,
+        ];
+
+        return $this->toResponse(null, [
+            'success' => true,
+            'activities' => $data,
+            'message' => 'Search Completed'
+        ]);
     }
 
     public function toResponse($request = null, $data)
