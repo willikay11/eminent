@@ -1,5 +1,6 @@
 <script>
     export default {
+        props: ['userId'],
         data() {
             return {
                 data: [],
@@ -18,13 +19,13 @@
 
                 vm.loading = true;
 
-//                axios.get('/api/dashboard/cards')
-//                    .then(function (response) {
-//                        vm.data = response.data;
-//                        vm.loading = false;
-//                    }).catch(function (error) {
-//                    console.log(error);
-//                })
+                axios.get('/api/dashboard/cards/'+vm.userId)
+                    .then(function (response) {
+                        vm.data = response.data.data;
+                        vm.loading = false;
+                    }).catch(function (error) {
+                    console.log(error);
+                })
             },
         }
     }

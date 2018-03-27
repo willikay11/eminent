@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use eminent\Activities\ActivityRepository;
 use eminent\API\SortFilterPaginate;
 use eminent\Authorization\Authorizer;
+use eminent\Models\Activity;
 use eminent\Models\Contact;
 use eminent\Models\Interaction;
 use Illuminate\Support\Facades\Auth;
@@ -168,6 +169,24 @@ class DashboardController extends Controller
             'content' => 'Days to finish'
         ];
     }
+
+    public function cardInfo($userId)
+    {
+        $activities =  Activity::where('user_id', $userId)->get();
+
+        $data =  [
+            'todo' => $activities->where('activity_status_id', 1)->count(),
+            'ongoing' => $activities->where('activity_status_id', 2)->count(),
+            'review' => $activities->where('activity_status_id', 3)->count(),
+            'complete' => $activities->where('activity_status_id', 4)->count(),
+        ];
+
+        return self::toResponse(null, [
+            'success' => true,
+            'data' => $data,
+        ]);
+    }
+
     public function toResponse($request = null, $data)
     {
         return response($data);

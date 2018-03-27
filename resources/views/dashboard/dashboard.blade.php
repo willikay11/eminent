@@ -16,16 +16,16 @@
     <section class="content">
         <!-- Small boxes (Stat box) -->
 
-        <cards inline-template>
+        <cards user-id="{!! $userId !!}" inline-template>
             <div class="row">
                 <!-- ./col -->
                 <div class="col-lg-3 col-xs-6">
                     <!-- small box -->
                     <div class="small-box bg-green">
                         <div class="inner">
-                            <h3>5</h3>
+                            <h3>@{{ data.todo }}</h3>
 
-                            <p>Activities</p>
+                            <p>Todo Activities</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-stats-bars"></i>
@@ -38,9 +38,9 @@
                     <!-- small box -->
                     <div class="small-box bg-red">
                         <div class="inner">
-                            <h3>2</h3>
+                            <h3>@{{ data.ongoing }}</h3>
 
-                            <p>Contacts</p>
+                            <p>Ongoing Activities</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-pie-graph"></i>
@@ -53,9 +53,9 @@
                     <!-- small box -->
                     <div class="small-box bg-aqua">
                         <div class="inner">
-                            <h3>12</h3>
+                            <h3>@{{ data.review }}</h3>
 
-                            <p>Interactions</p>
+                            <p>In Review</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-bag"></i>
@@ -68,9 +68,9 @@
                     <!-- small box -->
                     <div class="small-box bg-yellow">
                         <div class="inner">
-                            <h3>12</h3>
+                            <h3>@{{ data.complete }}</h3>
 
-                            <p>Something</p>
+                            <p>Completed Activities</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-person-add"></i>
@@ -91,7 +91,7 @@
                     <div class="box-header">
                         <i class="fa fa-comments-o"></i>
 
-                        <h3 class="box-title">Upcoming Payments</h3>
+                        <h3 class="box-title">Contacts</h3>
                     </div>
                     <div class="box-body chat" id="chat-box">
                         <dashboard-contacts user-id="{!! $userId !!}"></dashboard-contacts>
@@ -99,7 +99,7 @@
 
                     <div class="box-footer">
                         <div class="input-group">
-                            <a href="/sales" class="btn btn-block btn-primary">See More</a>
+                            <a href="/contacts/user" class="btn btn-block btn-primary">See More</a>
                         </div>
                     </div>
                 </div>
@@ -111,7 +111,7 @@
                         <h3 class="box-title">Inventory</h3>
                     </div>
                     <div class="box-body chat" id="chat-box">
-                        <dashboard-interactions user-id="{!! $userId !!}"></dashboard-interactions>
+
                     </div>
                     <div class="box-footer">
                         <div class="input-group">
@@ -146,15 +146,15 @@
                     <div class="box-header">
                         <i class="fa fa-comments-o"></i>
 
-                        <h3 class="box-title">Overdue Payments</h3>
+                        <h3 class="box-title">Interactions</h3>
                     </div>
                     <div class="box-body chat" id="chat-box">
-                        {{--<overdue-payments></overdue-payments>--}}
+                        <dashboard-interactions user-id="{!! $userId !!}"></dashboard-interactions>
                     </div>
 
                     <div class="box-footer">
                         <div class="input-group">
-                            <a href="/sales" class="btn btn-block btn-primary">See More</a>
+                            <a href="/interactions/user" class="btn btn-block btn-primary">See More</a>
                         </div>
                     </div>
                 </div>

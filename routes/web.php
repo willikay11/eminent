@@ -29,6 +29,9 @@ Route::group(['middleware' => 'auth'], function (){
         'uses' => 'DashboardController@getDashBoardCalendar'
     ]);
 
+    Route::get('/api/dashboard/cards/{id}', [
+        'uses' => 'DashboardController@cardInfo'
+    ]);
     Route::get('/logout', [
         'as' => 'auth.logout',
         'uses' => 'LoginController@destroy'
