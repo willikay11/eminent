@@ -159,22 +159,6 @@
                     </div>
                 </div>
 
-                <div class="box box-success">
-                    <div class="box-header">
-                        <i class="fa fa-comments-o"></i>
-
-                        <h3 class="box-title">Customers</h3>
-                    </div>
-                    <div class="box-body chat" id="chat-box">
-                        {{--<calendar user-id="{!! $userId !!}"></calendar>--}}
-                    </div>
-                    <div class="box-footer">
-                        <div class="input-group">
-                            <a href="/customers" class="btn btn-block btn-primary">See More</a>
-                        </div>
-                    </div>
-                </div>
-
             </section>
             <!-- /.Left col -->
 
@@ -197,24 +181,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="box box-warning">
-                    <div class="box-header">
-                        <i class="fa fa-comments-o"></i>
-
-                        <h3 class="box-title">Sales</h3>
-                    </div>
-                    <div class="box-body chat" id="chat-box">
-                        {{--<sales></sales>--}}
-                    </div>
-
-                    <div class="box-footer">
-                        <div class="input-group">
-                            <a href="/sales" class="btn btn-block btn-primary">See More</a>
-                        </div>
-                    </div>
-                </div>
-
             </section>
             <!-- right col -->
         </div>
