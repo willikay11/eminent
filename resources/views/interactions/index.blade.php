@@ -1,36 +1,40 @@
 @extends('dashboard.default')
 
 
-@section('dashboard-content')
+@section('main-content')
 
-    <div class="row">
-        <div class="col-lg-12">
-            <interactions-table user-id="{!! $userId !!}" inline-template>
-                <div class="panel panel-default contact-panel">
-                    <div class="col-lg-12 panel-header">
-                        <div class="col-lg-6">
-                            <h4>Interactions</h4>
+    <section class="content-header">
+        <h1>
+            Interactions List
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Interactions</li>
+        </ol>
+    </section>
+
+    <section class="content">
+        <interactions-table user-id="{!! $userId !!}" inline-template>
+            <div class="row">
+                <!-- left column -->
+                <div class="col-md-12">
+                    <!-- general form elements -->
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <div class="pull-left">
+                                <h3 class="box-title" style="padding-bottom: 25px">Interactions</h3>
+                            </div>
+
                         </div>
-                        <div class="col-lg-6" style="text-align: right">
-
-                        </div>
-
-                        <div class="col-lg-12">
-                            <hr>
-                        </div>
-
-                    </div>
-
-                    <div class="panel-body">
 
                         <el-form :model="searchForm" :rules="searchRules" ref="searchForm" label-position="top"
-                                 style="padding-left: 30px">
+                                 style="padding-left: 10px; padding-right: 10px">
                             <el-row :gutter="20">
-                                <el-col :span="2">
+                                <el-col :xs="24" :sm="24" :md="24" :lg="2">
                                     <el-form-item prop="filter" label="Filter By:">
                                     </el-form-item>
                                 </el-col>
-                                <el-col :span="7">
+                                <el-col :xs="12" :sm="12" :md="6" :lg="4">
                                     <el-form-item prop="startDate" label="From date:">
                                         <el-date-picker
                                                 v-model="searchForm.startDate"
@@ -40,7 +44,7 @@
                                     </el-form-item>
                                 </el-col>
 
-                                <el-col :span="7">
+                                <el-col :xs="12" :sm="12" :md="6" :lg="4">
                                     <el-form-item prop="endDate" label="To date:">
                                         <el-date-picker
                                                 v-model="searchForm.endDate"
@@ -50,13 +54,13 @@
                                     </el-form-item>
                                 </el-col>
 
-                                <el-col :span="3" style="margin-top: 30px">
-                                    <el-button type="primary" @click="searchInteractions()">Search</el-button>
+                                <el-col :xs="6" :sm="6" :md="3" :lg="2" class="search-buttons">
+                                    <el-button type="primary" icon="el-icon-search" @click="searchInteractions()">Search</el-button>
                                 </el-col>
 
-                                <el-col :span="3" style="margin-top: 30px">
+                                <el-col :xs="6" :sm="6" :md="3" :lg="2" class="search-buttons">
                                     @if(in_array(11, getPermissions()))
-                                        <el-button type="primary" @click="exportInteractions()">Export</el-button>
+                                        <el-button type="primary" icon="el-icon-download" @click="exportInteractions()">Export</el-button>
                                     @endif
                                 </el-col>
                             </el-row>
@@ -92,20 +96,20 @@
                                 </template>
                             </el-table-column>
                         </el-table>
-                    </div>
-                    <hr class="panel-hr">
-                    <div class="panel-footer">
-                        <div class="block">
-                            <el-pagination
-                                    layout="prev, pager, next"
-                                    @current-change="handleCurrentChange"
-                                    :total="total">
-                            </el-pagination>
+
+                        <div class="panel-footer">
+                            <div class="block">
+                                <el-pagination
+                                        layout="prev, pager, next"
+                                @current-change="handleCurrentChange"
+                                :total="total">
+                                </el-pagination>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </interactions-table>
-        </div>
-    </div>
+            </div>
+        </interactions-table>
+    </section>
 
 @stop

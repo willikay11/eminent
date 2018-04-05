@@ -31,7 +31,7 @@ mix.js(['resources/assets/js/app.js',
     'resources/assets/adminLTE/js/pages/dashboard.js',
     'resources/assets/adminLTE/js/demo.js'
 ], 'public/js')
-   .sass('resources/assets/sass/app.scss', 'public/css')
+   .sass('resources/assets/sass/app.scss', 'public/css/app.css')
     .styles([
         'bower_components/bootstrap/dist/css/bootstrap.min.css',
         // 'bower_components/font-awesome/css/font-awesome.min.css',
@@ -49,7 +49,7 @@ mix.autoload({
     'jquery': ['$', 'window.jQuery', 'jQuery'],
     'vue': ['Vue','window.Vue'],
     'moment': ['moment','window.moment'],
-})
+});
 
 if (mix.inProduction()) {
     mix.version();

@@ -143,4 +143,27 @@
     .el-date-editor.el-input {
         width: 100%;
     }
+
+    @media only screen and (min-width : 768px) {
+        .search-buttons{
+            margin-top: 20px;
+            margin-right: 30px;
+        }
+    }
+
+    /* Medium Devices, Desktops */
+    @media only screen and (min-width : 992px) {
+        .search-buttons{
+            margin-top: 55px;
+            margin-right: 30px;
+        }
+    }
+
+    /* Large Devices, Wide Screens */
+    @media only screen and (min-width : 1200px) {
+        .search-buttons{
+            margin-top: 55px;
+            margin-right: 30px;
+        }
+    }
 </style>
