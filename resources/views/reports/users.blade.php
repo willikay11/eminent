@@ -1,18 +1,31 @@
 @extends('dashboard.default')
 
 
-@section('dashboard-content')
+@section('main-content')
 
-    <div class="row">
-        <div class="col-lg-12">
-            <employee-table report-id={!! $id !!} inline-template>
-                <div class="panel panel-default">
-                    <div class="col-lg-12 panel-header">
-                        <div class="col-lg-6">
-                            <h4>Users</h4>
+    <section class="content-header">
+        <h1>
+            Users List
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Users</li>
+        </ol>
+    </section>
+
+    <section class="content">
+        <employee-table report-id="{!! $id !!}" inline-template>
+            <div class="row">
+                <!-- left column -->
+                <div class="col-md-12">
+                    <!-- general form elements -->
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <div class="pull-left">
+                                <h3 class="box-title" style="padding-bottom: 25px">Users</h3>
+                            </div>
                         </div>
-                    </div>
-                    <div class="panel-body">
+
                         <el-table
                                 :data="tableData"
                                 v-loading.body="loading"
@@ -49,20 +62,19 @@
                                 </el-table-column>
                             @endif
                         </el-table>
-                    </div>
-                    <hr class="panel-hr">
-                    <div class="panel-footer">
-                        <div class="block">
-                            <el-pagination
-                                    layout="prev, pager, next"
-                            @current-change="handleCurrentChange"
-                            :total="total">
-                            </el-pagination>
+
+                        <div class="panel-footer">
+                            <div class="block">
+                                <el-pagination
+                                        layout="prev, pager, next"
+                                @current-change="handleCurrentChange"
+                                :total="total">
+                                </el-pagination>
+                            </div>
                         </div>
                     </div>
-
                 </div>
-            </employee-table>
-        </div>
-    </div>
+            </div>
+        </employee-table>
+    </section>
 @stop

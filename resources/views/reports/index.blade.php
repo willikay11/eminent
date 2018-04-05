@@ -1,22 +1,30 @@
 @extends('dashboard.default')
 
 
-@section('dashboard-content')
+@section('main-content')
 
-    <div class="row">
-        <div class="col-lg-12">
-            <reports-table user-id="{!! \Illuminate\Support\Facades\Auth::id() !!}" inline-template>
-                <div class="panel panel-default contact-panel">
-                    <div class="col-lg-12 panel-header">
-                        <div class="col-lg-6">
-                            <h4>Reports</h4>
+    <section class="content-header">
+        <h1>
+           Reports List
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Reports</li>
+        </ol>
+    </section>
+
+    <section class="content">
+        <reports-table user-id="{!! \Illuminate\Support\Facades\Auth::id() !!}" inline-template>
+            <div class="row">
+                <!-- left column -->
+                <div class="col-md-12">
+                    <!-- general form elements -->
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <div class="pull-left">
+                                <h3 class="box-title" style="padding-bottom: 25px">Reports</h3>
+                            </div>
                         </div>
-                        <div class="col-lg-6" style="text-align: right">
-
-                        </div>
-                    </div>
-
-                    <div class="panel-body">
 
                         <el-table
                                 :data="tableData"
@@ -39,8 +47,7 @@
                                 </template>
                             </el-table-column>
                         </el-table>
-                    </div>
-                    <hr class="panel-hr">
+
                     <div class="panel-footer">
                         <div class="block">
                             <el-pagination
@@ -51,8 +58,8 @@
                         </div>
                     </div>
                 </div>
-            </reports-table>
-        </div>
-    </div>
-
+            </div>
+            </div>
+        </reports-table >
+    </section>
 @stop
