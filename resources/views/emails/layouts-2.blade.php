@@ -1,41 +1,101 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width"/>
+    <style type="text/css">
+        * { margin: 0; padding: 0; font-size: 100%; font-family: 'Avenir Next', "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif; line-height: 1.65; }
 
+        img { max-width: 100%; margin: 0 auto; display: block; }
 
+        body, .body-wrap { width: 100% !important; height: 100%; background: #f8f8f8; }
+
+        a { color: #e6944b; text-decoration: none; }
+
+        a:hover { text-decoration: underline; }
+
+        .text-center { text-align: center; }
+
+        .text-right { text-align: right; }
+
+        .text-left { text-align: left; }
+
+        .button { display: inline-block; color: white; background: #e6944b; border: solid #e6944b; border-width: 10px 20px 8px; font-weight: bold; border-radius: 4px; }
+
+        .button:hover { text-decoration: none; }
+
+        h1, h2, h3, h4, h5, h6 { margin-bottom: 20px; line-height: 1.25; }
+
+        h1 { font-size: 32px; }
+
+        h2 { font-size: 28px; }
+
+        h3 { font-size: 24px; }
+
+        h4 { font-size: 20px; }
+
+        h5 { font-size: 16px; }
+
+        p, ul, ol { font-size: 16px; font-weight: normal; margin-bottom: 20px; }
+
+        .container { display: block !important; clear: both !important; margin: 0 auto !important; max-width: 580px !important; }
+
+        .container table { width: 100% !important; border-collapse: collapse; }
+
+        .container .masthead { padding: 80px 0; background: #e6944b; color: white; }
+
+        .container .masthead h1 { margin: 0 auto !important; max-width: 90%; text-transform: uppercase; }
+
+        .container .content { background: white; padding: 30px 35px; }
+
+        .container .content.footer { background: none; }
+
+        .container .content.footer p { margin-bottom: 0; color: #888; text-align: center; font-size: 14px; }
+
+        .container .content.footer a { color: #888; text-decoration: none; font-weight: bold; }
+
+        .container .content.footer a:hover { text-decoration: underline; }
+    </style>
 </head>
-<body style="background-color: #f3f3f3;font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin: 50px; color: #595959; line-height: 2">
+<body>
+<table class="body-wrap">
+    <tr>
+        <td class="container">
 
-<div style="border-radius: 5px">
-    <div class="email-logo" style="height: 200px; background-color: white; text-align: center">
-        <img style="height: 120px; position: relative; top: 50%;transform: translateY(-50%);" src="http://eminent.co.ke/images/logo.png">
-    </div>
+            <table>
+                <tr>
+                    <td align="center" class="masthead">
 
-    <div style="height: 200px; background-color: #fff3e7; text-align: center">
-        <span style="position: relative; top: 40%;transform: translateY(-50%);font-size: 26px;word-spacing: 4px; letter-spacing: 1px">Eminent CRM</span>
-    </div>
-    <div id="email-body" style="min-height: 500px; background-color: white">
+                        <h1>Eminent Business Group.</h1>
 
-        <div id="content" style="padding-bottom: 50px; padding-top: 50px; padding-right: 100px; padding-left: 100px;">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="content">
 
-            @yield('email_content')
+                        @yield('email_content')
 
-            <p>Best Regards,</p>
+                        <p>Best Regards,</p>
 
-            <p>Eminent Business Group</p>
-        </div>
+                        <p>Eminent Business Group</p>
+                    </td>
+                </tr>
+            </table>
 
-        <hr style="border-color: #ffdaba;">
+        </td>
+    </tr>
+    <tr>
+        <td class="container">
+            <table>
+                <tr>
+                    <td class="content footer" align="center">
+                        <p>Sent by <a href="#">Eminent Business Group.</a>, 8 Downhill Court, Riara Lane,</p>
+                    </td>
+                </tr>
+            </table>
 
-        <div id="info" style="padding-bottom: 50px; padding-top: 50px; padding-right: 100px; padding-left: 100px;">
-            <p>8 Downhill Court, Riara Lane</p>
-            <p>P.O. BOX 10216 – 00100</p>
-            <p>Nairobi, Kenya</p>
-        </div>
-
-        <hr style="border-color: #ffdaba;">
-    </div>
-</div>
+        </td>
+    </tr>
+</table>
 </body>
 </html>
