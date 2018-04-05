@@ -25,7 +25,7 @@ Route::group(['middleware' => 'auth'], function (){
         'uses' => 'DashboardController@getDashBoardInteractions'
     ]);
 
-    Route::get('/api/dashboard/calendar/{userId}/month/{month?}/{year?}', [
+    Route::get('/api/dashboard/calendar/{userId}/month/{month?}/year/{year?}', [
         'uses' => 'DashboardController@getDashBoardCalendar'
     ]);
 

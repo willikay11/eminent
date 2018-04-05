@@ -52,4 +52,6 @@ Vue.component('activityReport', require('./reports/activityReport.vue'));
 
 Vue.component('feedback', require('./general/feedback.vue'));
 
-Vue.component('calendar', require('./dashboards/calendar.vue'));
+// Vue.component('calendar', require('./dashboards/calendar.vue'));
+
+Vue.component('calendarTest', require('./dashboards/calendar-2.vue'));

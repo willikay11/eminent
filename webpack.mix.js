@@ -45,6 +45,12 @@ mix.js(['resources/assets/js/app.js',
         // 'bower_components/bootstrap3-wysihtml5-bower/dist/bootstrap3-wysihtml5.min.css'
     ], 'public/css/app.css');
 
+mix.autoload({
+    'jquery': ['$', 'window.jQuery', 'jQuery'],
+    'vue': ['Vue','window.Vue'],
+    'moment': ['moment','window.moment'],
+})
+
 if (mix.inProduction()) {
     mix.version();
 }

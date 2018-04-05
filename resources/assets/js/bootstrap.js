@@ -62,6 +62,12 @@ require('hchs-vue-charts');
 
 Vue.use(VueCharts);
 
+import Vue from 'vue';
+import datePicker from 'vue-bootstrap-datetimepicker';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css';
+Vue.use(datePicker);
+
 /**
  * Next we will register the CSRF Token as a common header with Axios so that
  * all outgoing HTTP requests automatically have it attached. This is just

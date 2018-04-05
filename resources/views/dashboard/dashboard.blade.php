@@ -104,19 +104,58 @@
                     </div>
                 </div>
 
-                <div class="box box-default">
+                <!-- Calendar -->
+                <div class="box box-solid bg-green-gradient">
                     <div class="box-header">
-                        <i class="fa fa-car"></i>
+                        <i class="fa fa-calendar"></i>
 
-                        <h3 class="box-title">Inventory</h3>
-                    </div>
-                    <div class="box-body chat" id="chat-box">
-
-                    </div>
-                    <div class="box-footer">
-                        <div class="input-group">
-                            <a href="/vehicles" class="btn btn-block btn-primary">See More</a>
+                        <h3 class="box-title">Calendar</h3>
+                        <!-- tools box -->
+                        <div class="pull-right box-tools">
+                            <!-- button with a dropdown -->
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fa fa-bars"></i></button>
+                                <ul class="dropdown-menu pull-right" role="menu">
+                                    <li><a href="#">Add new event</a></li>
+                                    <li><a href="#">Clear events</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="#">View calendar</a></li>
+                                </ul>
+                            </div>
+                            <button type="button" class="btn btn-success btn-sm" data-widget="collapse"><i class="fa fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-success btn-sm" data-widget="remove"><i class="fa fa-times"></i>
+                            </button>
                         </div>
+                        <!-- /. tools -->
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body no-padding">
+                        <!--The calendar -->
+                        <calendar-test  user-id="{!! $userId !!}" inline-template>
+                            <div>
+                                <v-calendar :attributes='attrs' style="width: 100%; background-color: transparent; border: 0">
+                                </v-calendar>
+
+                                <!-- /.box-body -->
+                                <div class="box-footer text-black">
+                                    <div class="row" v-if="events.length > 0">
+                                        <div class="col-sm-6" v-for="event in events">
+                                            <!-- Progress bars -->
+                                            <div class="clearfix">
+                                                <span class="pull-left">@{{ event.title }}</span>
+                                                <small class="pull-right">@{{ event.percentage }}%</small>
+                                            </div>
+                                            <div class="progress xs">
+                                                <div class="progress-bar progress-bar-green" style="width: 90%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.row -->
+                                </div>
+                            </div>
+                        </calendar-test>
                     </div>
                 </div>
 
@@ -127,7 +166,7 @@
                         <h3 class="box-title">Customers</h3>
                     </div>
                     <div class="box-body chat" id="chat-box">
-                        <calendar user-id="{!! $userId !!}"></calendar>
+                        {{--<calendar user-id="{!! $userId !!}"></calendar>--}}
                     </div>
                     <div class="box-footer">
                         <div class="input-group">
