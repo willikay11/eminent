@@ -27,9 +27,11 @@
 
                             <div class="pull-right box-tools">
                                 <div class="col-lg-6" style="text-align: right">
-                                        @if(in_array(17, getPermissions()))
-                                            <el-button type="primary" plain icon="el-icon-plus" v-on:click="showAddSourcesDialog()">Add Source</el-button>
-                                        @endif
+                                    @if(in_array(17, getPermissions()))
+                                        <el-button type="primary" plain icon="el-icon-plus"
+                                                   v-on:click="showAddSourcesDialog()">Add Source
+                                        </el-button>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -61,7 +63,7 @@
                                 </el-table-column>
                             @endif
                         </el-table>
-                        
+
                         <div class="panel-footer">
                             <div class="block">
                                 <el-pagination
