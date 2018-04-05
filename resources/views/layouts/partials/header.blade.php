@@ -216,14 +216,14 @@
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <img src="/img/no-avatar.png" class="user-image" alt="User Image">
-                        <span class="hidden-xs">{!! Auth::user()->firstname.' '.Auth::user()->lastname !!}</span>
+                        <span class="hidden-xs">{!! Auth::user()->contact->firstname.' '.Auth::user()->contact->lastname !!}</span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- User image -->
                         <li class="user-header">
                             <img src="/img/no-avatar.png" class="img-circle" alt="User Image">
 
-                            <p>{!! Auth::user()->firstname.' '.Auth::user()->lastname !!}</p>
+                            <p>{!! Auth::user()->contact->firstname.' '.Auth::user()->contact->lastname !!}</p>
                         </li>
                         <!-- Menu Footer-->
                         <li class="user-footer">
