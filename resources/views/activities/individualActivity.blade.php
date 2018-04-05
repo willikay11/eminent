@@ -429,13 +429,12 @@
                              style="min-height: 200px; background-color: white; padding-bottom: 20px">
 
                             <div class="col-lg-1 avatar-circle" v-for="watcher in watchersData">
-                                <span data-toggle="tooltip" title="" style="margin-top: 20px" class="activity-watcher-badge bg-light-blue" data-original-title="@{{ watcher.name }}">@{{ watcher.initials }}</span>
-                                {{--<el-tooltip class="item" effect="dark" v-bind:content=watcher.name--}}
-                                            {{--placement="top-start">--}}
-                                            {{--<span class="initials">--}}
-                                                {{--@{{ watcher.initials }}--}}
-                                            {{--</span>--}}
-                                {{--</el-tooltip>--}}
+                                <el-tooltip class="activity-watcher-badge" effect="dark" v-bind:content=watcher.name
+                                            placement="top-start">
+                                            <span class="initials">
+                                                @{{ watcher.initials }}
+                                            </span>
+                                </el-tooltip>
                             </div>
 
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
