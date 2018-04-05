@@ -30,8 +30,9 @@ mix.js(['resources/assets/js/app.js',
     'resources/assets/adminLTE/js/adminlte.js',
     'resources/assets/adminLTE/js/pages/dashboard.js',
     'resources/assets/adminLTE/js/demo.js'
-], 'public/js')
-   .sass('resources/assets/sass/app.scss', 'public/css/app.css')
+], 'public/js');
+
+mix.sass('resources/assets/sass/app.scss', 'public/css/styles.css')
     .styles([
         'bower_components/bootstrap/dist/css/bootstrap.min.css',
         // 'bower_components/font-awesome/css/font-awesome.min.css',
@@ -42,6 +43,7 @@ mix.js(['resources/assets/js/app.js',
         'bower_components/jvectormap/jquery-jvectormap.css',
         'bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css',
         'bower_components/bootstrap-daterangepicker/daterangepicker.css',
+        'public/css/styles.css',
         // 'bower_components/bootstrap3-wysihtml5-bower/dist/bootstrap3-wysihtml5.min.css'
     ], 'public/css/app.css');
 

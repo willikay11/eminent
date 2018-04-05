@@ -17,6 +17,21 @@
   width:70%;
 }
 
+.activity-watcher-badge{
+  display: inline-block;
+  min-width: 13px;
+  padding: 14px 12px;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 1;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  background-color: #777;
+  border-radius: 30px;
+}
+
 /* Extra Small Devices, Phones */
 @media (min-width : 480px) {
   .activity-box{
