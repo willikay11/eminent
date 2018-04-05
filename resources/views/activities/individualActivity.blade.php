@@ -213,7 +213,7 @@
                                                         <div class="avatar"><img :src="comment.avatar"
                                                                                  draggable="false"/></div>
                                                         <div class="msg">
-                                                            <p class="name">@{{ comment.username }}</p>
+                                                            <p class="avatar-name">@{{ comment.username }}</p>
                                                             <p v-html="comment.comment"></p>
                                                             <div v-if="comment.files.length != 0">
                                                                 <div v-for="file in comment.files">
