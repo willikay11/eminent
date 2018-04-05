@@ -2,73 +2,38 @@
 
 @section('content')
 
-    <div class="login-background">
-        <div class="row">
-            <div class="login-container">
-                <div class="login-overlay"></div>
-                <div class="col-lg-6 col-md-6 visible-lg visible-md inner-left">
-                    <div class="inner-left-overlay"></div>
-                    <div class="vertical-center">
-                        <img class="login-image" src="/img/EBG-logo.png">
-                        <div class="login-text">
-                            <p class="login-welcome-text">Welcome</p>
-                            <p class="login-banner">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                                ut labore et dolore magna aliqua.</p>
+    <body class="hold-transition login-page">
+        <div class="login-box">
+            <div class="login-logo">
+                <p><b>Eminent Business Group</b> ltd.</p>
+            </div>
+            <div class="login-box-body">
+                <p class="login-box-msg">Sign in to start your session</p>
+
+                {!! Form::open(['route' => 'login.auth']) !!}
+                <div class="form-group has-feedback">
+                    {!! Form::text('email', null, ['class' => 'form-control ', 'placeholder' => 'example@eminent.co.ke']) !!}
+                </div>
+                <div class="form-group has-feedback">
+                    {!! Form::password('password', ['class' => 'form-control ebg-input', 'placeholder' => 'password']) !!}
+                </div>
+                <div class="row">
+                    <div class="col-xs-8">
+                        <div class="checkbox icheck">
+                            <label>
+                                <input type="checkbox"> Remember Me
+                            </label>
                         </div>
                     </div>
-
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-12 inner-right">
-
-                    <div class="vertical-center">
-                        <div class="ebg-input-container">
-
-                            @include('layouts.partials.errors')
-
-                            @include('layouts.partials.flash')
-                        </div>
-
-                        <div class="col-lg-12 login-header">
-                            <h3>Login</h3>
-                            <p>Enter your login details </p>
-                        </div>
-
-                        {!! Form::open(['route' => 'login.auth']) !!}
-                        <div class="row">
-                            <div class="col-lg-12 form-group ebg-input-container">
-                                {!! Form::text('email', null, ['class' => 'form-control ebg-input', 'placeholder' => 'example@eminent.co.ke']) !!}
-                            </div>
-
-                            <div class="col-lg-12 form-group ebg-input-container">
-                                {!! Form::password('password', ['class' => 'form-control ebg-input', 'placeholder' => 'password']) !!}
-                            </div>
-
-                            <div class="col-lg-12 ebg-input-container">
-                                <div class="col-lg-6">
-                                    {!! Form::submit('Continue', ['class' => 'btn ebg-button']) !!}
-                                </div>
-
-                                <div class="col-lg-6" style="text-align: right">
-                                    <a href="/password/remind">Forgot Password</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        {!! Form::close() !!}
-
-                        <div class="login-header ebg-input-container">
-                            <p>To use this system you must be an employee of EGB</p>
-                            <p>If you do not have an account, kindly request one from the administrator </p>
-                        </div>
+                    <div class="col-xs-4">
+                        {!! Form::submit('Continue', ['class' => 'btn btn-primary btn-block btn-flat']) !!}
                     </div>
-
                 </div>
+                {!! Form::close() !!}
+
+                <a href="/password/remind">I forgot my password</a><br>
             </div>
         </div>
-
-
-    </div>
-
-
+    </body>
 
 @stop
