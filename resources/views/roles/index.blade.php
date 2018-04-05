@@ -1,23 +1,39 @@
 @extends('dashboard.default')
 
 
-@section('dashboard-content')
+@section('main-content')
 
-    <div class="row">
-        <div class="col-lg-12">
-            <roles-table inline-template>
-                <div class="panel panel-default">
-                    <div class="col-lg-12 panel-header">
-                        <div class="col-lg-6">
-                            <h4>Roles</h4>
+    <section class="content-header">
+        <h1>
+            Roles List
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Roles</li>
+        </ol>
+    </section>
+
+    <section class="content">
+        <roles-table inline-template>
+            <div class="row">
+                <!-- left column -->
+                <div class="col-md-12">
+                    <!-- general form elements -->
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <div class="pull-left">
+                                <h3 class="box-title" style="padding-bottom: 25px">Roles</h3>
+                            </div>
+
+                            <div class="pull-right box-tools">
+                                <div class="col-lg-6" style="text-align: right">
+                                    @if(in_array(15, getPermissions()))
+                                        <el-button type="primary" plain icon="el-icon-plus" v-on:click="showAddRoleDialog()">Add Role</el-button>
+                                    @endif
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-lg-6" style="text-align: right">
-                            @if(in_array(15, getPermissions()))
-                                <button class="btn ebg-button" v-on:click="showAddRoleDialog()">Add Role</button>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="panel-body">
+
                         <el-table
                                 :data="tableData"
                                 stripe
@@ -49,38 +65,39 @@
                                 </el-table-column>
                             @endif
                         </el-table>
-                    </div>
-                    <hr class="panel-hr">
-                    <div class="panel-footer">
-                        <div class="block">
-                            <el-pagination
-                                    layout="prev, pager, next"
-                                    :total="total">
-                            </el-pagination>
+
+                        <div class="panel-footer">
+                            <div class="block">
+                                <el-pagination
+                                        layout="prev, pager, next"
+                                        :total="total">
+                                </el-pagination>
+                            </div>
                         </div>
+
+                        <el-dialog
+                                title="Tips"
+                                :visible.sync="dialogVisible"
+                                size="tiny">
+                            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-position="top">
+
+                                <el-form-item prop="roleName" label="Role Name">
+                                    <el-input placeholder="Input Name" v-model="ruleForm.roleName"></el-input>
+                                </el-form-item>
+
+                                <el-form-item prop="roleDescription" label="Description">
+                                    <el-input placeholder="Input Description" v-model="ruleForm.roleDescription"></el-input>
+                                </el-form-item>
+                            </el-form>
+                            <span slot="footer" class="dialog-footer">
+                                <el-button @click="dialogVisible = false">Cancel</el-button>
+                                <el-button type="primary" @click="addRole('ruleForm')">Save</el-button>
+                            </span>
+                        </el-dialog>
+
                     </div>
-
-                    <el-dialog
-                            title="Tips"
-                            :visible.sync="dialogVisible"
-                            size="tiny">
-                        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-position="top">
-
-                            <el-form-item prop="roleName" label="Role Name">
-                                <el-input placeholder="Input Name" v-model="ruleForm.roleName"></el-input>
-                            </el-form-item>
-
-                            <el-form-item prop="roleDescription" label="Description">
-                                <el-input placeholder="Input Description" v-model="ruleForm.roleDescription"></el-input>
-                            </el-form-item>
-                        </el-form>
-                        <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">Cancel</el-button>
-                            <el-button type="primary" @click="addRole('ruleForm')">Save</el-button>
-            </span>
-                    </el-dialog>
                 </div>
-            </roles-table>
-        </div>
-    </div>
+            </div>
+        </roles-table>
+    </section>
 @stop
