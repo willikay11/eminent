@@ -1,23 +1,39 @@
 @extends('dashboard.default')
 
 
-@section('dashboard-content')
+@section('main-content')
 
-    <div class="row">
-        <div class="col-lg-12">
-            <users-table inline-template>
-                <div class="panel panel-default">
-                    <div class="col-lg-12 panel-header">
-                        <div class="col-lg-6">
-                            <h4>Users</h4>
+    <section class="content-header">
+        <h1>
+            Users List
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Users</li>
+        </ol>
+    </section>
+
+    <section class="content">
+        <users-table inline-template>
+            <div class="row">
+                <!-- left column -->
+                <div class="col-md-12">
+                    <!-- general form elements -->
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <div class="pull-left">
+                                <h3 class="box-title" style="padding-bottom: 25px">Users</h3>
+                            </div>
+
+                            <div class="pull-right box-tools">
+                                <div class="col-lg-6" style="text-align: right">
+                                    @if(in_array(1, getPermissions()))
+                                        <el-button type="primary" plain icon="el-icon-plus" class="btn ebg-button" v-on:click="showAddUserDialog()">Add User</el-button>
+                                    @endif
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-lg-6" style="text-align: right">
-                            @if(in_array(1, getPermissions()))
-                                <button class="btn ebg-button" v-on:click="showAddUserDialog()">Add User</button>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="panel-body">
+
                         <el-table
                                 :data="tableData"
                                 v-loading.body="loading"
@@ -56,168 +72,171 @@
                                 </el-table-column>
                             @endif
                         </el-table>
-                    </div>
-                    <hr class="panel-hr">
-                    <div class="panel-footer">
-                        <div class="block">
-                            <el-pagination
-                                    layout="prev, pager, next"
-                                    @current-change="handleCurrentChange"
-                                    :total="total">
-                            </el-pagination>
+
+                        <hr class="panel-hr">
+                        <div class="panel-footer">
+                            <div class="block">
+                                <el-pagination
+                                        layout="prev, pager, next"
+                                @current-change="handleCurrentChange"
+                                :total="total">
+                                </el-pagination>
+                            </div>
                         </div>
-                    </div>
 
-                    <el-dialog
-                            title="New/Edit User"
-                            :visible.sync="dialogVisible"
-                            size="large">
-                        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-position="left">
+                        <el-dialog
+                                title="New/Edit User"
+                                :visible.sync="dialogVisible"
+                                size="large">
+                            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-position="left">
 
-                            <div class="contact-add">
-                                <span>Personal Details</span>
-                                <hr class="hr-section-divider">
-                            </div>
+                                <div class="contact-add">
+                                    <span>Personal Details</span>
+                                    <hr class="hr-section-divider">
+                                </div>
 
-                            <div class="form-item-container">
-                                <el-form-item label="Title & Name" required>
-                                    <el-col :span="3" class="right-margin">
-                                        <el-form-item prop="title">
-                                            <el-select v-model="ruleForm.title" placeholder="Select Title">
-                                                <el-option
-                                                        v-for="item in titles"
-                                                        :key="item.value"
-                                                        :label="item.label"
-                                                        :value="item.value">
-                                                </el-option>
-                                            </el-select>
-                                        </el-form-item>
-                                    </el-col>
-                                    <el-col :span="7" class="right-margin">
-                                        <el-form-item prop="firstname">
-                                            <el-input placeholder="First Name" v-model="ruleForm.firstname"></el-input>
-                                        </el-form-item>
-                                    </el-col>
-                                    <el-col :span="7">
-                                        <el-form-item prop="lastname">
-                                            <el-input placeholder="Last Name" v-model="ruleForm.lastname"></el-input>
-                                        </el-form-item>
-                                    </el-col>
-                                </el-form-item>
-
-                                <el-form-item label="Gender & Country" required>
-                                    <el-col :span="3" class="right-margin">
-                                        <el-form-item prop="gender">
-                                            <el-select v-model="ruleForm.gender" placeholder="Select Gender">
-                                                <el-option
-                                                        v-for="item in genders"
-                                                        :key="item.value"
-                                                        :label="item.label"
-                                                        :value="item.value">
-                                                </el-option>
-                                            </el-select>
-                                        </el-form-item>
-                                    </el-col>
-                                    <el-col :span="3">
-                                        <el-form-item prop="country">
-                                            <el-select v-model="ruleForm.country" filterable placeholder="Select Country">
-                                                <el-option
-                                                        v-for="item in countries"
-                                                        :key="item.value"
-                                                        :label="item.label"
-                                                        :value="item.value">
-                                                </el-option>
-                                            </el-select>
-                                        </el-form-item>
-                                    </el-col>
-                                </el-form-item>
-
-                                <el-form-item label="Email & Phone" required>
-                                    <el-col :span="7" class="right-margin">
-                                        <el-form-item prop="email">
-                                            <el-input placeholder="Email (email@eminent.co.ke)" v-model="ruleForm.email"></el-input>
-                                        </el-form-item>
-                                    </el-col>
-                                    <el-col :span="7">
-                                        <el-form-item prop="phone">
-                                            <el-input placeholder="Phone Number" v-model.number="ruleForm.phone"></el-input>
-                                        </el-form-item>
-                                    </el-col>
-                                </el-form-item>
-
-                            </div>
-
-                            <div class="contact-add">
-                                <span>User Details</span>
-                                <hr class="hr-section-divider">
-                            </div>
-
-                            <div class="form-item-container">
-                                <el-form-item label="Department" required>
-                                    <el-form-item prop="department">
-                                        <el-select v-model="ruleForm.department" filterable placeholder="Select Department">
-                                            <el-option
-                                                    v-for="item in departments"
-                                                    :key="item.value"
-                                                    :label="item.label"
-                                                    :value="item.value">
-                                            </el-option>
-                                        </el-select>
+                                <div class="form-item-container">
+                                    <el-form-item label="Title & Name" required>
+                                        <el-col :span="3" class="right-margin">
+                                            <el-form-item prop="title">
+                                                <el-select v-model="ruleForm.title" placeholder="Select Title">
+                                                    <el-option
+                                                            v-for="item in titles"
+                                                            :key="item.value"
+                                                            :label="item.label"
+                                                            :value="item.value">
+                                                    </el-option>
+                                                </el-select>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="7" class="right-margin">
+                                            <el-form-item prop="firstname">
+                                                <el-input placeholder="First Name" v-model="ruleForm.firstname"></el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="7">
+                                            <el-form-item prop="lastname">
+                                                <el-input placeholder="Last Name" v-model="ruleForm.lastname"></el-input>
+                                            </el-form-item>
+                                        </el-col>
                                     </el-form-item>
-                                </el-form-item>
 
-                                <el-form-item prop="roles"
-                                              label="Role">
-                                    <el-col :span="6">
-                                        <el-select v-model="ruleForm.role" multiple placeholder="Select">
-                                            <el-option
-                                                    v-for="item in roles"
-                                                    :key="item.value"
-                                                    :label="item.label"
-                                                    :value="item.value">
-                                            </el-option>
-                                        </el-select>
-                                    </el-col>
-                                </el-form-item>
-
-                                <el-form-item label="Employment Date" required>
-                                    <el-col :span="7">
-                                        <el-form-item prop="employmentDate">
-                                            <el-date-picker
-                                                    v-model="ruleForm.employmentDate"
-                                                    type="date"
-                                                    placeholder="Employment Date">
-                                            </el-date-picker>
-                                        </el-form-item>
-                                    </el-col>
-                                </el-form-item>
-
-                                <el-form-item label="Designation" required>
-                                    <el-form-item prop="designation">
-                                        <el-select v-model="ruleForm.designation" filterable placeholder="Select Designation">
-                                            <el-option
-                                                    v-for="item in designations"
-                                                    :key="item.value"
-                                                    :label="item.label"
-                                                    :value="item.value">
-                                            </el-option>
-                                        </el-select>
+                                    <el-form-item label="Gender & Country" required>
+                                        <el-col :span="3" class="right-margin">
+                                            <el-form-item prop="gender">
+                                                <el-select v-model="ruleForm.gender" placeholder="Select Gender">
+                                                    <el-option
+                                                            v-for="item in genders"
+                                                            :key="item.value"
+                                                            :label="item.label"
+                                                            :value="item.value">
+                                                    </el-option>
+                                                </el-select>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="3">
+                                            <el-form-item prop="country">
+                                                <el-select v-model="ruleForm.country" filterable placeholder="Select Country">
+                                                    <el-option
+                                                            v-for="item in countries"
+                                                            :key="item.value"
+                                                            :label="item.label"
+                                                            :value="item.value">
+                                                    </el-option>
+                                                </el-select>
+                                            </el-form-item>
+                                        </el-col>
                                     </el-form-item>
-                                </el-form-item>
-                            </div>
 
-                            <hr>
+                                    <el-form-item label="Email & Phone" required>
+                                        <el-col :span="7" class="right-margin">
+                                            <el-form-item prop="email">
+                                                <el-input placeholder="Email (email@eminent.co.ke)" v-model="ruleForm.email"></el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="7">
+                                            <el-form-item prop="phone">
+                                                <el-input placeholder="Phone Number" v-model.number="ruleForm.phone"></el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-form-item>
 
-                        </el-form>
-                        <div class="form-item-container">
+                                </div>
+
+                                <div class="contact-add">
+                                    <span>User Details</span>
+                                    <hr class="hr-section-divider">
+                                </div>
+
+                                <div class="form-item-container">
+                                    <el-form-item label="Department" required>
+                                        <el-form-item prop="department">
+                                            <el-select v-model="ruleForm.department" filterable placeholder="Select Department">
+                                                <el-option
+                                                        v-for="item in departments"
+                                                        :key="item.value"
+                                                        :label="item.label"
+                                                        :value="item.value">
+                                                </el-option>
+                                            </el-select>
+                                        </el-form-item>
+                                    </el-form-item>
+
+                                    <el-form-item prop="roles"
+                                                  label="Role">
+                                        <el-col :span="6">
+                                            <el-select v-model="ruleForm.role" multiple placeholder="Select">
+                                                <el-option
+                                                        v-for="item in roles"
+                                                        :key="item.value"
+                                                        :label="item.label"
+                                                        :value="item.value">
+                                                </el-option>
+                                            </el-select>
+                                        </el-col>
+                                    </el-form-item>
+
+                                    <el-form-item label="Employment Date" required>
+                                        <el-col :span="7">
+                                            <el-form-item prop="employmentDate">
+                                                <el-date-picker
+                                                        v-model="ruleForm.employmentDate"
+                                                        type="date"
+                                                        placeholder="Employment Date">
+                                                </el-date-picker>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-form-item>
+
+                                    <el-form-item label="Designation" required>
+                                        <el-form-item prop="designation">
+                                            <el-select v-model="ruleForm.designation" filterable placeholder="Select Designation">
+                                                <el-option
+                                                        v-for="item in designations"
+                                                        :key="item.value"
+                                                        :label="item.label"
+                                                        :value="item.value">
+                                                </el-option>
+                                            </el-select>
+                                        </el-form-item>
+                                    </el-form-item>
+                                </div>
+
+                                <hr>
+
+                            </el-form>
+                            <div class="form-item-container">
                 <span slot="footer" class="dialog-footer">
                     <el-button @click="dialogVisible = false">Cancel</el-button>
                     <el-button type="primary" @click="addUser('ruleForm')">Save</el-button>
                 </span>
-                        </div>
-                    </el-dialog>
+                            </div>
+                        </el-dialog>
+
+                    </div>
                 </div>
-            </users-table>
-        </div>
-    </div>
+            </div>
+        </users-table>
+    </section>
+
 @stop
