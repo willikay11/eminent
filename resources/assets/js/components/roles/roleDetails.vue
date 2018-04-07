@@ -58,6 +58,7 @@
             </div>
             <el-table
                     :data="permissionsTableData"
+                    v-loading.body="rolePermissionsLoading"
                     stripe
                     style="width: 100%">
                 <el-table-column
@@ -82,6 +83,7 @@
             <div class="block">
                 <el-pagination
                         layout="prev, pager, next"
+                        @current-change="handleCurrentChange"
                         :total="totalPermissions">
                 </el-pagination>
             </div>
@@ -96,6 +98,7 @@
             return {
                 memberTableData: [],
                 permissionsTableData: [],
+                rolePermissionsLoading: false,
                 totalPermissions: 0,
                 total: 0,
             }
@@ -112,24 +115,43 @@
             handleClick() {
                 console.log('click');
             },
-            getRoleMembers()
+            getRoleMembers(page)
             {
                 let vm = this;
-                axios.get('/api/role/'+ vm.id +'/members')
+
+                let url = '/api/role/'+ vm.id +'/members';
+
+                if (page != null)
+                {
+                    url = '/api/role/'+ vm.id +'/members/?page='+page
+                }
+
+                axios.get(url)
                     .then(function (response) {
                         vm.memberTableData = response.data;
-//                        vm.total = response.data.last_page;
+                        vm.total = response.data.last_page * 10;
                     }).catch(function (error) {
                     console.log(error);
                 })
             },
-            getRolePermissions()
+            getRolePermissions(page = null)
             {
                 let vm = this;
-                axios.get('/api/role/'+ vm.id +'/permissions')
+
+                vm.rolePermissionsLoading = true;
+
+                let url = '/api/role/'+ vm.id +'/permissions';
+
+                if (page != null)
+                {
+                    url = '/api/role/'+ vm.id +'/permissions/?page='+page
+                }
+
+                axios.get(url)
                     .then(function (response) {
-                        vm.permissionsTableData = [].concat(response.data.data);
-                        vm.totalPermissions = response.data.last_page;
+                        vm.rolePermissionsLoading = false;
+                        vm.permissionsTableData = response.data.data;
+                        vm.totalPermissions = response.data.last_page * 10;
                     }).catch(function (error) {
                     console.log(error);
                 })
@@ -207,6 +229,18 @@
                     }).catch(function (error) {
                     console.log(error);
                 })
+            },
+            handleCurrentChange(val) {
+                let vm = this;
+
+                vm.getRolePermissions(val);
+            },
+
+            handleCurrentMemberChange(val)
+            {
+                let vm = this;
+
+                vm.getRoleMembers(val);
             }
         }
     }

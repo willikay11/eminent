@@ -64,6 +64,7 @@
                             <div class="block">
                                 <el-pagination
                                         layout="prev, pager, next"
+                                        @current-change="handleCurrentMemberChange"
                                         :total="total">
                                 </el-pagination>
                             </div>
@@ -92,6 +93,7 @@
                         </div>
 
                         <el-table
+                                v-loading.body="rolePermissionsLoading"
                                 :data="permissionsTableData"
                                 stripe
                                 style="width: 100%">
@@ -100,6 +102,7 @@
                                     label="Name">
                             </el-table-column>
                             <el-table-column
+                                    width="400"
                                     prop="description"
                                     label="Description">
                             </el-table-column>
@@ -117,6 +120,7 @@
                             <div class="block">
                                 <el-pagination
                                         layout="prev, pager, next"
+                                        @current-change="handleCurrentChange"
                                         :total="totalPermissions">
                                 </el-pagination>
                             </div>

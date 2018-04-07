@@ -136,9 +136,22 @@
                                                 <el-col :xs="24" :sm="24" :md="24" :lg="4">
                                                     <span>Due Date</span>
                                                 </el-col>
-                                                <el-col :xs="22" :sm="22" :md="22" :lg="20">
-                                                    @{{ activityData.due_date }}
-                                                </el-col>
+                                                @if(in_array(24, getPermissions()))
+                                                    <el-col :xs="22" :sm="22" :md="22" :lg="20">
+                                                        <el-form-item prop="dueDate">
+                                                            <el-date-picker
+                                                                    v-model="ruleForm.dueDate"
+                                                                    type="date"
+                                                                    format="dd-MM-yyyy"
+                                                                    placeholder="Due Date">
+                                                            </el-date-picker>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                @else
+                                                    <el-col :xs="22" :sm="22" :md="22" :lg="20">
+                                                        @{{ activityData.due_date }}
+                                                    </el-col>
+                                                @endif
                                             </div>
                                         </el-form>
 
