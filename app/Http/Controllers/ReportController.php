@@ -10,6 +10,7 @@ namespace App\Http\Controllers;
 
 
 use eminent\API\SortFilterPaginate;
+use eminent\Authorization\Authorizer;
 use eminent\Models\Activity;
 use eminent\Models\Report;
 use Illuminate\Http\Request;
@@ -19,6 +20,8 @@ class ReportController extends Controller
 {
 
     use SortFilterPaginate;
+
+    use Authorizer;
 
     protected $labels;
 
@@ -56,16 +59,22 @@ class ReportController extends Controller
 
     public function index()
     {
+        $this->hasPermission('canViewReports');
+
         return view('reports.index');
     }
 
     public function viewUsers($id)
     {
+        $this->hasPermission('canViewReports');
+
         return view('reports.users', ['id' => $id]);
     }
 
     public function viewUserReport($id, $userId)
     {
+        $this->hasPermission('canViewReports');
+
         return view('reports.report', ['reportId' => $id, 'userId' => $userId]);
     }
 
