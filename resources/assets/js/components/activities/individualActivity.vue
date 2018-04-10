@@ -573,11 +573,11 @@
                             });
 
                             axios.post('/activity/save', {
-                                activity_id: vm.activityData.id,
+                                activity_id: vm.activityId,
                                 name: vm.ruleForm.name,
                                 description: vm.ruleForm.description,
                                 user_id: vm.activityData.user_id,
-                                due_date: moment(vm.activityData.due_date).format("YYYY-MM-DD"),
+                                due_date: moment(vm.ruleForm.due_date).format("YYYY-MM-DD"),
                                 activity_status_id: vm.activityData.activity_status_id,
                                 priority_type_id: vm.ruleForm.priority,
                                 activity_type_id: vm.ruleForm.activityType,
@@ -620,21 +620,22 @@
                             vm.priorityTypes = response.data.priorityTypes;
                             vm.activityTypes = response.data.activityTypes;
                             vm.userClients = response.data.userClients;
-                            vm.attributes[1].dates = response.data.activity.today,
-                            vm.attributes[0].dates.start = response.data.activity.start_date,
-                            vm.attributes[0].dates.end = response.data.activity.calendar_end_date,
-                            vm.ruleForm.name = response.data.activity.name,
-                            vm.ruleForm.description = response.data.activity.description,
-                            vm.ruleForm.activityType = response.data.activity.activity_type_id,
-                            vm.ruleForm.priority = response.data.activity.priority_type_id,
-                            vm.ruleForm.source = response.data.activity.user_client_id,
-                            vm.ruleForm.projectedRevenue = response.data.activity.projected_revenue,
+                            vm.attributes[1].dates = response.data.activity.today;
+                            vm.attributes[0].dates.start = response.data.activity.start_date;
+                            vm.attributes[0].dates.end = response.data.activity.calendar_end_date;
+                            vm.ruleForm.name = response.data.activity.name;
+                            vm.ruleForm.description = response.data.activity.description;
+                            vm.ruleForm.activityType = response.data.activity.activity_type_id;
+                            vm.ruleForm.priority = response.data.activity.priority_type_id;
+                            vm.ruleForm.source = response.data.activity.user_client_id;
+                            vm.ruleForm.projectedRevenue = response.data.activity.projected_revenue;
+                            vm.ruleForm.dueDate = new moment(response.data.activity.due_date).format("YYYY-MM-DD");
                             vm.activityData = response.data.activity;
                             vm.commentsData = response.data.comments;
                             vm.progressUpdateData = response.data.progressUpdate;
                             vm.progressUpdateStatuses = response.data.progressUpdateStatuses;
                             vm.watchersData = response.data.watchers;
-                            console.log(response.data);
+                            console.log(vm.ruleForm.dueDate);
                         }).catch(function (error) {
                         console.log(error);
                     });

@@ -39,6 +39,8 @@ class ActivityRepository
     {
         $activity = self::getActivityById($activityId);
 
+        \Log::info($input);
+
         $activity->update($input);
 
         return $activity;

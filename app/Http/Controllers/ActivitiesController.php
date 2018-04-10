@@ -254,9 +254,11 @@ class ActivitiesController extends Controller
             }
             else
             {
+                $this->activityRepository->updateActivities($input['activity_id'], $input);
+
                 return self::toResponse(null, [
                     'success' => true,
-                    'message' => 'Task updated successfully'
+                    'message' => 'Task updated successfully sdasdada'
                 ]);
             }
         }
