@@ -18,6 +18,7 @@ trait ContactRules
 
     public function contactsCreate($request)
     {
+        
         $messages = [
             'email.required_if' => 'Either the phone number or the email address should be provided',
             'phone.required_if' => 'Either the phone number or the email address should be provided',
