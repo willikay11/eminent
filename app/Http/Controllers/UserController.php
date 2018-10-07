@@ -188,11 +188,13 @@ class UserController extends Controller
 
         list($user, $domain) = explode('@', $request->get('email'));
 
-        if ((strtolower($domain) != 'eminent.co.ke') && (strtolower($domain != 'sterlingq.com')))
+        $allowedEmails = explode(',', env('allowedEmails'));
+
+        if (!in_array(strtolower($domain), $allowedEmails))
         {
             $response = [
                 'success' => false,
-                'message' => "The email must be either eminent.co.ke or sterlingq.com",
+                'message' => "The email must be either of the following ".env('allowedEmails'),
             ];
 
             return self::toResponse(null, $response);

@@ -12,7 +12,7 @@
 
                 {!! Form::open(['route' => 'login.auth']) !!}
                 <div class="form-group has-feedback">
-                    {!! Form::text('email', null, ['class' => 'form-control ', 'placeholder' => 'example@eminent.co.ke']) !!}
+                    {!! Form::text('email', null, ['class' => 'form-control ', 'placeholder' => 'email']) !!}
                 </div>
                 <div class="form-group has-feedback">
                     {!! Form::password('password', ['class' => 'form-control ebg-input', 'placeholder' => 'password']) !!}
