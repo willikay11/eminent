@@ -133,4 +133,17 @@ class UsersRepository
 
         return $user;
     }
+
+    public function toggleActivation($id)
+    {
+        $user = $this->getUserById($id);
+
+        ($user->active == 1)? $active = 0 : $active = 1;
+
+        $user->active = $active;
+
+        $user->save();
+
+        return $user;
+    }
 }

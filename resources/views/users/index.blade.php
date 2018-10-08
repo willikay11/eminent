@@ -68,6 +68,7 @@
                                         <el-button @click="EditUser(scope.row)" size="small">Edit</el-button>
                                         <el-button @click="UserRole(scope.row)" size="small">Roles</el-button>
                                         <el-button v-if="scope.row.active != 'Active'" @click="resendActivationLink(scope.row)" size="small">Resend Activation Link</el-button>
+                                        <el-button v-if="scope.row.active == 'Active'" @click="toggleActivation(scope.row)" size="small">Deactivate User</el-button>
                                     </template>
                                 </el-table-column>
                             @endif

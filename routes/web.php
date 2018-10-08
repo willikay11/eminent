@@ -153,6 +153,10 @@ Route::group(['middleware' => 'auth'], function (){
         'uses' => 'UserController@resendActivation'
     ]);
 
+    Route::get('/user/toggle/activation/{id}', [
+        'uses' => 'UserController@toggleActive'
+    ]);
+
     Route::get('/user/{id}/role/', [
         'uses' => 'UserController@userRoles'
     ]);

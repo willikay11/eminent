@@ -486,6 +486,33 @@
                 })
             },
 
+            toggleActivation(user)
+            {
+                let vm = this;
+                axios.get('/user/toggle/activation/'+user.id)
+                    .then(function (response) {
+
+                        vm.getUsers();
+
+                        if(response.data.success)
+                        {
+                            vm.$message({
+                                type: 'success',
+                                message: response.data.message
+                            });
+
+                        }else
+                        {
+                            vm.$message({
+                                type: 'error',
+                                message: response.data.message
+                            });
+                        }
+                    }).catch(function (error) {
+                    console.log(error);
+                })
+            },
+
             handleCurrentChange(val)
             {
                 let vm = this;

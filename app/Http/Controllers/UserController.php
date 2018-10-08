@@ -401,6 +401,28 @@ class UserController extends Controller
         return self::toResponse(null, $response);
     }
 
+    public function toggleActive($id){
+        $this->hasPermission('manageUsers', true);
+
+        $user = $this->usersRepository->toggleActivation($id);
+
+        if($user->active){
+            $response = [
+                'success' => true,
+                'message' => "User activated",
+            ];
+
+            return self::toResponse(null, $response);
+        }
+
+        $response = [
+            'success' => true,
+            'message' => "User deactivated",
+        ];
+
+        return self::toResponse(null, $response);
+    }
+
     public function toResponse($request = null, $data)
     {
         return response($data);
